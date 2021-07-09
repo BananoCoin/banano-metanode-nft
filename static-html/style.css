@@ -1,0 +1,30 @@
+.not_selectable {
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.selectable {
+  cursor: text;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.column {
+  flex-direction: column;
+}
+
+.nowrap {
+  flex-wrap: nowrap;
+}
+
+.bordered {
+  border-radius: 0.4vmin;
+  border: solid;
+  border-width: 0.1vmin;
+}
