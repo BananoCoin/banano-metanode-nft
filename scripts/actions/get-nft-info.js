@@ -2,7 +2,7 @@
 // libraries
 
 // modules
-const ipfsUtil = require('../ipfs-util.js')
+const ipfsUtil = require('../ipfs-util.js');
 
 // constants
 const ACTION = 'get_nft_info';
@@ -72,7 +72,7 @@ const getNftInfo = async (context, req, res) => {
   const ipfsCid = req.body.ipfs_cid;
   const resp = await ipfsUtil.getNftInfoForIpfsCid(fetch, ipfsCid);
   res.send(resp);
-}
+};
 
 const addAction = (actions) => {
   actions[ACTION] = getNftInfo;
