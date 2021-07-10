@@ -11,7 +11,7 @@ window.onLoad = async () => {
   loadSeed();
   addSeedHideShow();
   addAccountAndInfo();
-  addMintNft();
+  addCidInfo();
   addOwnerCheck();
   updateSeedAndAccountInfo();
 };
@@ -115,9 +115,9 @@ const addOwnerCheck = () => {
   });
 };
 
-const addMintNft = () => {
-  const wrapperElt = document.getElementById('mintNftWrapper');
-  addText(addChildElement(wrapperElt, 'h2'), 'Mint NFT');
+const addCidInfo = () => {
+  const wrapperElt = document.getElementById('cidInfoWrapper');
+  addText(addChildElement(wrapperElt, 'h2'), 'CID Info');
   const formElt = addChildElement(wrapperElt, 'form', {
     'method': 'POST',
     'class': '',
