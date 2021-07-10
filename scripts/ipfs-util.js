@@ -1,8 +1,7 @@
 'use strict';
-// libraries
-const bs58 = require('bs58');
 
 // modules
+const bananoIpfs = require('banano-ipfs');
 
 // constants
 const ACTION = 'get_nft_info';
@@ -96,33 +95,11 @@ const getNftInfoForIpfsCid = async (fetch, ipfsCid) => {
         }
       }
 
-      if (resp.json.ifps_cid === undefined) {
+      try {
+        resp.json.new_representative = bananoIpfs.ifpsCidToAccount(resp.json.ifps_cid);
+      } catch (error) {
         resp.success = false;
-        resp.errors.push(`ifps_cid undefined`);
-      } else {
-        const regExp = new RegExp('^Qm[0-9A-Za-z]{0,64}$');
-        if (!regExp.test(resp.json.ifps_cid)) {
-          resp.success = false;
-          resp.errors.push(`ifps_cid:'${resp.json.ifps_cid}' not Qm+base58`);
-        } else {
-          const bytes = bs58.decode(resp.json.ifps_cid);
-          resp.json.ifps_cid_hex = bytes.toString('hex');
-          resp.json.ifps_cid_hex_base58 = bs58.encode(Buffer.from(bytes));
-
-          const regExp = new RegExp('^1220.{64}$');
-          if (!regExp.test(resp.json.ifps_cid_hex)) {
-            resp.success = false;
-            // check https://github.com/multiformats/js-cid
-            resp.errors.push(`ifps_cid_hex:'${resp.json.ifps_cid_hex}' not 64 characters after prefix 1220, ${resp.json.ifps_cid_hex.length}`);
-          } else {
-            resp.json.new_representative = resp.json.ifps_cid_hex.substring(4);
-            const regExp = new RegExp('^[0123456789abcdefABCDEF]{64}$');
-            if (!regExp.test(resp.json.new_representative)) {
-              resp.success = false;
-              resp.errors.push(`new_representative:'${resp.json.new_representative}' not hex 64 characters, ${resp.json.new_representative.length}`);
-            }
-          }
-        }
+        resp.errors.push(error);
       }
 
       if (resp.json.mint_previous === undefined) {

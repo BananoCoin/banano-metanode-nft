@@ -1,6 +1,5 @@
 'use strict';
 // libraries
-const bs58 = require('bs58');
 
 // modules
 const ipfsUtil = require('../ipfs-util.js')
