@@ -3,6 +3,7 @@
 const bs58 = require('bs58');
 
 // modules
+const ipfsUtil = require('../ipfs-util.js')
 
 // constants
 const ACTION = 'get_nft_info';
@@ -70,120 +71,9 @@ const getNftInfo = async (context, req, res) => {
 
   // loggingUtil.log('getNftOwner', req.body);
   const ipfsCid = req.body.ipfs_cid;
-  const url = `https://ipfs.globalupload.io/${ipfsCid}`;
-
-  const headers = {
-    'accept': '*/*',
-    'accept-language': 'en-US,en',
-    'content-type': 'application/json',
-  };
-
-  const nftJsonRequest = {
-    method: 'GET',
-    headers: headers,
-  };
-  const nftJsonResponse = await fetch(url, nftJsonRequest);
-
-  // loggingUtil.log('getNftOwner', 'status', nftJsonResponse.status);
-  // loggingUtil.log('getNftOwner', 'content-type', nftJsonResponse.headers);
-  // loggingUtil.log('getNftOwner', 'content-type', nftJsonResponse.headers.get('content-type'));
-
-  const resp = {};
-  resp.status = nftJsonResponse.status;
-  resp.ipfs_cid = ipfsCid;
-  resp.success = false;
-  if (nftJsonResponse.status === 200) {
-    const contentType = nftJsonResponse.headers.get('content-type');
-    resp.content_type = contentType;
-    if (resp.content_type === 'application/json') {
-      resp.json = await nftJsonResponse.json();
-      resp.success = true;
-      resp.errors = [];
-
-      if (resp.json.command !== 'mint_nft') {
-        resp.success = false;
-        resp.errors.push(`command:'${resp.json.command}' !== 'mint_nft'`);
-      }
-
-      if (resp.json.version === undefined) {
-        resp.success = false;
-        resp.errors.push(`version undefined`);
-      }
-
-      if (resp.json.title === undefined) {
-        resp.success = false;
-        resp.errors.push(`title undefined`);
-      }
-
-      if (resp.json.issuer === undefined) {
-        resp.success = false;
-        resp.errors.push(`issuer undefined`);
-      }
-
-      if (resp.json.max_supply === undefined) {
-        resp.success = false;
-        resp.errors.push(`max_supply undefined`);
-      } else {
-        const regExp = new RegExp('^[0-9]+$');
-        if (!regExp.test(resp.json.max_supply.toString())) {
-          resp.success = false;
-          resp.errors.push(`max_supply:'${resp.json.max_supply}' not an integer`);
-        }
-      }
-
-      if (resp.json.ifps_cid === undefined) {
-        resp.success = false;
-        resp.errors.push(`ifps_cid undefined`);
-      } else {
-        const regExp = new RegExp('^Qm[0-9A-Za-z]{0,64}$');
-        if (!regExp.test(resp.json.ifps_cid)) {
-          resp.success = false;
-          resp.errors.push(`ifps_cid:'${resp.json.ifps_cid}' not Qm+base58`);
-        } else {
-          const bytes = bs58.decode(resp.json.ifps_cid);
-          resp.json.ifps_cid_hex = bytes.toString('hex');
-          resp.json.ifps_cid_hex_base58 = bs58.encode(Buffer.from(bytes));
-
-          const regExp = new RegExp('^1220.{64}$');
-          if (!regExp.test(resp.json.ifps_cid_hex)) {
-            resp.success = false;
-            // check https://github.com/multiformats/js-cid
-            resp.errors.push(`ifps_cid_hex:'${resp.json.ifps_cid_hex}' not 64 characters after prefix 1220, ${resp.json.ifps_cid_hex.length}`);
-          } else {
-            resp.json.new_representative = resp.json.ifps_cid_hex.substring(4);
-            const regExp = new RegExp('^[0123456789abcdefABCDEF]{64}$');
-            if (!regExp.test(resp.json.new_representative)) {
-              resp.success = false;
-              resp.errors.push(`new_representative:'${resp.json.new_representative}' not hex 64 characters, ${resp.json.new_representative.length}`);
-            }
-          }
-        }
-      }
-
-      if (resp.json.mint_previous === undefined) {
-        resp.success = false;
-        resp.errors.push(`mint_previous undefined`);
-      } else {
-        const regExp = new RegExp('^[0123456789abcdefABCDEF]{64}$');
-        if (!regExp.test(resp.json.mint_previous)) {
-          resp.success = false;
-          resp.errors.push(`mint_previous:'${resp.json.mint_previous}' not 64 hex characters`);
-        }
-      }
-
-      if (resp.success) {
-        delete resp.errors;
-      }
-    } else {
-      resp.errors = ['unsupported content_type'];
-      // const buffer = await nftJsonResponse.buffer();
-      // resp.base64 = buffer.toString('base64');
-    }
-  } else {
-    resp.errors = ['unknown ipfs_cid'];
-  }
+  const resp = await ipfsUtil.getNftInfoForIpfsCid(fetch, ipfsCid);
   res.send(resp);
-};
+}
 
 const addAction = (actions) => {
   actions[ACTION] = getNftInfo;

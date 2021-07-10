@@ -12,7 +12,7 @@ window.onLoad = async () => {
   addSeedHideShow();
   addAccountAndInfo();
   addMintNft();
-  addMetanodeSubscription();
+  addOwnerCheck();
   updateSeedAndAccountInfo();
 };
 
@@ -93,9 +93,9 @@ const clear = (parent) => {
   }
 };
 
-const addMetanodeSubscription = () => {
-  const wrapperElt = document.getElementById('metanodeSubscriptionWrapper');
-  addText(addChildElement(wrapperElt, 'h2'), 'Metanode Subscription');
+const addOwnerCheck = () => {
+  const wrapperElt = document.getElementById('ownerCheckWrapper');
+  addText(addChildElement(wrapperElt, 'h2'), 'Check Ownership');
   const formElt = addChildElement(wrapperElt, 'form', {
     'method': 'POST',
     'class': '',
@@ -103,14 +103,14 @@ const addMetanodeSubscription = () => {
   });
   addChildElement(formElt, 'br');
   const checkCidElt = addChildElement(formElt, 'button', {
-    'id': 'check-metanode-subscription',
+    'id': 'check-ownership',
     'type': 'button',
     'class': '',
-    'onclick': 'checkMetanodeSubscription();return false;',
+    'onclick': 'checkOwnership();return false;',
   });
-  addText(checkCidElt, 'Get Metanode Subscription Info');
+  addText(checkCidElt, 'Get Ownership Info');
   addChildElement(wrapperElt, 'div', {
-    'id': 'metanodeSubscriptionInfo',
+    'id': 'ownershipInfo',
     'class': 'selectable container column',
   });
 };
@@ -291,50 +291,33 @@ window.updateAccountInfo = async () => {
   accountInfoElt.innerText = innerText;
 };
 
-window.checkMetanodeSubscription = async () => {
-  const subResponse = await fetch('/', {
+window.checkOwnership = async () => {
+  console.log('checkOwnership');
+  const cid = document.getElementById('cid').value.trim();
+  const response = await fetch('/', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
     },
-    body: `{"action": "get_metanode_subscription_account"}`,
+    body: `{"action": "get_nft_assets_owners", "ipfs_cid":"${cid}"}`,
   });
-  const subResponseJson = await subResponse.json();
-  const subscriptionAccount = subResponseJson.metanode_subscription_account;
-
-  const histBody = {
-    action: 'account_history',
-    account: account.innerText,
-    count: 1,
-    raw: true,
-    account_filter: [
-      subscriptionAccount,
-    ],
-  };
-  const histRequest = {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify(histBody),
-  };
-  // console.log('bananoApiUrl', bananoApiUrl);
-  // console.log('histBody', histBody);
-  // console.log('histBody2', histBody);
-  // console.log('histRequest', histRequest);
-  const histResponse = await fetch(bananoApiUrl, histRequest);
-  // console.log('histResponse', histResponse);
-  const histResponseJson = await histResponse.json();
-  // console.log('histResponseJson', histResponseJson);
-
+  console.log('checkOwnership', response);
+  const responseJson = await response.json();
   let html = '';
-  if (histResponseJson.history.length == 0) {
-    html = `<span><strong>Failure! not subscribed</strong>. Send 1 raw from ${account.innerText} to ${subscriptionAccount}.`;
+  if (responseJson.success) {
+    html = `<span><strong>Success! owner is ${responseJson.owner}</strong>`;
   } else {
-    html = `<span><strong>Success! subscribed to ${subscriptionAccount}</strong>`;
+    html = `<span><strong>Failure!</strong></span>.`;
+    if (responseJson.errors !== undefined) {
+      html += '<span class="bordered container column">';
+      html += `<span><h2>errors</h2></span>`;
+      responseJson.errors.forEach((error) => {
+        html += `<span>${error}</span>`;
+      });
+      html += '</span>';
+    }
   }
-  metanodeSubscriptionInfo.innerHTML = html;
+  ownershipInfo.innerHTML = html;
 };
 
 window.checkCid = async () => {

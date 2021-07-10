@@ -1,10 +1,12 @@
 'use strict';
 // libraries
+const bs58 = require('bs58');
 
 // modules
+const ipfsUtil = require('../ipfs-util.js')
 
 // constants
-const ACTION = 'mint_nft';
+const ACTION = 'get_nft_assets_owners';
 
 // variables
 /* eslint-disable no-unused-vars */
@@ -34,7 +36,7 @@ const deactivate = () => {
 };
 
 /**
- * gets the blocks required to mint the NFT.
+ * gets the owners of a NFT's assets
  * @memberof NFT
  * @param {Object} context the context, used to get cached data.
  * - from filesystem in nodejs,
@@ -44,7 +46,7 @@ const deactivate = () => {
  * @param {Object} res the http response.
  * @return {undefined}
  */
-const getMintNftBlocks = async (context, req, res) => {
+const getNftAssetsOwners = async (context, req, res) => {
   const fetch = context.fetch;
 
   /* istanbul ignore if */
@@ -66,55 +68,56 @@ const getMintNftBlocks = async (context, req, res) => {
   if (req.body.ipfs_cid === undefined) {
     throw Error('req.body.ipfs_cid is required');
   }
-
-  /* istanbul ignore if */
-  if (req.body.mint_previous === undefined) {
-    throw Error('req.body.mint_previous is required');
-  }
-  const mint_previous = req.body.mint_previous;
-
   const ipfsCid = req.body.ipfs_cid;
-  const url = `https://ipfs.globalupload.io/${ipfsCid}`;
+  loggingUtil.log(ACTION, 'getNftInfoForIpfsCid', ipfsCid);
+  const ipfsResp = await ipfsUtil.getNftInfoForIpfsCid(fetch, ipfsCid);
+  loggingUtil.log(ACTION, 'getNftInfoForIpfsCid', 'ipfsResp', ipfsResp);
+  if(!ipfsResp.success) {
+    res.send(ipfsResp);
+    return;
+  }
 
-  const headers = {
-    'accept': '*/*',
-    'accept-language': 'en-US,en',
-    'content-type': 'application/json',
+  const startAccount = ipfsResp.json.issuer;
+  const startBlock = ipfsResp.json.mint_previous;
+  const newRepresentative = ipfsResp.json.new_representative;
+
+  const histBody = {
+    action: 'account_history',
+    account: startAccount,
+    count: -1,
+    raw: true,
+    head: startBlock,
+    reverse: true
   };
-
-  const nftJsonRequest = {
-    method: 'GET',
-    headers: headers,
+  const histRequest = {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(histBody),
   };
-  const nftJsonResponse = await fetch(url, nftJsonRequest);
-
-  // loggingUtil.log('getNftOwner', 'status', nftJsonResponse.status);
-  // loggingUtil.log('getNftOwner', 'content-type', nftJsonResponse.headers);
-  // loggingUtil.log('getNftOwner', 'content-type', nftJsonResponse.headers.get('content-type'));
+  const histResponse = await fetch(config.bananodeApiUrl, histRequest);
+  const histResponseJson = await histResponse.json();
 
   const resp = {};
-  resp.status = nftJsonResponse.status;
-  resp.ipfs_cid = ipfsCid;
-  resp.success = false;
-  if (nftJsonResponse.status === 200) {
-    const contentType = nftJsonResponse.headers.get('content-type');
-    resp.content_type = contentType;
-    if (resp.content_type === 'application/json') {
-      resp.json = await nftJsonResponse.json();
-      resp.success = true;
-    } else {
-      resp.error = 'unsupported content_type';
-      // const buffer = await nftJsonResponse.buffer();
-      // resp.base64 = buffer.toString('base64');
-    }
+  if (histResponseJson.history.length == 0) {
+    resp.success = false;
+    resp.errors = [];
+    resp.errors.push('no history');
   } else {
-    resp.error = 'unknown ipfs_cid';
+    resp.success = true;
+    resp.owners = [];
+    histResponseJson.history.forEach((historyElt) => {
+      resp.owners.push(historyElt);
+    });
   }
+
   res.send(resp);
 };
 
 const addAction = (actions) => {
-  actions[ACTION] = getMintNftBlocks;
+  actions[ACTION] = getNftAssetsOwners;
 };
 
 exports.init = init;

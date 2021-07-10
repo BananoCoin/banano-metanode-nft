@@ -54,8 +54,8 @@ const init = async () => {
 const addModules = () => {
   modules.push(require('./actions/get-nft-info.js'));
   modules.push(require('./actions/get-bananode-api-url.js'));
-  modules.push(require('./actions/get-metanode-subscription-account.js'));
-  modules.push(require('./actions/mint-nft.js'));
+  modules.push(require('./actions/get-nft-assets-owners.js'));
+  modules.push(require('./ipfs-util.js'));
 };
 
 const initModules = async () => {
@@ -127,7 +127,9 @@ const initServer = () => {
 
   for (let moduleIx = 0; moduleIx < modules.length; moduleIx++) {
     const item = modules[moduleIx];
-    item.addAction(actions);
+    if (item.addAction !== undefined) {
+      item.addAction(actions);
+    }
   }
 
   const server = http.createServer(app);
