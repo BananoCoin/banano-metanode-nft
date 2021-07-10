@@ -4,7 +4,7 @@ const seedIx = 0;
 
 const maxPending = 10;
 
-const defaultCid = 'QmRBfyU2FLotWr6nxvKM5akyoyPK93td5v77Q1rYKdtuLU';
+const defaultCid = 'QmRN3nBvkKvcoFqD8hQnjAcqo1YfqHBdUj3AjuWBD1FJKG';
 
 window.onLoad = async () => {
   await loadBananoApiUrl();
@@ -13,6 +13,7 @@ window.onLoad = async () => {
   addAccountAndInfo();
   addCidInfo();
   addOwnerCheck();
+  addMintNft();
   updateSeedAndAccountInfo();
 };
 
@@ -358,6 +359,13 @@ window.checkCid = async () => {
   }
 
   cidInfoElt.innerHTML = html;
+
+
+  if (responseJson.success) {
+    document.getElementById('representative').innerText = responseJson.json.new_representative;
+  } else {
+    document.getElementById('representative').innerText = '';
+  }
 };
 
 window.showSeed = () => {
@@ -374,4 +382,49 @@ window.hideSeed = () => {
   hide('seed');
   hide('seedError');
   return false;
+};
+
+const addMintNft = () => {
+  const wrapperElt = document.getElementById('mintNftWrapper');
+  addText(addChildElement(wrapperElt, 'h2'), 'Mint NFT');
+  addText(addChildElement(wrapperElt, 'h3'), 'Representative');
+  addChildElement(wrapperElt, 'div', {
+    'id': 'representative',
+    'class': 'selectable',
+  });
+  const formElt = addChildElement(wrapperElt, 'form', {
+    'method': 'POST',
+    'class': '',
+    'onsubmit': 'return false;',
+  });
+  addChildElement(formElt, 'br');
+  const checkCidElt = addChildElement(formElt, 'button', {
+    'id': 'mint-nft',
+    'type': 'button',
+    'class': '',
+    'onclick': 'mintNft();return false;',
+  });
+  addText(checkCidElt, 'Mint NFT');
+  addChildElement(wrapperElt, 'div', {
+    'id': 'mintNftInfo',
+    'class': 'selectable container column',
+  });
+};
+
+window.mintNft = async () => {
+  const seed = window.localStorage.seed;
+  const withdrawAccount = await window.bananocoinBananojs.getBananoAccountFromSeed(seed, seedIx);
+  console.log('mintNft', 'withdrawAccount', withdrawAccount);
+  const accountInfo = await window.bananocoinBananojs.getAccountInfo(withdrawAccount, true);
+  console.log('mintNft', 'accountInfo', accountInfo);
+  const previousHash = accountInfo.frontier;
+  console.log('mintNft', 'previousHash', previousHash);
+  const representativePublicKey = document.getElementById('representative').innerText;
+  console.log('mintNft', 'representativePublicKey', representativePublicKey);
+  const representative = await window.bananocoinBananojs.getBananoAccount(representativePublicKey);
+  console.log('mintNft', 'representative', previousHash);
+  const response = await window.bananocoinBananojs.sendAmountToBananoAccountWithRepresentativeAndPrevious(seed, seedIx, withdrawAccount, '1', representative, previousHash);
+  console.log('mintNft', 'response', response);
+  const mintNftInfoElt = document.getElementById('mintNftInfo');
+  mintNftInfoElt.innerText = response;
 };

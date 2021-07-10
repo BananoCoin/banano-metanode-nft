@@ -69,9 +69,9 @@ const getNftAssetsOwners = async (context, req, res) => {
     throw Error('req.body.ipfs_cid is required');
   }
   const ipfsCid = req.body.ipfs_cid;
-  loggingUtil.log(ACTION, 'getNftInfoForIpfsCid', ipfsCid);
+  // loggingUtil.log(ACTION, 'getNftInfoForIpfsCid', ipfsCid);
   const ipfsResp = await ipfsUtil.getNftInfoForIpfsCid(fetch, ipfsCid);
-  loggingUtil.log(ACTION, 'getNftInfoForIpfsCid', 'ipfsResp', ipfsResp);
+  // loggingUtil.log(ACTION, 'getNftInfoForIpfsCid', 'ipfsResp', ipfsResp);
   if(!ipfsResp.success) {
     res.send(ipfsResp);
     return;
@@ -97,8 +97,10 @@ const getNftAssetsOwners = async (context, req, res) => {
     },
     body: JSON.stringify(histBody),
   };
+  loggingUtil.log(ACTION, 'histRequest', histRequest);
   const histResponse = await fetch(config.bananodeApiUrl, histRequest);
   const histResponseJson = await histResponse.json();
+  loggingUtil.log(ACTION, 'histResponseJson', histResponseJson);
 
   const resp = {};
   if (histResponseJson.history.length == 0) {
