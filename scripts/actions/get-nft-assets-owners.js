@@ -1,9 +1,10 @@
 'use strict';
 // libraries
 const bs58 = require('bs58');
+const bananojs = require('@bananocoin/bananojs');
 
 // modules
-const ipfsUtil = require('../ipfs-util.js')
+const ipfsUtil = require('../ipfs-util.js');
 
 // constants
 const ACTION = 'get_nft_assets_owners';
@@ -72,7 +73,7 @@ const getNftAssetsOwners = async (context, req, res) => {
   // loggingUtil.log(ACTION, 'getNftInfoForIpfsCid', ipfsCid);
   const ipfsResp = await ipfsUtil.getNftInfoForIpfsCid(fetch, ipfsCid);
   // loggingUtil.log(ACTION, 'getNftInfoForIpfsCid', 'ipfsResp', ipfsResp);
-  if(!ipfsResp.success) {
+  if (!ipfsResp.success) {
     res.send(ipfsResp);
     return;
   }
@@ -87,7 +88,7 @@ const getNftAssetsOwners = async (context, req, res) => {
     count: -1,
     raw: true,
     head: startBlock,
-    reverse: true
+    reverse: true,
   };
   const histRequest = {
     method: 'POST',
@@ -97,10 +98,10 @@ const getNftAssetsOwners = async (context, req, res) => {
     },
     body: JSON.stringify(histBody),
   };
-  loggingUtil.log(ACTION, 'histRequest', histRequest);
+  // loggingUtil.log(ACTION, 'histRequest', histRequest);
   const histResponse = await fetch(config.bananodeApiUrl, histRequest);
   const histResponseJson = await histResponse.json();
-  loggingUtil.log(ACTION, 'histResponseJson', histResponseJson);
+  // loggingUtil.log(ACTION, 'histResponseJson', histResponseJson);
 
   const resp = {};
   if (histResponseJson.history.length == 0) {
@@ -110,8 +111,11 @@ const getNftAssetsOwners = async (context, req, res) => {
   } else {
     resp.success = true;
     resp.owners = [];
+    const representativeAccount = await bananojs.getBananoAccount(newRepresentative);
     histResponseJson.history.forEach((historyElt) => {
-      resp.owners.push(historyElt);
+      if (historyElt.representative == representativeAccount) {
+        resp.owners.push(historyElt.account);
+      }
     });
   }
 

@@ -307,6 +307,14 @@ window.checkOwnership = async () => {
   let html = '';
   if (responseJson.success) {
     html = `<span><strong>Success! owner is ${responseJson.owner}</strong>`;
+    if (responseJson.owners !== undefined) {
+      html += '<span class="bordered container column">';
+      html += `<span><h2>owners</h2></span>`;
+      responseJson.owners.forEach((owner) => {
+        html += `<span>${owner}</span>`;
+      });
+      html += '</span>';
+    }
   } else {
     html = `<span><strong>Failure!</strong></span>.`;
     if (responseJson.errors !== undefined) {
