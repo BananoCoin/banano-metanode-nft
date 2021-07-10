@@ -115,6 +115,7 @@ const getNftAssetsOwners = async (context, req, res) => {
     histResponseJson.history.forEach((historyElt) => {
       if (historyElt.representative == representativeAccount) {
         resp.owners.push(historyElt.account);
+        resp.owner = historyElt.account;
       }
     });
   }
