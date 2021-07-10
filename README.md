@@ -10,3 +10,7 @@ An RPC node for issuing NFTs on the banano blockchain.
 # installation instructions
 
   [installation instructions](docs/installation.md)
+
+#todo
+
+  [todo](https://github.com/BananoCoin/banano-metanode-nft/issues)
