@@ -5,13 +5,13 @@ const chai = require('chai');
 
 // modules
 const expect = chai.expect;
-const actionUtil = require('../../scripts/actions/get-pinata-api-url.js');
+const actionUtil = require('../../scripts/actions/get-ipfs-api-url.js');
 
 // constants
 const DEBUG = false;
 
 const config = {
-  'pinataApiUrl': 'pinataApiUrlValue',
+  'ipfsApiUrl': 'ipfsApiUrlValue',
 };
 const loggingUtil = {};
 loggingUtil.trace = console.trace;
@@ -63,7 +63,7 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
-      pinata_api_url: config.pinataApiUrl,
+      ipfs_api_url: config.ipfsApiUrl,
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);

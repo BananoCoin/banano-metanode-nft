@@ -55,18 +55,19 @@ describe(actionUtil.ACTION, () => {
   it('get status 200', async () => {
     const context = {
     };
-    const actualResponse = await getResponse(context);
+    let actualResponse;
     try {
-      const expectedResponse = {
-        success: true,
-        pinata_api_url: config.pinataApiUrl,
-      };
-      loggingUtil.debug('actualResponse', actualResponse);
-      loggingUtil.debug('expectedResponse', expectedResponse);
-      expect(actualResponse).to.deep.equal(expectedResponse);
+      actualResponse = await getResponse(context);
     } catch (error) {
       loggingUtil.trace(error);
     }
+    const expectedResponse = {
+      success: true,
+      bananode_api_url: config.bananodeApiUrl,
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
   });
   beforeEach(async () => {
     actionUtil.init(config, loggingUtil);
