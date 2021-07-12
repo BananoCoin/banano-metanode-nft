@@ -1,6 +1,5 @@
 'use strict';
 // libraries
-const bs58 = require('bs58');
 const bananojs = require('@bananocoin/bananojs');
 
 // modules

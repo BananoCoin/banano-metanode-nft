@@ -6,7 +6,6 @@ const AbortController = require('abort-controller');
 // modules
 
 // constants
-const ACTION = 'get_nft_info';
 
 // variables
 /* eslint-disable no-unused-vars */

@@ -45,7 +45,6 @@ const deactivate = () => {
  * @return {undefined}
  */
 const getPinataApiUrl = async (context, req, res) => {
-  
   /* istanbul ignore if */
   if (req === undefined) {
     throw Error('req is required');

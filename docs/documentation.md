@@ -3,36 +3,96 @@
 ### Table of Contents
 
 *   [Main][1]
-*   [NFT][2]
-    *   [getNftOwner][3]
-        *   [Parameters][4]
+    *   [getBananodeApiUrl][2]
+        *   [Parameters][3]
+    *   [getPinataApiUrl][4]
+        *   [Parameters][5]
+    *   [getIpfsApiUrl][6]
+        *   [Parameters][7]
+*   [NFT][8]
+    *   [getNftAssetsOwners][9]
+        *   [Parameters][10]
 
 ## Main
 
-## NFT
+### getBananodeApiUrl
 
-### getNftOwner
-
-gets the owner of a NFT
+gets the bananode url
 
 #### Parameters
 
-*   `context` **[Object][5]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][11]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][5]** the http request.
-*   `res` **[Object][5]** the http response.
+*   `req` **[Object][11]** the http request.
+*   `res` **[Object][11]** the http response.
 
-Returns **[undefined][6]** 
+Returns **[undefined][12]** 
+
+### getPinataApiUrl
+
+gets the pinata url
+
+#### Parameters
+
+*   `context` **[Object][11]** the context, used to get cached data.*   from filesystem in nodejs,
+    *   from localstorage in a browser,
+    *   from a test harness in the unit tests.
+*   `req` **[Object][11]** the http request.
+*   `res` **[Object][11]** the http response.
+
+Returns **[undefined][12]** 
+
+### getIpfsApiUrl
+
+gets the ipfs url
+
+#### Parameters
+
+*   `context` **[Object][11]** the context, used to get cached data.*   from filesystem in nodejs,
+    *   from localstorage in a browser,
+    *   from a test harness in the unit tests.
+*   `req` **[Object][11]** the http request.
+*   `res` **[Object][11]** the http response.
+
+Returns **[undefined][12]** 
+
+## NFT
+
+### getNftAssetsOwners
+
+gets the owners of a NFT's assets
+
+#### Parameters
+
+*   `context` **[Object][11]** the context, used to get cached data.*   from filesystem in nodejs,
+    *   from localstorage in a browser,
+    *   from a test harness in the unit tests.
+*   `req` **[Object][11]** the http request.
+*   `res` **[Object][11]** the http response.
+
+Returns **[undefined][12]** 
 
 [1]: #main
 
-[2]: #nft
+[2]: #getbananodeapiurl
 
-[3]: #getnftowner
+[3]: #parameters
 
-[4]: #parameters
+[4]: #getpinataapiurl
 
-[5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[5]: #parameters-1
 
-[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
+[6]: #getipfsapiurl
+
+[7]: #parameters-2
+
+[8]: #nft
+
+[9]: #getnftassetsowners
+
+[10]: #parameters-3
+
+[11]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[12]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined

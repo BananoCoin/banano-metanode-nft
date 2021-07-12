@@ -54,7 +54,6 @@ const init = async () => {
 };
 
 const addModules = () => {
-  modules.push(require('./actions/get-nft-info.js'));
   modules.push(require('./actions/get-bananode-api-url.js'));
   modules.push(require('./actions/get-pinata-api-url.js'));
   modules.push(require('./actions/get-ipfs-api-url.js'));
