@@ -48,6 +48,7 @@ const deactivate = () => {
  * @return {undefined}
  */
 const getNftAssetsOwners = async (context, req, res) => {
+  // loggingUtil.log(ACTION, 'getNftAssetsOwners', context, req, res);
   const fetch = context.fetch;
 
   /* istanbul ignore if */
@@ -69,10 +70,16 @@ const getNftAssetsOwners = async (context, req, res) => {
   if (req.body.ipfs_cid === undefined) {
     throw Error('req.body.ipfs_cid is required');
   }
+
+  /* istanbul ignore if */
+  if (config.bananodeApiUrl === undefined) {
+    throw Error('config.bananodeApiUrl is required');
+  }
+
   const ipfsCid = req.body.ipfs_cid;
-  // loggingUtil.log(ACTION, 'getNftInfoForIpfsCid', ipfsCid);
+  loggingUtil.log(ACTION, 'getNftInfoForIpfsCid', ipfsCid);
   const ipfsResp = await ipfsUtil.getNftInfoForIpfsCid(fetch, ipfsCid);
-  // loggingUtil.log(ACTION, 'getNftInfoForIpfsCid', 'ipfsResp', ipfsResp);
+  loggingUtil.log(ACTION, 'getNftInfoForIpfsCid', 'ipfsResp', ipfsResp);
   if (!ipfsResp.success) {
     res.send(ipfsResp);
     return;
