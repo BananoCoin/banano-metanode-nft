@@ -1,0 +1,7 @@
+{
+  "ipfsApiUrl": "https://gateway.pinata.cloud/ipfs",
+  "pinataApiUrl": "https://api.pinata.cloud",
+  "bananodeApiUrl": "https://kaliumapi.appditto.com/api",
+  "fetchTimeout": 5000,
+  "webPort": ""
+}

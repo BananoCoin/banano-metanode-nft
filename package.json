@@ -1,0 +1,43 @@
+{
+  "name": "banano-metanode-nft",
+  "version": "1.0.0",
+  "description": "banano metanode nft",
+  "author": "Coranos",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BananoCoin/banano-metanode-nft.git"
+  },
+  "scripts": {
+    "coverage": "nyc -x 'test/util/**' -x 'test/unit/**' ./node_modules/mocha/bin/mocha -t 100000 test/unit",
+    "docs": "./node_modules/documentation/bin/documentation.js build --config documentation.yaml documentation.js -f md -o docs/documentation.md",
+    "eslint": "eslint --fix 'scripts/**/*.js'",
+    "jsonlint": "jsonlint -q package.json;jsonlint -q scripts;jsonlint -q config.json;",
+    "publish-preflight": "npm i;npm audit fix;npm run eslint;npm run jsonlint;npm run coverage;npm run docs;",
+    "screenjoin": "screen -x banano_metanode_nft;exit 0;",
+    "screenstart": "screen -dmSL banano_metanode_nft npm start;npm run screenjoin",
+    "screenrestart": "npm stop;npm run screenjoin;npm run screenstart",
+    "start": "node --trace-warnings scripts/index.js",
+    "stop": "node scripts/stop.js",
+    "test": "./node_modules/mocha/bin/mocha --recursive -t 100000 test/unit"
+  },
+  "dependencies": {
+    "@bananocoin/bananojs": "^2.4.13",
+    "abort-controller": "^3.0.0",
+    "bs58": "^4.0.1",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
+    "socket.io": "^4.1.3",
+    "socket.io-client": "^4.1.3"
+  },
+  "preferGlobal": true,
+  "devDependencies": {
+    "@prantlf/jsonlint": "^10.2.0",
+    "chai": "^4.3.4",
+    "documentation": "^13.2.5",
+    "eslint": "^7.30.0",
+    "eslint-config-google": "^0.14.0",
+    "mocha": "^9.0.1",
+    "nyc": "^15.1.0"
+  }
+}
