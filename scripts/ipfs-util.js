@@ -61,13 +61,13 @@ const getNftInfoForIpfsCid = async (fetch, ipfsCid) => {
       // });
       const id = setTimeout(() => controller.abort(), timeout);
 
-      loggingUtil.log('getNftInfoForIpfsCid', 'fetch');
+      loggingUtil.debug('getNftInfoForIpfsCid', 'fetch');
       fetch(resource, {
         ...options,
         signal: controller.signal,
       })
           .catch((error) => {
-            loggingUtil.log('getNftInfoForIpfsCid', 'error', error.message);
+            loggingUtil.debug('getNftInfoForIpfsCid', 'error', error.message);
             clearTimeout(id);
             if (error.message == 'The user aborted a request.') {
               error.message = `timeout waiting for response from IPFS CID lookup`;
@@ -75,7 +75,7 @@ const getNftInfoForIpfsCid = async (fetch, ipfsCid) => {
             resolve({status: 408, statusText: error.message});
           })
           .then((response) => {
-            loggingUtil.log('getNftInfoForIpfsCid', 'response', response);
+            loggingUtil.debug('getNftInfoForIpfsCid', 'response', response);
             clearTimeout(id);
             resolve(response);
           });
@@ -94,12 +94,12 @@ const getNftInfoForIpfsCid = async (fetch, ipfsCid) => {
     method: 'GET',
     headers: headers,
   };
-  loggingUtil.log('getNftInfoForIpfsCid', 'nftJsonRequest', nftJsonRequest);
+  loggingUtil.debug('getNftInfoForIpfsCid', 'nftJsonRequest', nftJsonRequest);
   const nftJsonResponse = await fetchWithTimeout(url, nftJsonRequest);
 
-  loggingUtil.log('getNftInfoForIpfsCid', 'status', nftJsonResponse.status);
-  loggingUtil.log('getNftInfoForIpfsCid', 'content-type', nftJsonResponse.headers);
-  loggingUtil.log('getNftInfoForIpfsCid', 'content-type', nftJsonResponse.headers.get('content-type'));
+  loggingUtil.debug('getNftInfoForIpfsCid', 'status', nftJsonResponse.status);
+  loggingUtil.debug('getNftInfoForIpfsCid', 'content-type', nftJsonResponse.headers);
+  loggingUtil.debug('getNftInfoForIpfsCid', 'content-type', nftJsonResponse.headers.get('content-type'));
 
   const resp = {};
   resp.status = nftJsonResponse.status;
