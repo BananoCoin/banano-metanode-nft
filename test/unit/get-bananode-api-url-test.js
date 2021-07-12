@@ -5,13 +5,13 @@ const chai = require('chai');
 
 // modules
 const expect = chai.expect;
-const actionUtil = require('../../scripts/actions/get-pinata-api-url.js');
+const actionUtil = require('../../scripts/actions/get-bananode-api-url.js');
 
 // constants
 const DEBUG = false;
 
 const config = {
-  'pinataApiUrl': 'pinataApiUrlValue',
+  'bananodeApiUrl': 'bananodeApiUrlValue',
 };
 const loggingUtil = {};
 loggingUtil.trace = console.trace;
