@@ -12,6 +12,9 @@ const ipfsUtil = require('../../scripts/ipfs-util.js');
 
 // constants
 const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
+const badContentTypeIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWABADCT';
+const badTimeoutIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQBADTIME';
+const badUnknownIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciqBADUNKNOWN';
 const goodHead = '0000000000000000000000000000000000000000000000000000000000000000';
 const goodLink = '0000000000000000000000000000000000000000000000000000000000000001';
 const goodOwner4link = '0000000000000000000000000000000000000000000000000000000000000002';
@@ -104,6 +107,50 @@ describe(actionUtil.ACTION, () => {
                   'ipfs_cid': goodIpfsCid,
                   'mint_previous': goodHead,
                 };
+              },
+            });
+          });
+        }
+        if (resource == `${config.ipfsApiUrl}/${badContentTypeIpfsCid}`) {
+          return new Promise(async (resolve) => {
+            resolve({
+              status: 200,
+              headers: {
+                get: (header) => {
+                  if (header == 'content-type') {
+                    return 'text/plain';
+                  }
+                },
+              },
+            });
+          });
+        }
+        if (resource == `${config.ipfsApiUrl}/${badTimeoutIpfsCid}`) {
+          return new Promise(async (resolve) => {
+            resolve({
+              status: 408,
+              statusText: 'Request Timeout',
+              headers: {
+                get: (header) => {
+                  if (header == 'content-type') {
+                    return 'text/plain';
+                  }
+                },
+              },
+            });
+          });
+        }
+        if (resource == `${config.ipfsApiUrl}/${badUnknownIpfsCid}`) {
+          return new Promise(async (resolve) => {
+            resolve({
+              status: 451,
+              statusText: 'Unavailable For Legal Reasons',
+              headers: {
+                get: (header) => {
+                  if (header == 'content-type') {
+                    return 'text/plain';
+                  }
+                },
               },
             });
           });
@@ -268,6 +315,71 @@ describe(actionUtil.ACTION, () => {
     loggingUtil.debug('expectedResponse', expectedResponse);
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
+  it('get status 200 badContentTypeIpfsCid', async () => {
+    const context = getContext();
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(context, badContentTypeIpfsCid);
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      'content_type': 'text/plain',
+      'errors': [
+        'unsupported content_type',
+      ],
+      'ipfs_cid': badContentTypeIpfsCid,
+      'status': 200,
+      'success': false,
+
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 badTimeoutIpfsCid', async () => {
+    const context = getContext();
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(context, badTimeoutIpfsCid);
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      'errors': [
+        'Request Timeout',
+      ],
+      'ipfs_cid': badTimeoutIpfsCid,
+      'status': 408,
+      'success': false,
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 badUnknownIpfsCid', async () => {
+    const context = getContext();
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(context, badUnknownIpfsCid);
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      'errors': [
+        'unknown error from IPFS CID lookup',
+        'status:451',
+        'statusText:Unavailable For Legal Reasons',
+      ],
+      'ipfs_cid': badUnknownIpfsCid,
+      'status': 451,
+      'success': false,
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+
   beforeEach(async () => {
     ipfsUtil.init(config, loggingUtil);
     actionUtil.init(config, loggingUtil);

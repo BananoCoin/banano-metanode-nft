@@ -149,7 +149,10 @@ const getNftAssetsOwners = async (context, req, res) => {
 
       // find the receive block that recieved the send.
       let owner_receive_hash = await getReceiveBlock(fetch, asset_owner.asset, asset_owner.owner, send_to_owner_hash);
-      loggingUtil.log(ACTION, 'getNftAssetsOwners', 'asset', assetRepresentativeAccount, 'send_to_owner_hash', '=>', 'owner_receive_hash', send_to_owner_hash, '=>', owner_receive_hash);
+      loggingUtil.log(ACTION, 'getNftAssetsOwners',
+          'asset', assetRepresentativeAccount,
+          'send_to_owner_hash', '=>', 'owner_receive_hash',
+          send_to_owner_hash, '=>', owner_receive_hash);
       while ((send_to_owner_hash !== undefined) && (owner_receive_hash !== undefined)) {
         // looking in the history of asset_owner.owner,
         // starting at the owner_receive_hash (the point the owner received the nft)

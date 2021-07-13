@@ -199,9 +199,15 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
       // resp.base64 = buffer.toString('base64');
     }
   } else if (nftJsonResponse.status === 408) {
-    resp.errors = [nftJsonResponse.statusText];
+    resp.errors = [
+      nftJsonResponse.statusText,
+    ];
   } else {
-    resp.errors = ['unknown error from IPFS CID lookup:' + nftJsonResponse.statusText];
+    resp.errors = [
+      'unknown error from IPFS CID lookup',
+      'status:' + nftJsonResponse.status,
+      'statusText:' + nftJsonResponse.statusText,
+    ];
   }
   return resp;
 };
