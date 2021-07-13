@@ -1,6 +1,8 @@
 'use strict';
 
 // libraries
+const bananojs = require('@bananocoin/bananojs');
+
 const chai = require('chai');
 
 // modules
@@ -78,6 +80,7 @@ const getResponse = (context, ipfsCd) => {
 describe(actionUtil.ACTION, () => {
   const getContext = (histories) => {
     return {
+      bananojs: bananojs,
       fetch: (resource, options) => {
         loggingUtil.debug('fetch', resource, options);
         if (resource == `${config.ipfsApiUrl}/${goodIpfsCid}`) {

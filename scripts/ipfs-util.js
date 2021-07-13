@@ -34,10 +34,14 @@ const deactivate = () => {
   /* eslint-enable no-unused-vars */
 };
 
-const getNftInfoForIpfsCid = async (fetch, ipfsCid) => {
+const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
   /* istanbul ignore if */
   if (fetch === undefined) {
-    throw Error('context.fetch is required');
+    throw Error('fetch is required');
+  }
+  /* istanbul ignore if */
+  if (bananojs === undefined) {
+    throw Error('bananojs is required');
   }
   /* istanbul ignore if */
   if (config.fetchTimeout === undefined) {
@@ -168,6 +172,8 @@ const getNftInfoForIpfsCid = async (fetch, ipfsCid) => {
             if (!regExp.test(resp.json.new_representative)) {
               resp.success = false;
               resp.errors.push(`new_representative:'${resp.json.new_representative}' not hex 64 characters, ${resp.json.new_representative.length}`);
+            } else {
+              resp.json.new_representative_account = await bananojs.getBananoAccount(resp.json.new_representative);
             }
           }
         }

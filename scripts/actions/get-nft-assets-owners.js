@@ -1,6 +1,5 @@
 'use strict';
 // libraries
-const bananojs = require('@bananocoin/bananojs');
 
 // modules
 const ipfsUtil = require('../ipfs-util.js');
@@ -55,6 +54,13 @@ const getNftAssetsOwners = async (context, req, res) => {
     throw Error('context.fetch is required');
   }
 
+  const bananojs = context.bananojs;
+
+  /* istanbul ignore if */
+  if (bananojs === undefined) {
+    throw Error('context.bananojs is required');
+  }
+
   /* istanbul ignore if */
   if (req === undefined) {
     throw Error('req is required');
@@ -77,7 +83,7 @@ const getNftAssetsOwners = async (context, req, res) => {
 
   const ipfsCid = req.body.ipfs_cid;
   loggingUtil.debug(ACTION, 'getNftInfoForIpfsCid', ipfsCid);
-  const ipfsResp = await ipfsUtil.getNftInfoForIpfsCid(fetch, ipfsCid);
+  const ipfsResp = await ipfsUtil.getNftInfoForIpfsCid(fetch, bananojs, ipfsCid);
   loggingUtil.debug(ACTION, 'getNftInfoForIpfsCid', 'ipfsResp', ipfsResp);
   if (!ipfsResp.success) {
     res.send(ipfsResp);
@@ -137,29 +143,42 @@ const getNftAssetsOwners = async (context, req, res) => {
       // owner is who it was sent to.
       const asset_owner = resp.asset_owners[ix];
 
+      const assetRepresentativeAccount = await bananojs.getBananoAccount(asset_owner.asset);
+
       let send_to_owner_hash = asset_owner.asset;
 
       // find the receive block that recieved the send.
       let owner_receive_hash = await getReceiveBlock(fetch, asset_owner.asset, asset_owner.owner, send_to_owner_hash);
-      loggingUtil.log(ACTION, 'getNftAssetsOwners', 'asset', asset_owner.asset, 'send_to_owner_hash', '=>', 'owner_receive_hash', send_to_owner_hash, '=>', owner_receive_hash);
+      loggingUtil.log(ACTION, 'getNftAssetsOwners', 'asset', assetRepresentativeAccount, 'send_to_owner_hash', '=>', 'owner_receive_hash', send_to_owner_hash, '=>', owner_receive_hash);
       while ((send_to_owner_hash !== undefined) && (owner_receive_hash !== undefined)) {
         // looking in the history of asset_owner.owner,
         // starting at the owner_receive_hash (the point the owner received the nft)
         // find the next send block with the representative set to the same nft hash (the asset_owner.asset)
         // and return the hash of the send block, and the new owner.
-        const nextAssetOwner = await getNextAssetOwner(fetch, asset_owner.asset, asset_owner.owner, owner_receive_hash);
+        asset_owner.history.push(
+            {
+              owner: asset_owner.owner,
+              send: send_to_owner_hash,
+              receive: owner_receive_hash,
+            },
+        );
+
+        const nextAssetOwner = await getNextAssetOwner(fetch, bananojs, assetRepresentativeAccount, asset_owner.owner, owner_receive_hash);
         if (nextAssetOwner !== undefined) {
           loggingUtil.log(ACTION, 'getNftAssetsOwners', 'asset_owner', '=>', 'nextAssetOwner', asset_owner, '=>', nextAssetOwner);
-          asset_owner.history.push(
-              {
-                owner: asset_owner.owner,
-                send: send_to_owner_hash,
-                receive: owner_receive_hash,
-              },
-          );
           asset_owner.owner = nextAssetOwner.owner;
           send_to_owner_hash = nextAssetOwner.send;
           owner_receive_hash = await getReceiveBlock(fetch, asset_owner.asset, asset_owner.owner, send_to_owner_hash);
+          if (owner_receive_hash === undefined) {
+            // show an entry in history if it is sent but not recieved
+            asset_owner.history.push(
+                {
+                  owner: asset_owner.owner,
+                  send: send_to_owner_hash,
+                  receive: '',
+                },
+            );
+          }
         } else {
           send_to_owner_hash = undefined;
           owner_receive_hash = undefined;
@@ -177,7 +196,7 @@ const addAction = (actions) => {
   actions[ACTION] = getNftAssetsOwners;
 };
 
-const getNextAssetOwner = async (fetch, assetRepresentativeAccount, owner, owner_receive_hash) => {
+const getNextAssetOwner = async (fetch, bananojs, assetRepresentativeAccount, owner, owner_receive_hash) => {
   const histBody = {
     action: 'account_history',
     account: owner,

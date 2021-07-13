@@ -14,12 +14,24 @@ const config = require('./config.json');
 const configOverride = require('../config.json');
 
 const loggingUtil = {};
-loggingUtil.log = console.log;
+loggingUtil.isLogEnabled = () => {
+  return false;
+};
+if (loggingUtil.isLogEnabled()) {
+  loggingUtil.log = console.log;
+} else {
+  loggingUtil.log = () => {};
+}
+
 loggingUtil.isDebugEnabled = () => {
   return false;
 };
-loggingUtil.debug = () => {};
-// loggingUtil.debug = console.log;
+if (loggingUtil.isDebugEnabled()) {
+  loggingUtil.debug = console.log;
+} else {
+  loggingUtil.debug = () => {};
+}
+
 loggingUtil.trace = console.trace;
 
 
@@ -58,6 +70,7 @@ const addModules = () => {
   modules.push(require('./actions/get-pinata-api-url.js'));
   modules.push(require('./actions/get-ipfs-api-url.js'));
   modules.push(require('./actions/get-nft-assets-owners.js'));
+  modules.push(require('./actions/get-nft-info.js'));
   modules.push(require('./ipfs-util.js'));
 };
 

@@ -434,41 +434,49 @@ window.updateAccountInfo = async () => {
 window.checkOwnership = async () => {
   console.log('checkOwnership');
   const cid = document.getElementById('cid').value.trim();
-  const response = await fetch('/', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: `{"action": "get_nft_assets_owners", "ipfs_cid":"${cid}"}`,
-  });
-  console.log('checkOwnership', response);
-  const responseJson = await response.json();
-  let html = '';
-  if (responseJson.success) {
-    html = `<span><strong>Success! owner is ${responseJson.owner}</strong>`;
-    if (responseJson.asset_owners !== undefined) {
-      html += '<span class="bordered container column">';
-      html += `<span><h2>owners</h2></span>`;
-      responseJson.asset_owners.forEach((asset_owner) => {
-        html += `<span>${asset_owner.asset}=>${asset_owner.owner}</span>`;
-        asset_owner.history.forEach((historical_owner) => {
-          html += `<span>${asset_owner.send}=>${asset_owner.receive}=${asset_owner.owner}</span>`;
+  ownershipInfo.innerHTML = 'pending...';
+  const callback = async () => {
+    const response = await fetch('/', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: `{"action": "get_nft_assets_owners", "ipfs_cid":"${cid}"}`,
+    });
+    console.log('checkOwnership', response);
+    const responseJson = await response.json();
+    let html = '';
+    if (responseJson.success) {
+      html = `<span><strong>Success!</strong>`;
+      if (responseJson.asset_owners !== undefined) {
+        html += '<span class="bordered container column">';
+        html += `<span><h2>owners</h2></span>`;
+        for (let asset_owner_ix = 0; asset_owner_ix < responseJson.asset_owners.length; asset_owner_ix++) {
+          const asset_owner = responseJson.asset_owners[asset_owner_ix];
+          const assetAccount = await window.bananocoinBananojs.getBananoAccount(asset_owner.asset);
+          html += `<span>Asset:${asset_owner.asset}</span>`;
+          html += `<span>Asset Owner:${asset_owner.owner}</span>`;
+          html += `<span>Asset Account:${assetAccount}</span>`;
+          asset_owner.history.forEach((historical_owner) => {
+            html += `<span>${historical_owner.send}=>${historical_owner.receive}=${historical_owner.owner}</span>`;
+          });
+        }
+        html += '</span>';
+      }
+    } else {
+      html = `<span><strong>Failure!</strong></span>.`;
+      if (responseJson.errors !== undefined) {
+        html += '<span class="bordered container column">';
+        html += `<span><h2>errors</h2></span>`;
+        responseJson.errors.forEach((error) => {
+          html += `<span>${error}</span>`;
         });
-      });
-      html += '</span>';
+        html += '</span>';
+      }
     }
-  } else {
-    html = `<span><strong>Failure!</strong></span>.`;
-    if (responseJson.errors !== undefined) {
-      html += '<span class="bordered container column">';
-      html += `<span><h2>errors</h2></span>`;
-      responseJson.errors.forEach((error) => {
-        html += `<span>${error}</span>`;
-      });
-      html += '</span>';
-    }
-  }
-  ownershipInfo.innerHTML = html;
+    ownershipInfo.innerHTML = html;
+  };
+  setTimeout(callback, 0);
 };
 
 window.checkCid = async () => {
