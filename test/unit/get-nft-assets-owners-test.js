@@ -26,7 +26,7 @@ const goodAssetRep = 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrf
 
 const DEBUG = false;
 
-const LOG = false;
+const LOG = true;
 
 const config = {
   fetchTimeout: 0,
@@ -212,14 +212,14 @@ describe(actionUtil.ACTION, () => {
           type: 'receive',
           account: goodOwner3,
           hash: goodReceiveHash3,
-          representative: goodSendHash4,
+          representative: goodOwner6,
           link: goodSendHash4,
         },
         {
           type: 'send',
           account: goodOwner3,
           hash: goodSendHash6,
-          representative: goodSendHash4,
+          representative: goodOwner6,
           link: goodLink,
         },
       ],
@@ -230,7 +230,7 @@ describe(actionUtil.ACTION, () => {
           type: 'receive',
           account: goodOwner4,
           hash: goodReceiveHash5,
-          representative: goodSendHash4,
+          representative: goodOwner6,
           link: goodSendHash4,
         },
       ],
@@ -248,11 +248,18 @@ describe(actionUtil.ACTION, () => {
       asset_owners: [
         {
           asset: goodSendHash4,
-          history: [{
-            'owner': goodOwner4,
-            'receive': goodReceiveHash3,
-            'send': goodSendHash4,
-          }],
+          history: [
+            {
+              'owner': goodOwner4,
+              'receive': goodReceiveHash3,
+              'send': goodSendHash4,
+            },
+            {
+              'owner': goodOwner6,
+              'receive': '',
+              'send': goodReceiveHash3,
+            },
+          ],
           owner: goodOwner6,
         },
       ],
