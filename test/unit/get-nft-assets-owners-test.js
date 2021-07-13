@@ -26,7 +26,7 @@ const goodAssetRep = 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrf
 
 const DEBUG = false;
 
-const LOG = true;
+const LOG = false;
 
 const config = {
   fetchTimeout: 0,
