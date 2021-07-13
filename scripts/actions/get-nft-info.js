@@ -3,7 +3,7 @@
 const bs58 = require('bs58');
 
 // modules
-const ipfsUtil = require('../ipfs-util.js')
+const ipfsUtil = require('../ipfs-util.js');
 
 // constants
 const ACTION = 'get_nft_info';
@@ -60,7 +60,7 @@ const getNftInfo = async (context, req, res) => {
   if (bananojs === undefined) {
     throw Error('context.bananojs is required');
   }
-  
+
   /* istanbul ignore if */
   if (req === undefined) {
     throw Error('req is required');
@@ -80,7 +80,7 @@ const getNftInfo = async (context, req, res) => {
   const ipfsCid = req.body.ipfs_cid;
   const resp = await ipfsUtil.getNftInfoForIpfsCid(fetch, bananojs, ipfsCid);
   res.send(resp);
-}
+};
 
 const addAction = (actions) => {
   actions[ACTION] = getNftInfo;
