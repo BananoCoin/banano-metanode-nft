@@ -14,6 +14,7 @@ const config = require('./config.json');
 const configOverride = require('../config.json');
 
 const loggingUtil = {};
+loggingUtil.info = console.log;
 loggingUtil.isLogEnabled = () => {
   return false;
 };
@@ -42,7 +43,7 @@ let instance;
 /* eslint-enable no-unused-vars */
 
 const init = async () => {
-  loggingUtil.log('STARTED init');
+  loggingUtil.info('STARTED init');
 
   overrideConfig();
 
@@ -62,7 +63,7 @@ const init = async () => {
 
   process.on('SIGINT', closeProgram);
 
-  loggingUtil.log('SUCCESS init');
+  loggingUtil.info('SUCCESS init');
 };
 
 const addModules = () => {
@@ -82,13 +83,13 @@ const initModules = async () => {
 };
 
 const deactivateModules = async () => {
-  loggingUtil.log('STARTED deactivate');
+  loggingUtil.info('STARTED deactivate');
   const reverseModules = modules.slice().reverse();
   for (let moduleIx = 0; moduleIx < reverseModules.length; moduleIx++) {
     const item = reverseModules[moduleIx];
     await item.deactivate(config, loggingUtil);
   }
-  loggingUtil.log('SUCCESS deactivate');
+  loggingUtil.info('SUCCESS deactivate');
 };
 
 const initServer = () => {
@@ -105,7 +106,7 @@ const initServer = () => {
   }));
   app.use((err, req, res, next) => {
     if (err) {
-      loggingUtil.log(dateUtil.getDate(), 'error', req.url, err.message, err.body);
+      loggingUtil.info(dateUtil.getDate(), 'error', req.url, err.message, err.body);
       res.send('');
     } else {
       next();
@@ -166,7 +167,7 @@ const initServer = () => {
     if (err) {
       loggingUtil.error('ERROR', err);
     }
-    loggingUtil.log('listening on PORT', config.webPort);
+    loggingUtil.info('listening on PORT', config.webPort);
   });
 
   const io = require('socket.io')(server);
@@ -180,9 +181,9 @@ const initServer = () => {
 };
 
 const closeProgram = async () => {
-  console.log('STARTED closing program.');
+  console.info('STARTED closing program.');
   await deactivateModules();
-  console.log('SUCCESS closing program.');
+  console.info('SUCCESS closing program.');
   process.exit(0);
 };
 
@@ -210,6 +211,6 @@ const overrideConfig = () => {
 
 init()
     .catch((e) => {
-      console.log('FAILURE init.', e.message);
+      console.info('FAILURE init.', e.message);
       console.trace('FAILURE init.', e);
     });
