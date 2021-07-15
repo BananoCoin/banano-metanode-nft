@@ -57,12 +57,6 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
       const {timeout = config.fetchTimeout} = options;
 
       const controller = new AbortController();
-      // const signal = controller.signal;
-      // signal.addEventListener('abort', () => {
-      //   console.log('getNftInfoForIpfsCid', 'aborted');
-      //   resolve({'aborted': true});
-      //   return false;
-      // });
       const id = setTimeout(() => controller.abort(), timeout);
 
       loggingUtil.debug('getNftInfoForIpfsCid', 'fetch');
@@ -76,7 +70,7 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
             if (error.message == 'The user aborted a request.') {
               error.message = `timeout waiting for response from IPFS CID lookup`;
             }
-            resolve({status: 408, statusText: error.message});
+            resolve({status: 408, statusText: error.message, headers: {get: () => {}}});
           })
           .then((response) => {
             loggingUtil.debug('getNftInfoForIpfsCid', 'response', response);
@@ -161,20 +155,14 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
           resp.json.ipfs_cid_hex = bytes.toString('hex');
           resp.json.ipfs_cid_hex_base58 = bs58.encode(Buffer.from(bytes));
 
-          const regExp = new RegExp('^1220.{64}$');
+          const regExp = new RegExp('^1220[0123456789abcdefABCDEF]{64}$');
           if (!regExp.test(resp.json.ipfs_cid_hex)) {
             resp.success = false;
             // check https://github.com/multiformats/js-cid
-            resp.errors.push(`ipfs_cid_hex:'${resp.json.ipfs_cid_hex}' not 64 characters after prefix 1220, ${resp.json.ipfs_cid_hex.length}`);
+            resp.errors.push(`ipfs_cid_hex:'${resp.json.ipfs_cid_hex}' not 64 hex characters after prefix 1220, ${resp.json.ipfs_cid_hex.length}`);
           } else {
             resp.json.new_representative = resp.json.ipfs_cid_hex.substring(4);
-            const regExp = new RegExp('^[0123456789abcdefABCDEF]{64}$');
-            if (!regExp.test(resp.json.new_representative)) {
-              resp.success = false;
-              resp.errors.push(`new_representative:'${resp.json.new_representative}' not hex 64 characters, ${resp.json.new_representative.length}`);
-            } else {
-              resp.json.new_representative_account = await bananojs.getBananoAccount(resp.json.new_representative);
-            }
+            resp.json.new_representative_account = await bananojs.getBananoAccount(resp.json.new_representative);
           }
         }
       }

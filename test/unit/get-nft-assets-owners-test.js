@@ -19,6 +19,8 @@ const badJsonIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQBADJSON';
 const badMissingJsonIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUBAD2MISSINGJSON';
 const badJsonBase58Cid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfBADJSONBASE58';
 const badJsonBase58ShortCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knBADJSONBASE58SHORT';
+const badAbortIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAABORT';
+const badAbortOtherIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciqABORTOTHER';
 const goodHead = '0000000000000000000000000000000000000000000000000000000000000000';
 const goodLink = '0000000000000000000000000000000000000000000000000000000000000001';
 const goodOwner4link = '0000000000000000000000000000000000000000000000000000000000000002';
@@ -250,6 +252,17 @@ describe(actionUtil.ACTION, () => {
                 };
               },
             });
+          });
+        }
+        if (resource == `${config.ipfsApiUrl}/${badAbortIpfsCid}`) {
+          return new Promise(async (resolve, reject) => {
+            reject(Error('The user aborted a request.'));
+          });
+        }
+
+        if (resource == `${config.ipfsApiUrl}/${badAbortOtherIpfsCid}`) {
+          return new Promise(async (resolve, reject) => {
+            reject(Error('The user aborted a request with a wierd message.'));
           });
         }
 
@@ -579,7 +592,7 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       'content_type': 'application/json',
       'errors': [
-        'ipfs_cid_hex:\'500080c4b27277b22c373e4f0dbbc86091707c6cc1745a1b3efcf66664bbde9ceb\' not 64 characters after prefix 1220, 66',
+        'ipfs_cid_hex:\'500080c4b27277b22c373e4f0dbbc86091707c6cc1745a1b3efcf66664bbde9ceb\' not 64 hex characters after prefix 1220, 66',
         'mint_previous:\'AB\' not 64 hex characters',
       ],
       'ipfs_cid': badJsonBase58ShortCid,
@@ -595,6 +608,64 @@ describe(actionUtil.ACTION, () => {
         'version': '',
       },
       'status': 200,
+      'success': false,
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 badAbortIpfsCid timeout abort', async () => {
+    const context = getContext([{
+      head: goodHead,
+      history: [
+        {
+          hash: '',
+          representative: '',
+          link: '',
+        },
+      ]},
+    ]);
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(context, badAbortIpfsCid);
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      'errors': [
+        'timeout waiting for response from IPFS CID lookup',
+      ],
+      'ipfs_cid': badAbortIpfsCid,
+      'status': 408,
+      'success': false,
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 badAbortOtherIpfsCid timeout abort', async () => {
+    const context = getContext([{
+      head: goodHead,
+      history: [
+        {
+          hash: '',
+          representative: '',
+          link: '',
+        },
+      ]},
+    ]);
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(context, badAbortOtherIpfsCid);
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      'errors': [
+        'The user aborted a request with a wierd message.',
+      ],
+      'ipfs_cid': badAbortOtherIpfsCid,
+      'status': 408,
       'success': false,
     };
     loggingUtil.debug('actualResponse', actualResponse);
