@@ -55,37 +55,43 @@ these require understanding the multisig protocol, and adding it to bananojs, so
 
         ```js
         {
-        "command":"mint_nft",
-        "version":"1.0.0",
-        "title":"Camo Banano Volcano",
-        "issuer":"ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
-        "max_supply":"1","ipfs_cid":"QmbzTMo42KADUbLwc43KR9Se6aV3N6wfKqFbSr2qN1gJqR",
-        "mint_previous":"B7EE81B6B21C96B12A0FD84F8464C7321F932066E989D7F6EBDD08F5B82DCBD8"
+          "command":"mint_nft",
+          "version":"1.0.0",
+          "title":"Camo Banano Volcano",
+          "issuer":"ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+          "max_supply":"1","ipfs_cid":"QmbzTMo42KADUbLwc43KR9Se6aV3N6wfKqFbSr2qN1gJqR",
+          "mint_previous":"B7EE81B6B21C96B12A0FD84F8464C7321F932066E989D7F6EBDD08F5B82DCBD8"
         }
         ```
+
+        since only ban_1nft...nejq can create blocks after block B7EE...CBD8 its straightforward to detect forgeries.
+
+        However, anyone can copy/paste the json and set their own issuer and previous, so anyone can create forgeries pointing to the art asset (Qmbz...gJqR)
+
+        So it's important to check both the owner nd the issuer to determine that you do not have a forgery,.
 
     2.  publish the JSON to IPFS.
 
         This should be straightforward, using the pinata api, or other simmilar services.
 
         an example of a published Template JSON is here:
-        
-        https://gateway.pinata.cloud/ipfs/QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS
+
+        <https://gateway.pinata.cloud/ipfs/QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS>
 
 ### minting a NFT asset
 
   Minting an asset consists of the following steps:
 
-  1. create a banano block that does both a send, and a representative change at the same time.
+1.  create a banano block that does both a send, and a representative change at the same time.
 
-      Set the representative to the ipfs_cid of the template. This will require you to base58 decode the CID, encode it in hex, and remove '1220' from the beginning, leaving you with a 64 character hex string.
+    Set the representative to the ipfs_cid of the template. This will require you to base58 decode the CID, encode it in hex, and remove '1220' from the beginning, leaving you with a 64 character hex string.
 
-  2. ask the metadata node to check who owns the CID.
+2.  ask the metadata node to check who owns the CID.
 
-      this will cause the metadata node to track sends with that rep change, starting with the mint_previous block, and ending at whoever owns the asset, at the end of the send+rep chain.
+    this will cause the metadata node to track sends with that rep change, starting with the mint_previous block, and ending at whoever owns the asset, at the end of the send+rep chain.
 
 ## checking a NFT asset owner.
 
-  1. a send + rep change changes the NFT's owner.
+1.  a send + rep change changes the NFT's owner.
 
-  The metanode will look for send blocks with the given representative, and trace the NFT sends through the account history on the block chain. If the chain of sends ends, the last recipient of a send is the owner of the NFT (even if they have not confirmed the receipt by publishing a receive block)
+    The metanode will look for send blocks with the given representative, and trace the NFT sends through the account history on the block chain. If the chain of sends ends, the last recipient of a send is the owner of the NFT (even if they have not confirmed the receipt by publishing a receive block)
