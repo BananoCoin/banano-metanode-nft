@@ -51,9 +51,26 @@ these require understanding the multisig protocol, and adding it to bananojs, so
 
         The ipfs_cid is the Content Identifier (CID) on the IPFS network that identifies the actual artwork or data that this JSON metadata makes into an NFT.
 
+        for example, this is the JSON of the first template ever made:
+
+        ```js
+        {
+        "command":"mint_nft",
+        "version":"1.0.0",
+        "title":"Camo Banano Volcano",
+        "issuer":"ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+        "max_supply":"1","ipfs_cid":"QmbzTMo42KADUbLwc43KR9Se6aV3N6wfKqFbSr2qN1gJqR",
+        "mint_previous":"B7EE81B6B21C96B12A0FD84F8464C7321F932066E989D7F6EBDD08F5B82DCBD8"
+        }
+        ```
+
     2.  publish the JSON to IPFS.
 
         This should be straightforward, using the pinata api, or other simmilar services.
+
+        an example of a published Template JSON is here:
+        
+        https://gateway.pinata.cloud/ipfs/QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS
 
 ### minting a NFT asset
 
