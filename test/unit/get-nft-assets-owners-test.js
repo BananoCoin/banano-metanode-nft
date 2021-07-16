@@ -29,9 +29,14 @@ const goodSendHash4 = '000000000000000000000000000000000000000000000000000000000
 const goodReceiveHash5 = '0000000000000000000000000000000000000000000000000000000000000005';
 const goodSendHash6 = '0000000000000000000000000000000000000000000000000000000000000006';
 const nextHead = '0000000000000000000000000000000000000000000000000000000000000007';
+const goodReceiveHash8 = '0000000000000000000000000000000000000000000000000000000000000008';
+const goodSendHashA = '000000000000000000000000000000000000000000000000000000000000000A';
+const goodOwnerBlink = '000000000000000000000000000000000000000000000000000000000000000B';
+const goodReceiveHashC = '000000000000000000000000000000000000000000000000000000000000000C';
 const goodOwner3 = 'ban_1111111111111111111111111111111111111111111111111113b8661hfk';
 const goodOwner4 = 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c';
 const goodOwner6 = 'ban_1111111111111111111111111111111111111111111111111116i3bqjdmq';
+const goodOwnerB = 'ban_111111111111111111111111111111111111111111111111111d7qqrs8tn';
 const goodAssetRep = 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrfg8egjn';
 
 const DEBUG = false;
@@ -275,11 +280,29 @@ describe(actionUtil.ACTION, () => {
               const head = historiesElt.head;
               const account = historiesElt.account;
               loggingUtil.debug('histories check', body.head, head, body.account, account);
-              if ((body.head == head) || (body.account == account)) {
+
+              let match = false;
+              if (body.head !== undefined) {
+                if (body.head == head) {
+                  loggingUtil.debug('histories match head', body.head, head);
+                  match = true;
+                }
+              }
+              if (body.account !== undefined) {
+                if (body.account == account) {
+                  loggingUtil.debug('histories match account', body.account, account);
+                  match = true;
+                }
+              }
+
+              if (match) {
                 return new Promise(async (resolve) => {
                   resolve({
                     json: () => {
                       const history = historiesElt.history;
+                      // if(history == undefined) {
+                      //   console.trace('history', body.account, history == undefined);
+                      // }
                       return {
                         history: history,
                       };
@@ -431,26 +454,7 @@ describe(actionUtil.ACTION, () => {
         history: [
           {
             type: 'receive',
-            account: goodOwner3,
             hash: goodReceiveHash3,
-            representative: goodOwner6,
-            link: goodSendHash4,
-          },
-          {
-            type: 'send',
-            account: goodOwner3,
-            hash: goodSendHash6,
-            representative: goodOwner6,
-            link: goodLink,
-          },
-        ],
-      }, {
-        account: goodOwner6,
-        history: [
-          {
-            type: 'receive',
-            account: goodOwner4,
-            hash: goodReceiveHash5,
             representative: goodOwner6,
             link: goodSendHash4,
           },
@@ -474,13 +478,8 @@ describe(actionUtil.ACTION, () => {
               'receive': goodReceiveHash3,
               'send': goodSendHash4,
             },
-            {
-              'owner': goodOwner6,
-              'receive': '',
-              'send': goodReceiveHash3,
-            },
           ],
-          owner: goodOwner6,
+          owner: goodOwner4,
         },
       ],
     };
@@ -503,18 +502,152 @@ describe(actionUtil.ACTION, () => {
       },
       {
         account: goodOwner4,
+      },
+    ]);
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(context, goodIpfsCid);
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      success: true,
+      asset_owners: [
+        {
+          asset: goodSendHash4,
+          history: [],
+          owner: goodOwner4,
+        },
+      ],
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 goodIpfsCid two owners sent to unopened account', async () => {
+    const context = getContext([
+      {
+        head: goodHead,
+        history: [
+          {
+            hash: goodSendHash4,
+            representative: goodAssetRep,
+            link: goodOwner4link,
+            type: 'send',
+          },
+        ],
+      },
+      {
+        account: goodOwner4,
         history: [
           {
             type: 'receive',
-            account: goodOwner3,
+            hash: goodReceiveHashC,
+            representative: goodOwner6,
+            link: '',
+          },
+          {
+            type: 'receive',
             hash: goodReceiveHash3,
+            representative: goodOwner6,
             link: goodSendHash4,
           },
           {
-            type: 'send',
-            account: goodOwner3,
             hash: goodSendHash6,
-            link: goodLink,
+            representative: goodOwner4,
+            link: goodOwnerBlink,
+            type: 'send',
+          },
+          {
+            hash: goodSendHash6,
+            representative: goodOwner6,
+            link: goodOwnerBlink,
+            type: 'send',
+          },
+        ],
+      },
+      {
+        account: goodOwnerB,
+      },
+    ]);
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(context, goodIpfsCid);
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      success: true,
+      asset_owners: [
+        {
+          asset: goodSendHash4,
+          owner: goodOwnerB,
+          history: [
+            {
+              owner: goodOwner4,
+              receive: goodReceiveHash3,
+              send: goodSendHash4,
+            },
+            {
+              owner: goodOwnerB,
+              receive: '',
+              send: goodSendHash6,
+            },
+          ],
+        },
+      ],
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 goodIpfsCid two owners with receive', async () => {
+    const context = getContext([
+      {
+        head: goodHead,
+        history: [
+          {
+            hash: goodSendHash4,
+            representative: goodAssetRep,
+            link: goodOwner4link,
+            type: 'send',
+          },
+        ],
+      },
+      {
+        account: goodOwner4,
+        history: [
+          {
+            type: 'receive',
+            hash: goodReceiveHash3,
+            representative: goodOwner6,
+            link: goodSendHash4,
+          },
+          {
+            hash: goodSendHash6,
+            representative: goodOwner4,
+            link: goodOwnerBlink,
+            type: 'send',
+          },
+          {
+            hash: goodSendHashA,
+            representative: goodOwner6,
+            link: goodOwnerBlink,
+            type: 'send',
+          },
+        ],
+      },
+      {
+        head: goodReceiveHash8,
+      },
+      {
+        account: goodOwnerB,
+        history: [
+          {
+            type: 'receive',
+            hash: goodReceiveHash8,
+            representative: goodOwner6,
+            link: goodSendHashA,
           },
         ],
       },
@@ -530,14 +663,19 @@ describe(actionUtil.ACTION, () => {
       asset_owners: [
         {
           asset: goodSendHash4,
+          owner: goodOwnerB,
           history: [
             {
               owner: goodOwner4,
               receive: goodReceiveHash3,
               send: goodSendHash4,
             },
+            {
+              owner: goodOwnerB,
+              receive: goodReceiveHash8,
+              send: goodSendHashA,
+            },
           ],
-          owner: goodOwner4,
         },
       ],
     };

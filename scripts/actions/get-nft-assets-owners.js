@@ -145,46 +145,53 @@ const getNftAssetsOwners = async (context, req, res) => {
 
       const assetRepresentativeAccount = await bananojs.getBananoAccount(asset_owner.asset);
 
-      let send_to_owner_hash = asset_owner.asset;
+      let sendHash = asset_owner.asset;
 
       // find the receive block that recieved the send.
-      let owner_receive_hash = await getReceiveBlock(fetch, asset_owner.asset, asset_owner.owner, send_to_owner_hash);
+      let receiveHash = await getReceiveBlock(fetch, asset_owner.owner, sendHash);
       loggingUtil.log(ACTION, 'getNftAssetsOwners',
           'asset', assetRepresentativeAccount,
-          'send_to_owner_hash', '=>', 'owner_receive_hash',
-          send_to_owner_hash, '=>', owner_receive_hash);
-      while ((send_to_owner_hash !== undefined) && (owner_receive_hash !== undefined)) {
+          'sendHash', '=>', 'receiveHash',
+          sendHash, '=>', receiveHash);
+      while (receiveHash !== undefined) {
         // looking in the history of asset_owner.owner,
-        // starting at the owner_receive_hash (the point the owner received the nft)
+        // starting at the receiveHash (the point the owner received the nft)
         // find the next send block with the representative set to the same nft hash (the asset_owner.asset)
         // and return the hash of the send block, and the new owner.
         asset_owner.history.push(
             {
               owner: asset_owner.owner,
-              send: send_to_owner_hash,
-              receive: owner_receive_hash,
+              send: sendHash,
+              receive: receiveHash,
             },
         );
 
-        const nextAssetOwner = await getNextAssetOwner(fetch, bananojs, assetRepresentativeAccount, asset_owner.owner, owner_receive_hash);
+        const nextAssetOwner = await getNextAssetOwner(fetch, bananojs, assetRepresentativeAccount, asset_owner.owner, receiveHash);
         if (nextAssetOwner !== undefined) {
           loggingUtil.log(ACTION, 'getNftAssetsOwners', 'asset_owner', '=>', 'nextAssetOwner', asset_owner, '=>', nextAssetOwner);
           asset_owner.owner = nextAssetOwner.owner;
-          send_to_owner_hash = nextAssetOwner.send;
-          owner_receive_hash = await getReceiveBlock(fetch, asset_owner.asset, asset_owner.owner, send_to_owner_hash);
-          if (owner_receive_hash === undefined) {
+          sendHash = nextAssetOwner.send;
+          receiveHash = await getReceiveBlock(fetch, nextAssetOwner.owner, nextAssetOwner.send);
+          loggingUtil.log(ACTION, 'getNftAssetsOwners', 'asset_owner', '=>', 'nextAssetOwner', asset_owner, '=>', nextAssetOwner, 'receiveHash', receiveHash);
+
+          const isReceiveHashUndefined = () => {
+            const retval = receiveHash === undefined;
+            loggingUtil.log(ACTION, 'isReceiveHashUndefined', retval, 'nextAssetOwner', nextAssetOwner);
+            return retval;
+          };
+
+          if (isReceiveHashUndefined()) {
             // show an entry in history if it is sent but not recieved
             asset_owner.history.push(
                 {
                   owner: asset_owner.owner,
-                  send: send_to_owner_hash,
+                  send: sendHash,
                   receive: '',
                 },
             );
           }
         } else {
-          send_to_owner_hash = undefined;
-          owner_receive_hash = undefined;
+          receiveHash = undefined;
         }
       }
     }
@@ -199,48 +206,7 @@ const addAction = (actions) => {
   actions[ACTION] = getNftAssetsOwners;
 };
 
-const getNextAssetOwner = async (fetch, bananojs, assetRepresentativeAccount, owner, owner_receive_hash) => {
-  const histBody = {
-    action: 'account_history',
-    account: owner,
-    count: -1,
-    raw: true,
-    head: owner_receive_hash,
-    reverse: true,
-  };
-  const histRequest = {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify(histBody),
-  };
-  loggingUtil.debug(ACTION, 'histRequest', histRequest);
-  const histResponse = await fetch(config.bananodeApiUrl, histRequest);
-  const histResponseJson = await histResponse.json();
-  if (histResponseJson.history !== undefined) {
-    for (let ix = 0; ix < histResponseJson.history.length; ix++) {
-      const historyElt = histResponseJson.history[ix];
-      loggingUtil.log(ACTION, 'getNextAssetOwner', ix, 'account', historyElt.account);
-      loggingUtil.log(ACTION, 'getNextAssetOwner', ix, 'owner_receive_hash', owner_receive_hash);
-      loggingUtil.log(ACTION, 'getNextAssetOwner', ix, 'representative', historyElt.representative);
-      loggingUtil.log(ACTION, 'getNextAssetOwner', ix, 'assetRepresentativeAccount', assetRepresentativeAccount);
-      if (historyElt.representative == assetRepresentativeAccount) {
-        const linkAccount = await bananojs.getBananoAccount(historyElt.link);
-        // loggingUtil.log(ACTION, 'historyElt', ix, historyElt);
-        loggingUtil.log(ACTION, 'getNextAssetOwner', ix, 'return', historyElt.hash, owner, '=>', linkAccount);
-        return {
-          send: historyElt.hash,
-          owner: linkAccount,
-        };
-      }
-    }
-  }
-  return undefined;
-};
-
-const getReceiveBlock = async (fetch, asset, owner, send_to_owner_hash) => {
+const getReceiveBlock = async (fetch, owner, sendHash) => {
   const histBody = {
     action: 'account_history',
     account: owner,
@@ -262,13 +228,78 @@ const getReceiveBlock = async (fetch, asset, owner, send_to_owner_hash) => {
   if (histResponseJson.history !== undefined) {
     for (let ix = 0; ix < histResponseJson.history.length; ix++) {
       const historyElt = histResponseJson.history[ix];
-      if (historyElt.link == send_to_owner_hash) {
-      // loggingUtil.log(ACTION, 'historyElt', ix, historyElt);
-        loggingUtil.log(ACTION, 'getReceiveBlock', send_to_owner_hash, '=>', historyElt.hash);
+      loggingUtil.log(ACTION, 'getReceiveBlock', 'historyElt', ix, owner, '=>', sendHash, 'link', historyElt, 'match', (historyElt.link == sendHash));
+
+      const isLinkSendHash = () => {
+        const retval = historyElt.link == sendHash;
+        loggingUtil.log(ACTION, 'isLinkSendHash', retval, historyElt.link, sendHash);
+        return retval;
+      };
+
+      if (isLinkSendHash()) {
+        loggingUtil.log(ACTION, 'getReceiveBlock', sendHash, '=>', historyElt.hash);
         return historyElt.hash;
       }
     }
   }
+  loggingUtil.log(ACTION, 'getReceiveBlock', sendHash, 'no receive block');
+  return undefined;
+};
+
+const getNextAssetOwner = async (fetch, bananojs, assetRepresentativeAccount, owner, receiveHash) => {
+  const histBody = {
+    action: 'account_history',
+    account: owner,
+    count: -1,
+    raw: true,
+    head: receiveHash,
+    reverse: true,
+  };
+  const histRequest = {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(histBody),
+  };
+  loggingUtil.debug(ACTION, 'histRequest', histRequest);
+  const histResponse = await fetch(config.bananodeApiUrl, histRequest);
+  const histResponseJson = await histResponse.json();
+  loggingUtil.debug(ACTION, 'histResponseJson', histRequest);
+
+  const isHistoryUndefined = () => {
+    const retval = histResponseJson.history !== undefined;
+    loggingUtil.log(ACTION, 'isHistoryUndefined', retval, owner);
+    return retval;
+  };
+
+  if (isHistoryUndefined()) {
+    for (let ix = 0; ix < histResponseJson.history.length; ix++) {
+      const historyElt = histResponseJson.history[ix];
+      loggingUtil.log(ACTION, 'getNextAssetOwner', ix, 'account', historyElt.account);
+      loggingUtil.log(ACTION, 'getNextAssetOwner', ix, 'receiveHash', receiveHash);
+      loggingUtil.log(ACTION, 'getNextAssetOwner', ix, 'representative', historyElt.representative);
+      loggingUtil.log(ACTION, 'getNextAssetOwner', ix, 'assetRepresentativeAccount', assetRepresentativeAccount);
+      const isHistoryEltSend = () => {
+        const retval = historyElt.type == 'send';
+        loggingUtil.log('isHistoryEltSend', retval, historyElt.type);
+        return retval;
+      };
+      if (isHistoryEltSend()) {
+        if (historyElt.representative == assetRepresentativeAccount) {
+          const linkAccount = await bananojs.getBananoAccount(historyElt.link);
+          // loggingUtil.log(ACTION, 'historyElt', ix, historyElt);
+          loggingUtil.log(ACTION, 'getNextAssetOwner', 'return asset owner', historyElt.hash, owner, '=>', linkAccount);
+          return {
+            send: historyElt.hash,
+            owner: linkAccount,
+          };
+        }
+      }
+    }
+  }
+  loggingUtil.log(ACTION, 'getNextAssetOwner', 'no next asset owner');
   return undefined;
 };
 
