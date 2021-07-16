@@ -413,49 +413,49 @@ describe(actionUtil.ACTION, () => {
     loggingUtil.debug('expectedResponse', expectedResponse);
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
-  it('get status 200 goodIpfsCid one owner', async () => {
-    const context = getContext([{
-      head: goodHead,
-      history: [
-        {
-          hash: goodSendHash4,
-          representative: goodAssetRep,
-          link: goodOwner4link,
-          type: 'send',
-        },
-      ],
-    },
-    {
-      account: goodOwner4,
-      history: [
-        {
-          type: 'receive',
-          account: goodOwner3,
-          hash: goodReceiveHash3,
-          representative: goodOwner6,
-          link: goodSendHash4,
-        },
-        {
-          type: 'send',
-          account: goodOwner3,
-          hash: goodSendHash6,
-          representative: goodOwner6,
-          link: goodLink,
-        },
-      ],
-    }, {
-      account: goodOwner6,
-      history: [
-        {
-          type: 'receive',
-          account: goodOwner4,
-          hash: goodReceiveHash5,
-          representative: goodOwner6,
-          link: goodSendHash4,
-        },
-      ],
-    },
-
+  it('get status 200 goodIpfsCid one owner with receive', async () => {
+    const context = getContext([
+      {
+        head: goodHead,
+        history: [
+          {
+            hash: goodSendHash4,
+            representative: goodAssetRep,
+            link: goodOwner4link,
+            type: 'send',
+          },
+        ],
+      },
+      {
+        account: goodOwner4,
+        history: [
+          {
+            type: 'receive',
+            account: goodOwner3,
+            hash: goodReceiveHash3,
+            representative: goodOwner6,
+            link: goodSendHash4,
+          },
+          {
+            type: 'send',
+            account: goodOwner3,
+            hash: goodSendHash6,
+            representative: goodOwner6,
+            link: goodLink,
+          },
+        ],
+      }, {
+        account: goodOwner6,
+        history: [
+          {
+            type: 'receive',
+            account: goodOwner4,
+            hash: goodReceiveHash5,
+            representative: goodOwner6,
+            link: goodSendHash4,
+          },
+        ],
+      },
     ]);
     let actualResponse;
     try {
@@ -481,6 +481,63 @@ describe(actionUtil.ACTION, () => {
             },
           ],
           owner: goodOwner6,
+        },
+      ],
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 goodIpfsCid one owner no receive', async () => {
+    const context = getContext([
+      {
+        head: goodHead,
+        history: [
+          {
+            hash: goodSendHash4,
+            representative: goodAssetRep,
+            link: goodOwner4link,
+            type: 'send',
+          },
+        ],
+      },
+      {
+        account: goodOwner4,
+        history: [
+          {
+            type: 'receive',
+            account: goodOwner3,
+            hash: goodReceiveHash3,
+            link: goodSendHash4,
+          },
+          {
+            type: 'send',
+            account: goodOwner3,
+            hash: goodSendHash6,
+            link: goodLink,
+          },
+        ],
+      },
+    ]);
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(context, goodIpfsCid);
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      success: true,
+      asset_owners: [
+        {
+          asset: goodSendHash4,
+          history: [
+            {
+              owner: goodOwner4,
+              receive: goodReceiveHash3,
+              send: goodSendHash4,
+            },
+          ],
+          owner: goodOwner4,
         },
       ],
     };
