@@ -28,6 +28,7 @@ const goodReceiveHash3 = '000000000000000000000000000000000000000000000000000000
 const goodSendHash4 = '0000000000000000000000000000000000000000000000000000000000000004';
 const goodReceiveHash5 = '0000000000000000000000000000000000000000000000000000000000000005';
 const goodSendHash6 = '0000000000000000000000000000000000000000000000000000000000000006';
+const nextHead = '0000000000000000000000000000000000000000000000000000000000000007';
 const goodOwner3 = 'ban_1111111111111111111111111111111111111111111111111113b8661hfk';
 const goodOwner4 = 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c';
 const goodOwner6 = 'ban_1111111111111111111111111111111111111111111111111116i3bqjdmq';
@@ -273,11 +274,12 @@ describe(actionUtil.ACTION, () => {
               const historiesElt = histories[historiesIx];
               const head = historiesElt.head;
               const account = historiesElt.account;
-              const history = historiesElt.history;
+              loggingUtil.debug('histories check', body.head, head, body.account, account);
               if ((body.head == head) || (body.account == account)) {
                 return new Promise(async (resolve) => {
                   resolve({
                     json: () => {
+                      const history = historiesElt.history;
                       return {
                         history: history,
                       };
@@ -286,7 +288,10 @@ describe(actionUtil.ACTION, () => {
                 });
               }
             }
+
+            throw Error(`cannot match options.body '${options.body}' with any histories ${JSON.stringify(histories)}`);
           }
+          throw Error(`unknown resource '${resource}'`);
         }
 
         return new Promise(async (resolve) => {
@@ -326,10 +331,67 @@ describe(actionUtil.ACTION, () => {
       history: [
         {
           hash: goodSendHash4,
-          representative: 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrfg8egjn',
+          representative: goodAssetRep,
           link: goodLink,
         },
       ]}, {account: goodOwner3},
+    ]);
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(context, goodIpfsCid);
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      success: true,
+      asset_owners: [
+        {
+          asset: goodSendHash4,
+          history: [],
+          owner: goodOwner3,
+        },
+      ],
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 goodIpfsCid no head history', async () => {
+    const context = getContext([
+      {head: goodHead, history: []},
+    ]);
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(context, goodIpfsCid);
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      success: false,
+      errors: [
+        'no history',
+      ],
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 goodIpfsCid undefined head history', async () => {
+    const context = getContext([
+      {
+        head: goodHead,
+        history: [
+          {
+            hash: goodSendHash4,
+            representative: goodAssetRep,
+            link: goodLink,
+          },
+        ],
+      },
+      {
+        head: nextHead,
+        account: goodOwner3,
+      },
     ]);
     let actualResponse;
     try {
