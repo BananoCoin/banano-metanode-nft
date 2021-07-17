@@ -1,20 +1,26 @@
-let bananoApiUrl;
+import {getRandomHex32} from './lib/randomHex32.js';
+import {addAttributes, addText, addChildElement, hide, show, clear} from './lib/dom.js';
+import {loadSeed, addSeedHideShow, addAccountAndInfo} from './actions/seed-and-account.js';
+import {addNavigation} from './actions/navigation.js';
 
-let pinataApiUrl;
+window.bananoApiUrl = '';
 
-let ipfsApiUrl;
+window.pinataApiUrl = '';
 
-const seedIx = 0;
+window.ipfsApiUrl = '';
 
-const maxPending = 10;
+window.seedIx = 0;
 
-const defaultCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
+window.maxPending = 10;
+
+window.defaultCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
 
 window.onLoad = async () => {
   await loadBananoApiUrl();
   await loadPinataApiUrl();
   await loadIpfsApiUrl();
   loadSeed();
+  addNavigation();
   addSeedHideShow();
   addAccountAndInfo();
   addCidPinInfo();
@@ -34,8 +40,8 @@ const loadBananoApiUrl = async () => {
     body: `{"action": "get_bananode_api_url"}`,
   });
   const responseJson = await response.json();
-  bananoApiUrl = responseJson.bananode_api_url;
-  console.log('loadBananoApiUrl', 'bananoApiUrl', bananoApiUrl);
+  window.bananoApiUrl = responseJson.bananode_api_url;
+  console.log('loadBananoApiUrl', 'bananoApiUrl', window.bananoApiUrl);
 };
 
 const loadPinataApiUrl = async () => {
@@ -47,8 +53,8 @@ const loadPinataApiUrl = async () => {
     body: `{"action": "get_pinata_api_url"}`,
   });
   const responseJson = await response.json();
-  pinataApiUrl = responseJson.pinata_api_url;
-  console.log('loadPinataApiUrl', 'pinataApiUrl', pinataApiUrl);
+  window.pinataApiUrl = responseJson.pinata_api_url;
+  console.log('loadPinataApiUrl', 'pinataApiUrl', window.pinataApiUrl);
 };
 
 const loadIpfsApiUrl = async () => {
@@ -60,73 +66,8 @@ const loadIpfsApiUrl = async () => {
     body: `{"action": "get_ipfs_api_url"}`,
   });
   const responseJson = await response.json();
-  ipfsApiUrl = responseJson.ipfs_api_url;
-  console.log('loadIpfsApiUrl', 'ipfsApiUrl', ipfsApiUrl);
-};
-
-const loadSeed = () => {
-  if (window.localStorage.seed == undefined) {
-    window.localStorage.seed = getRandomHex32();
-  }
-};
-
-const saveSeed = () => {
-  const seed = document.getElementById('seed').value;
-  window.localStorage.seed = seed;
-};
-
-const getRandomHex32 = () => {
-  const array = new Uint32Array(32);
-  window.crypto.getRandomValues(array);
-  const hex = getByteArrayAsHexString(array);
-  return hex;
-};
-
-const getByteArrayAsHexString = (byteArray) => {
-  return Array.prototype.map.call(byteArray, (byte) => {
-    return ('0' + (byte & 0xFF).toString(16)).slice(-2);
-  }).join('');
-};
-
-const addAttributes = (child, attributes) => {
-  if (attributes) {
-    Object.keys(attributes).forEach((attibute) => {
-      const value = attributes[attibute];
-      child.setAttribute(attibute, value);
-    });
-  }
-};
-
-const addText = (parent, childText) => {
-  parent.appendChild(document.createTextNode(childText));
-};
-
-const addChildElement = (parent, childType, attributes) => {
-  // console.log('addChildElement', parent, childType, attributes);
-  const child = document.createElement(childType);
-  parent.appendChild(child);
-  addAttributes(child, attributes);
-  return child;
-};
-
-const hide = (id) => {
-  const elt = document.getElementById(id);
-  if (elt) {
-    elt.style = 'display:none';
-  }
-};
-
-const show = (id) => {
-  const elt = document.getElementById(id);
-  if (elt) {
-    elt.style = '';
-  }
-};
-
-const clear = (parent) => {
-  while (parent.firstChild) {
-    parent.removeChild(parent.firstChild);
-  }
+  window.ipfsApiUrl = responseJson.ipfs_api_url;
+  console.log('loadIpfsApiUrl', 'ipfsApiUrl', window.ipfsApiUrl);
 };
 
 const addOwnerCheck = () => {
@@ -284,151 +225,6 @@ const addCidInfo = () => {
     'id': 'cidInfo',
     'class': 'selectable container column',
   });
-};
-
-const addAccountAndInfo = () => {
-  const wrapperElt = document.getElementById('accountWrapper');
-  addText(addChildElement(wrapperElt, 'h2'), 'Account');
-  addChildElement(wrapperElt, 'div', {
-    'id': 'account',
-    'class': 'selectable',
-  });
-  const accountFormElt = addChildElement(wrapperElt, 'form', {
-    'method': 'POST',
-    'class': '',
-  });
-
-  addText(addChildElement(accountFormElt, 'h2'), 'Account Info');
-  const updateAccountInfoElt = addChildElement(accountFormElt, 'button', {
-    'id': 'update-account-info',
-    'type': 'button',
-    'class': '',
-    'onclick': 'updateAccountInfo();return false;',
-  });
-  addText(updateAccountInfoElt, 'Refresh Account Info');
-  addChildElement(accountFormElt, 'div', {
-    'id': 'accountInfo',
-    'class': 'selectable',
-  });
-};
-
-const addSeedHideShow = () => {
-  const wrapperElt = document.getElementById('seedWrapper');
-  const hideShowElt = addChildElement(wrapperElt, 'form', {
-    'method': 'POST',
-    'class': '',
-    'onsubmit': 'return false;',
-  });
-  const showButtonElt = addChildElement(hideShowElt, 'button', {
-    'id': 'seed-show',
-    'type': 'button',
-    'class': '',
-    'onclick': 'return showSeed();',
-  });
-  addText(showButtonElt, 'Show Seed');
-  const hideButtonElt = addChildElement(hideShowElt, 'button', {
-    'id': 'seed-hide',
-    'type': 'button',
-    'class': '',
-    'style': 'display:none',
-    'onclick': 'return hideSeed();',
-  });
-  addText(hideButtonElt, 'Hide Seed');
-  addChildElement(hideShowElt, 'br');
-  const seedElt = addChildElement(hideShowElt, 'input', {
-    'id': 'seed',
-    'class': '',
-    'type': 'text',
-    'size': '66',
-    'max_length': '64',
-    'value': window.localStorage.seed,
-    'style': 'display:none',
-    'onchange': 'updateSeedAndAccountInfo(); return false;',
-    'oninput': 'updateSeedAndAccountInfo(); return false;',
-  });
-  addChildElement(hideShowElt, 'div', {
-    'id': 'seedError',
-    'style': 'display:none',
-    'class': 'selectable',
-  });
-};
-
-window.updateSeedAndAccountInfo = () => {
-  updateSeed();
-  updateAccountInfo();
-};
-
-const updateSeed = () => {
-  const seedElt = document.querySelector('#seed');
-  const seedErrorElt = document.querySelector('#seedError');
-  window.localStorage.seed = seedElt.value.trim();
-  seedElt.value = window.localStorage.seed;
-  saveSeed();
-  try {
-    const seed = window.localStorage.seed;
-    window.bananocoinBananojs.getBananoAccountFromSeed(seed, seedIx);
-  } catch (error) {
-    console.trace(error);
-    seedErrorElt.innerText = 'error:' + error.message;
-    accountElt.innerText = 'seed error';
-    accountInfoElt.innerText = 'seed error';
-    return;
-  }
-};
-
-window.updateAccountInfo = async () => {
-  const seed = window.localStorage.seed;
-  const accountElt = document.querySelector('#account');
-  const accountInfoElt = document.querySelector('#accountInfo');
-  const seedErrorElt = document.querySelector('#seedError');
-  window.bananocoinBananojs.setBananodeApiUrl(bananoApiUrl);
-  clear(accountInfoElt);
-  seedErrorElt.innerText = '';
-  let account;
-  try {
-    account = await window.bananocoinBananojs.getBananoAccountFromSeed(seed, seedIx);
-  } catch (error) {
-    console.trace(error);
-    seedErrorElt.innerText = 'error:' + error.message;
-    accountElt.innerText = 'seed error';
-    accountInfoElt.innerText = 'seed error';
-    return;
-  }
-  accountElt.innerText = account;
-  const representative = account;
-
-  let innerText = '';
-  const accountInfo = await window.bananocoinBananojs.getAccountInfo(account, true);
-  if (accountInfo.error !== undefined) {
-    innerText = accountInfo.error;
-  } else {
-    const balanceParts = await window.bananocoinBananojs.getBananoPartsFromRaw(accountInfo.balance);
-    const balanceDescription = await window.bananocoinBananojs.getBananoPartsDescription(balanceParts);
-    innerText = 'Balance ' + balanceDescription;
-
-    if (balanceParts.raw == '0') {
-      delete balanceParts.raw;
-    }
-  }
-  const pending = await window.bananocoinBananojs.getAccountsPending([account], maxPending, true);
-  if (pending.error !== undefined) {
-    innerText += '\n';
-    innerText += pending.error;
-  }
-  const pendingBlocks = pending.blocks[account];
-
-  const hashes = [...Object.keys(pendingBlocks)];
-  if (hashes.length !== 0) {
-    const hash = hashes[0];
-    const response = await window.bananocoinBananojs.receiveBananoDepositsForSeed(seed, seedIx, representative, hash);
-    if (response.pendingMessage) {
-      innerText += '\nPending ' + response.pendingMessage;
-    }
-    if (response.receiveMessage) {
-      innerText += '\nReceive ' + response.receiveMessage;
-    }
-  }
-  accountInfoElt.innerText = innerText;
 };
 
 window.checkOwnership = async () => {

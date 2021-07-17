@@ -10,11 +10,15 @@
     "SharedArrayBuffer": "readonly"
   },
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2018,
+    "sourceType": "module"
   },
   "rules": {
-    "max-len": ["error", {
-      "code": 160
-    }]
+    "max-len": [
+      "error",
+      {
+        "code": 160
+      }
+    ]
   }
 }

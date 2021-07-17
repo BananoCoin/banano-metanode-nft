@@ -141,14 +141,14 @@ const getNftAssetsOwners = async (context, req, res) => {
     for (let ix = 0; ix < resp.asset_owners.length; ix++) {
       // asset is the hash of the send block that created the asset.
       // owner is who it was sent to.
-      const asset_owner = resp.asset_owners[ix];
+      const assetOwner = resp.asset_owners[ix];
 
-      const assetRepresentativeAccount = await bananojs.getBananoAccount(asset_owner.asset);
+      const assetRepresentativeAccount = await bananojs.getBananoAccount(assetOwner.asset);
 
-      let sendHash = asset_owner.asset;
+      let sendHash = assetOwner.asset;
 
       // find the receive block that recieved the send.
-      let receiveHash = await getReceiveBlock(fetch, asset_owner.owner, sendHash);
+      let receiveHash = await getReceiveBlock(fetch, assetOwner.owner, sendHash);
       loggingUtil.log(ACTION, 'getNftAssetsOwners',
           'asset', assetRepresentativeAccount,
           'sendHash', '=>', 'receiveHash',
@@ -158,21 +158,21 @@ const getNftAssetsOwners = async (context, req, res) => {
         // starting at the receiveHash (the point the owner received the nft)
         // find the next send block with the representative set to the same nft hash (the asset_owner.asset)
         // and return the hash of the send block, and the new owner.
-        asset_owner.history.push(
+        assetOwner.history.push(
             {
-              owner: asset_owner.owner,
+              owner: assetOwner.owner,
               send: sendHash,
               receive: receiveHash,
             },
         );
 
-        const nextAssetOwner = await getNextAssetOwner(fetch, bananojs, assetRepresentativeAccount, asset_owner.owner, receiveHash);
+        const nextAssetOwner = await getNextAssetOwner(fetch, bananojs, assetRepresentativeAccount, assetOwner.owner, receiveHash);
         if (nextAssetOwner !== undefined) {
-          loggingUtil.log(ACTION, 'getNftAssetsOwners', 'asset_owner', '=>', 'nextAssetOwner', asset_owner, '=>', nextAssetOwner);
-          asset_owner.owner = nextAssetOwner.owner;
+          loggingUtil.log(ACTION, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner, '=>', nextAssetOwner);
+          assetOwner.owner = nextAssetOwner.owner;
           sendHash = nextAssetOwner.send;
           receiveHash = await getReceiveBlock(fetch, nextAssetOwner.owner, nextAssetOwner.send);
-          loggingUtil.log(ACTION, 'getNftAssetsOwners', 'asset_owner', '=>', 'nextAssetOwner', asset_owner, '=>', nextAssetOwner, 'receiveHash', receiveHash);
+          loggingUtil.log(ACTION, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner, '=>', nextAssetOwner, 'receiveHash', receiveHash);
 
           const isReceiveHashUndefined = () => {
             const retval = receiveHash === undefined;
@@ -182,9 +182,9 @@ const getNftAssetsOwners = async (context, req, res) => {
 
           if (isReceiveHashUndefined()) {
             // show an entry in history if it is sent but not recieved
-            asset_owner.history.push(
+            assetOwner.history.push(
                 {
-                  owner: asset_owner.owner,
+                  owner: assetOwner.owner,
                   send: sendHash,
                   receive: '',
                 },
