@@ -4,7 +4,6 @@ const addNavigation = () => {
   const wrapperElt = document.getElementById('navigationWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
     'method': 'POST',
-    'class': '',
     'onsubmit': 'return false;',
   });
   addText(addChildElement(formElt, 'h2'), 'Welcome! What are you trying to do?');
@@ -52,33 +51,35 @@ window.showAll = () => {
 };
 
 window.showSeedAndAccountWrappers = () => {
+  hide('navigationWrapper');
   show('seedWrapper');
   show('accountWrapper');
-  hide('cidPinWrapper');
-  hide('cidInfoWrapper');
-  hide('ownerCheckWrapper');
-  hide('mintNftWrapper');
-  hide('transferNftWrapper');
+};
+
+window.hideSeedAndAccountWrappers = () => {
+  show('navigationWrapper');
+  hide('seedWrapper');
+  hide('accountWrapper');
 };
 
 window.showCreateNftTemplateWrappers = () => {
-  hide('seedWrapper');
-  hide('accountWrapper');
+  hide('navigationWrapper');
   show('cidPinWrapper');
-  hide('cidInfoWrapper');
-  hide('ownerCheckWrapper');
-  hide('mintNftWrapper');
-  hide('transferNftWrapper');
+};
+
+window.hideCreateNftTemplateWrappers = () => {
+  show('navigationWrapper');
+  hide('cidPinWrapper');
 };
 
 window.showViewNftTemplateWrappers = () => {
-  hide('seedWrapper');
-  hide('accountWrapper');
-  hide('cidPinWrapper');
+  hide('navigationWrapper');
   show('cidInfoWrapper');
-  hide('ownerCheckWrapper');
-  hide('mintNftWrapper');
-  hide('transferNftWrapper');
+};
+
+window.hideViewNftTemplateWrappers = () => {
+  show('navigationWrapper');
+  hide('cidInfoWrapper');
 };
 
 export {addNavigation};

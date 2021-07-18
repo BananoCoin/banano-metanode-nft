@@ -14,28 +14,32 @@ const saveSeed = () => {
 
 const addSeedHideShow = () => {
   const wrapperElt = document.getElementById('seedWrapper');
-  const hideShowElt = addChildElement(wrapperElt, 'form', {
+  const formElt = addChildElement(wrapperElt, 'form', {
     'method': 'POST',
     'class': '',
     'onsubmit': 'return false;',
   });
-  const showButtonElt = addChildElement(hideShowElt, 'button', {
+  addText(addChildElement(formElt, 'button', {
+    'type': 'button', 'onclick': 'return hideSeedAndAccountWrappers();',
+  }), 'Main Menu');
+
+  addText(addChildElement(formElt, 'h2'), 'Seed');
+  addChildElement(formElt, 'br');
+  addText(addChildElement(formElt, 'button', {
     'id': 'seed-show',
     'type': 'button',
     'class': '',
     'onclick': 'return showSeed();',
-  });
-  addText(showButtonElt, 'Show Seed');
-  const hideButtonElt = addChildElement(hideShowElt, 'button', {
+  }), 'Show Seed');
+  addText(addChildElement(formElt, 'button', {
     'id': 'seed-hide',
     'type': 'button',
     'class': '',
     'style': 'display:none',
     'onclick': 'return hideSeed();',
-  });
-  addText(hideButtonElt, 'Hide Seed');
-  addChildElement(hideShowElt, 'br');
-  addChildElement(hideShowElt, 'input', {
+  }), 'Hide Seed');
+  addChildElement(formElt, 'br');
+  addChildElement(formElt, 'input', {
     'id': 'seed',
     'class': '',
     'type': 'text',
@@ -46,7 +50,7 @@ const addSeedHideShow = () => {
     'onchange': 'updateSeedAndAccountInfo(); return false;',
     'oninput': 'updateSeedAndAccountInfo(); return false;',
   });
-  addChildElement(hideShowElt, 'div', {
+  addChildElement(formElt, 'div', {
     'id': 'seedError',
     'style': 'display:none',
     'class': 'selectable',
