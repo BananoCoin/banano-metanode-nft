@@ -12,7 +12,7 @@ const addCidInfo = () => {
   }), 'Main Menu');
   addText(addChildElement(formElt, 'h2'), 'CID Info');
   addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
-  const cidElt = addChildElement(formElt, 'input', {
+  addChildElement(formElt, 'input', {
     'id': 'cid',
     'class': '',
     'type': 'text',
@@ -57,9 +57,13 @@ window.checkCid = async () => {
 
   let html = '';
   if (responseJson.success) {
-    html += `<span><strong>Success!</strong> ipfs_cid <strong>${responseJson.ipfs_cid}</strong> has the correct information, with no errors.</span>`;
+    html += `<span><strong>Success!</strong> ipfs_cid `+
+    `<strong>${responseJson.ipfs_cid}</strong> has the `+
+    `correct information, with no errors.</span>`;
   } else {
-    html += `<span><strong>Failure!</strong> ipfs_cid <strong>${responseJson.ipfs_cid}</strong> has the <strong>wrong</strong> information, with <strong>errors</strong>.</span>`;
+    html += `<span><strong>Failure!</strong> ipfs_cid `+
+    `<strong>${responseJson.ipfs_cid}</strong> has the `+
+    `<strong>wrong</strong> information, with <strong>errors</strong>.</span>`;
   }
   if (responseJson.json !== undefined) {
     html += '<span class="bordered container column">';

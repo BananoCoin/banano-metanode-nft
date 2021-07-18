@@ -71,6 +71,7 @@ const addModules = () => {
   modules.push(require('./actions/get-pinata-api-url.js'));
   modules.push(require('./actions/get-ipfs-api-url.js'));
   modules.push(require('./actions/get-nft-assets-owners.js'));
+  modules.push(require('./actions/get-nft-assets-owner.js'));
   modules.push(require('./actions/get-nft-info.js'));
   modules.push(require('./ipfs-util.js'));
 };

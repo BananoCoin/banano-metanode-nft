@@ -12,8 +12,10 @@
 *   [NFT][8]
     *   [getNftAssetsOwners][9]
         *   [Parameters][10]
-    *   [getNftInfo][11]
+    *   [getNftAssetsOwners][11]
         *   [Parameters][12]
+    *   [getNftInfo][13]
+        *   [Parameters][14]
 
 ## Main
 
@@ -23,13 +25,13 @@ gets the bananode url
 
 #### Parameters
 
-*   `context` **[Object][13]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][15]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][13]** the http request.
-*   `res` **[Object][13]** the http response.
+*   `req` **[Object][15]** the http request.
+*   `res` **[Object][15]** the http response.
 
-Returns **[undefined][14]** 
+Returns **[undefined][16]** 
 
 ### getPinataApiUrl
 
@@ -37,13 +39,13 @@ gets the pinata url
 
 #### Parameters
 
-*   `context` **[Object][13]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][15]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][13]** the http request.
-*   `res` **[Object][13]** the http response.
+*   `req` **[Object][15]** the http request.
+*   `res` **[Object][15]** the http response.
 
-Returns **[undefined][14]** 
+Returns **[undefined][16]** 
 
 ### getIpfsApiUrl
 
@@ -51,13 +53,13 @@ gets the ipfs url
 
 #### Parameters
 
-*   `context` **[Object][13]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][15]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][13]** the http request.
-*   `res` **[Object][13]** the http response.
+*   `req` **[Object][15]** the http request.
+*   `res` **[Object][15]** the http response.
 
-Returns **[undefined][14]** 
+Returns **[undefined][16]** 
 
 ## NFT
 
@@ -67,13 +69,27 @@ gets the owners of a NFT's assets
 
 #### Parameters
 
-*   `context` **[Object][13]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][15]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][13]** the http request.
-*   `res` **[Object][13]** the http response.
+*   `req` **[Object][15]** the http request.
+*   `res` **[Object][15]** the http response.
 
-Returns **[undefined][14]** 
+Returns **[undefined][16]** 
+
+### getNftAssetsOwners
+
+gets the owners of a NFT's assets
+
+#### Parameters
+
+*   `context` **[Object][15]** the context, used to get cached data.*   from filesystem in nodejs,
+    *   from localstorage in a browser,
+    *   from a test harness in the unit tests.
+*   `req` **[Object][15]** the http request.
+*   `res` **[Object][15]** the http response.
+
+Returns **[undefined][16]** 
 
 ### getNftInfo
 
@@ -81,13 +97,13 @@ gets the information about an NFT
 
 #### Parameters
 
-*   `context` **[Object][13]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][15]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][13]** the http request.
-*   `res` **[Object][13]** the http response.
+*   `req` **[Object][15]** the http request.
+*   `res` **[Object][15]** the http response.
 
-Returns **[undefined][14]** 
+Returns **[undefined][16]** 
 
 [1]: #main
 
@@ -109,10 +125,14 @@ Returns **[undefined][14]**
 
 [10]: #parameters-3
 
-[11]: #getnftinfo
+[11]: #getnftassetsowners-1
 
 [12]: #parameters-4
 
-[13]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[13]: #getnftinfo
 
-[14]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
+[14]: #parameters-5
+
+[15]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[16]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined

@@ -1,5 +1,4 @@
-import {getRandomHex32} from './lib/randomHex32.js';
-import {addAttributes, addText, addChildElement, hide, show, clear} from './lib/dom.js';
+import {addText, addChildElement, hide, show} from './lib/dom.js';
 import {loadSeed, addSeedHideShow, addAccountAndInfo} from './actions/seed-and-account.js';
 import {addCidPinInfo} from './actions/cid-pin.js';
 import {addCidInfo} from './actions/cid-info.js';
@@ -95,7 +94,6 @@ const addOwnerCheck = () => {
 };
 
 
-
 window.checkOwnership = async () => {
   console.log('checkOwnership');
   const cid = document.getElementById('cid').value.trim();
@@ -116,14 +114,14 @@ window.checkOwnership = async () => {
       if (responseJson.asset_owners !== undefined) {
         html += '<span class="bordered container column">';
         html += `<span><h2>owners</h2></span>`;
-        for (let asset_owner_ix = 0; asset_owner_ix < responseJson.asset_owners.length; asset_owner_ix++) {
-          const asset_owner = responseJson.asset_owners[asset_owner_ix];
-          const assetAccount = await window.bananocoinBananojs.getBananoAccount(asset_owner.asset);
-          html += `<span>Asset:${asset_owner.asset}</span>`;
-          html += `<span>Asset Owner:${asset_owner.owner}</span>`;
+        for (let assetOwnerIx = 0; assetOwnerIx < responseJson.asset_owners.length; assetOwnerIx++) {
+          const assetOwner = responseJson.asset_owners[assetOwnerIx];
+          const assetAccount = await window.bananocoinBananojs.getBananoAccount(assetOwner.asset);
+          html += `<span>Asset:${assetOwner.asset}</span>`;
+          html += `<span>Asset Owner:${assetOwner.owner}</span>`;
           html += `<span>Asset Account:${assetAccount}</span>`;
-          asset_owner.history.forEach((historical_owner) => {
-            html += `<span>${historical_owner.send}=>${historical_owner.receive}=${historical_owner.owner}</span>`;
+          assetOwner.history.forEach((historicalOwner) => {
+            html += `<span>${historicalOwner.send}=>${historicalOwner.receive}=${historicalOwner.owner}</span>`;
           });
         }
         html += '</span>';
@@ -208,7 +206,8 @@ window.mintNft = async () => {
   console.log('mintNft', 'representativePublicKey', representativePublicKey);
   const representative = await window.bananocoinBananojs.getBananoAccount(representativePublicKey);
   console.log('mintNft', 'representative', representative);
-  const response = await window.bananocoinBananojs.sendAmountToBananoAccountWithRepresentativeAndPrevious(seed, seedIx, withdrawAccount, '1', representative, previousHash);
+  const fn = window.bananocoinBananojs.sendAmountToBananoAccountWithRepresentativeAndPrevious;
+  const response = await fn(seed, seedIx, withdrawAccount, '1', representative, previousHash);
   console.log('mintNft', 'response', response);
   const mintNftInfoElt = document.getElementById('mintNftInfo');
   mintNftInfoElt.innerText = response;
@@ -228,7 +227,7 @@ const addTransferNft = () => {
   });
   addChildElement(formElt, 'br');
   addText(addChildElement(formElt, 'h3'), 'Hash of Asset to Transfer');
-  const hashOfAssetToTransferElt = addChildElement(formElt, 'input', {
+  addChildElement(formElt, 'input', {
     'id': 'hashOfAssetToTransfer',
     'class': '',
     'type': 'text',
@@ -237,7 +236,7 @@ const addTransferNft = () => {
     'value': '',
   });
   addText(addChildElement(formElt, 'h3'), 'New Owner Account');
-  const newOwnerAccountElt = addChildElement(formElt, 'input', {
+  addChildElement(formElt, 'input', {
     'id': 'newOwnerAccount',
     'class': '',
     'type': 'text',
@@ -266,7 +265,8 @@ window.transferNft = async () => {
   console.log('transferNft', 'hashOfAssetToTransfer', hashOfAssetToTransfer.value);
   const representative = await window.bananocoinBananojs.getBananoAccount(hashOfAssetToTransfer.value);
   console.log('transferNft', 'representative', representative);
-  const response = await window.bananocoinBananojs.sendAmountToBananoAccountWithRepresentativeAndPrevious(seed, seedIx, newOwnerAccount.value, '1', representative, previousHash);
+  const fn = window.bananocoinBananojs.sendAmountToBananoAccountWithRepresentativeAndPrevious;
+  const response = await fn(seed, seedIx, newOwnerAccount.value, '1', representative, previousHash);
   console.log('transferNft', 'response', response);
   transferNftInfo.innerText = response;
 };
