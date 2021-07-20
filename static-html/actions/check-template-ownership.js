@@ -7,10 +7,10 @@ const addOwnerCheck = () => {
     'class': '',
     'onsubmit': 'return false;',
   });
-  addText(addChildElement(wrapperElt, 'h2'), 'Check Template Ownership');
   addText(addChildElement(formElt, 'button', {
     'type': 'button', 'onclick': 'return hideTemplateOwnerCheckWrappers();',
   }), 'Main Menu');
+  addText(addChildElement(formElt, 'h2'), 'Check Template Ownership');
   addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
   addChildElement(formElt, 'input', {
     'id': 'templateOwnerCid',

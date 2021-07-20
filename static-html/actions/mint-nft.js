@@ -2,29 +2,71 @@ import {addText, addChildElement, clear} from '../lib/dom.js';
 
 const addMintNft = () => {
   const wrapperElt = document.getElementById('mintNftWrapper');
-  addText(addChildElement(wrapperElt, 'h2'), 'Mint NFT');
-  addText(addChildElement(wrapperElt, 'h3'), 'Representative');
-  addChildElement(wrapperElt, 'div', {
-    'id': 'representativePublicKey',
-    'class': 'selectable',
-  });
   const formElt = addChildElement(wrapperElt, 'form', {
     'method': 'POST',
     'class': '',
     'onsubmit': 'return false;',
   });
+  addText(addChildElement(formElt, 'button', {
+    'type': 'button', 'onclick': 'return hideMintNftWrapper();',
+  }), 'Main Menu');
+  addText(addChildElement(formElt, 'h2'), 'Mint NFT');
+  addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
+  addChildElement(formElt, 'input', {
+    'id': 'mintNftTemplateCid',
+    'class': '',
+    'type': 'text',
+    'size': '66',
+    'max_length': '64',
+    'value': defaultCid,
+  });
   addChildElement(formElt, 'br');
-  const checkCidElt = addChildElement(formElt, 'button', {
+  addText(addChildElement(formElt, 'button', {
+    'id': 'mint-nft',
+    'type': 'button',
+    'class': '',
+    'onclick': 'checkMintNftCID();return false;',
+  }), 'Check CID');
+  addText(addChildElement(formElt, 'h3'), 'Representative');
+  addChildElement(formElt, 'div', {
+    'id': 'representativePublicKey',
+    'class': 'selectable',
+  });
+  addChildElement(formElt, 'br');
+  addText(addChildElement(formElt, 'button', {
     'id': 'mint-nft',
     'type': 'button',
     'class': '',
     'onclick': 'mintNft();return false;',
-  });
-  addText(checkCidElt, 'Mint NFT');
-  addChildElement(wrapperElt, 'div', {
+  }), 'Mint NFT');
+  addChildElement(formElt, 'div', {
     'id': 'mintNftInfo',
     'class': 'selectable container column',
   });
+};
+
+window.checkMintNftCID = async () => {
+  const cid = document.getElementById('mintNftTemplateCid').value.trim();
+  const response = await fetch('/', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: `{"action": "get_nft_info" ,"ipfs_cid":"${cid}"}`,
+  });
+  if (response.status == 200) {
+    const responseJson = await response.json();
+    if (responseJson.success) {
+      if (responseJson.json !== undefined) {
+        document.getElementById('representativePublicKey').innerText =
+          responseJson.json.new_representative;
+      }
+    }
+    return;
+  }
+
+  document.getElementById('representativePublicKey').innerText =
+    'Error, please check CID Info for errors.';
 };
 
 const getPreviousHash = async () => {

@@ -33,6 +33,11 @@ const addNavigation = () => {
   addText(addChildElement(formElt, 'button', {
     'type': 'button', 'onclick': 'return showTemplateOwnerCheckWrappers();',
   }), 'Show Tools to Check Ownership of an Nft Template');
+
+  addText(addChildElement(formElt, 'h3'), 'Are you trying to mint a new NFT asset from a template?');
+  addText(addChildElement(formElt, 'button', {
+    'type': 'button', 'onclick': 'return showMintNftWrapper();',
+  }), 'Show Tools to Mint a new Asset from a Nft Template');
 };
 
 window.hideAll = () => {
@@ -95,6 +100,16 @@ window.showTemplateOwnerCheckWrappers = () => {
 window.hideTemplateOwnerCheckWrappers = () => {
   show('navigationWrapper');
   hide('templateOwnerCheckWrapper');
+};
+
+window.showMintNftWrapper = () => {
+  hide('navigationWrapper');
+  show('mintNftWrapper');
+};
+
+window.hideMintNftWrapper = () => {
+  show('navigationWrapper');
+  hide('mintNftWrapper');
 };
 
 export {addNavigation};
