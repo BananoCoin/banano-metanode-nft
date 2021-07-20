@@ -1,4 +1,4 @@
-import {addText, addChildElement, clear} from '../lib/dom.js';
+import {addText, addChildElement} from '../lib/dom.js';
 import {getPreviousHash} from '../lib/previous-hash.js';
 
 const addTransferNft = () => {

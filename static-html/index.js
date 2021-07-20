@@ -1,4 +1,3 @@
-import {addText, addChildElement, hide, show} from './lib/dom.js';
 import {loadSeed, addSeedHideShow, addAccountAndInfo} from './actions/seed-and-account.js';
 import {addCidPinInfo} from './actions/cid-pin.js';
 import {addCidInfo} from './actions/cid-info.js';

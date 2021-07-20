@@ -12,7 +12,7 @@ const actionUtil = require('../../scripts/actions/get-nft-assets-owners.js');
 const ipfsUtil = require('../../scripts/ipfs-util.js');
 const dataUtil = require('../../scripts/data-util.js');
 const mockFs = require('../util/mock-fs.js');
-// const actualResponseUtil = require('../util/actual-response-util.js');
+const actualResponseUtil = require('../util/actual-response-util.js');
 const testData = require('./get-owners-test-QmQJ-dzzS.json');
 
 // constants
@@ -85,7 +85,9 @@ describe(actionUtil.ACTION, () => {
     } catch (error) {
       loggingUtil.trace(error);
     }
-    // actualResponseUtil.writeActualResponse(path.basename(__filename), actualResponse);
+    if (loggingUtil.isDebugEnabled()) {
+      actualResponseUtil.writeActualResponse(path.basename(__filename), actualResponse);
+    }
     const expectedResponse = testData.expectedResponse;
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);

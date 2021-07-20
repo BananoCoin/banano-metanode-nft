@@ -302,7 +302,9 @@ const getReceiveBlock = async (fetch, fs, action, owner, sendHash) => {
       for (let ix = 0; ix < histResponseJson.history.length; ix++) {
         const historyElt = histResponseJson.history[ix];
         if (loggingUtil.isDebugEnabled()) {
-          loggingUtil.debug(action, 'getReceiveBlock', 'historyElt', ix, owner, '=>', sendHash, 'link', historyElt.link, 'match', (historyElt.link == sendHash));
+          loggingUtil.debug(action, 'getReceiveBlock', 'historyElt', ix,
+              owner, '=>', sendHash, 'link', historyElt.link, 'match',
+              (historyElt.link == sendHash));
         }
 
         dataUtil.setReceiveBlockHash(fs, historyElt.link, historyElt.hash);
