@@ -28,6 +28,11 @@ const addNavigation = () => {
   addText(addChildElement(formElt, 'button', {
     'type': 'button', 'onclick': 'return showViewNftTemplateWrappers();',
   }), 'Show Tools to View a Nft Template');
+
+  addText(addChildElement(formElt, 'h3'), 'Are you trying to check ownership an existing NFT template?');
+  addText(addChildElement(formElt, 'button', {
+    'type': 'button', 'onclick': 'return showTemplateOwnerCheckWrappers();',
+  }), 'Show Tools to Check Ownership of an Nft Template');
 };
 
 window.hideAll = () => {
@@ -35,7 +40,7 @@ window.hideAll = () => {
   hide('accountWrapper');
   hide('cidPinWrapper');
   hide('cidInfoWrapper');
-  hide('ownerCheckWrapper');
+  hide('templateOwnerCheckWrapper');
   hide('mintNftWrapper');
   hide('transferNftWrapper');
 };
@@ -45,7 +50,7 @@ window.showAll = () => {
   show('accountWrapper');
   show('cidPinWrapper');
   show('cidInfoWrapper');
-  show('ownerCheckWrapper');
+  show('templateOwnerCheckWrapper');
   show('mintNftWrapper');
   show('transferNftWrapper');
 };
@@ -80,6 +85,16 @@ window.showViewNftTemplateWrappers = () => {
 window.hideViewNftTemplateWrappers = () => {
   show('navigationWrapper');
   hide('cidInfoWrapper');
+};
+
+window.showTemplateOwnerCheckWrappers = () => {
+  hide('navigationWrapper');
+  show('templateOwnerCheckWrapper');
+};
+
+window.hideTemplateOwnerCheckWrappers = () => {
+  show('navigationWrapper');
+  hide('templateOwnerCheckWrapper');
 };
 
 export {addNavigation};

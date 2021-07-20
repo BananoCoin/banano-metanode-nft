@@ -164,5 +164,20 @@ window.updateAccountInfo = async () => {
   accountInfoElt.innerText = innerText;
 };
 
+window.showSeed = () => {
+  hide('seed-show');
+  show('seed-hide');
+  show('seed');
+  show('seedError');
+  return false;
+};
+
+window.hideSeed = () => {
+  hide('seed-hide');
+  show('seed-show');
+  hide('seed');
+  hide('seedError');
+  return false;
+};
 
 export {loadSeed, addSeedHideShow, addAccountAndInfo};

@@ -8,7 +8,7 @@ const addCidPinInfo = () => {
     'onsubmit': 'return false;',
   });
   addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideViewNftTemplateWrappers();',
+    'type': 'button', 'onclick': 'return hideCreateNftTemplateWrappers();',
   }), 'Main Menu');
   addText(addChildElement(formElt, 'h2'), 'Create (and pin) an NFT template');
 
@@ -105,6 +105,24 @@ window.pinCid = async () => {
   console.log('pinCid', 'response', response);
   const responseJson = await response.json();
   document.getElementById('pinCidInfo').innerText = JSON.stringify(responseJson);
+};
+
+window.showPinataApiTokenJWT = () => {
+  hide('pinataApiTokenJWT-show');
+  show('pinataApiTokenJWT-hide');
+  show('pinataApiTokenJWT');
+  return false;
+};
+
+window.hidePinataApiTokenJWT = () => {
+  hide('pinataApiTokenJWT-hide');
+  show('pinataApiTokenJWT-show');
+  hide('pinataApiTokenJWT');
+  return false;
+};
+
+window.updatePinataApiTokenJWT = () => {
+  window.localStorage.pinataApiTokenJWT = document.getElementById('pinataApiTokenJWT').value.trim();
 };
 
 export {addCidPinInfo};
