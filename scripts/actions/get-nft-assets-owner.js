@@ -61,6 +61,13 @@ const getNftAssetsOwners = async (context, req, res) => {
     throw Error('context.bananojs is required');
   }
 
+  const dataUtil = context.dataUtil;
+
+  /* istanbul ignore if */
+  if (dataUtil === undefined) {
+    throw Error('context.dataUtil is required');
+  }
+
   /* istanbul ignore if */
   if (req === undefined) {
     throw Error('req is required');
@@ -109,11 +116,11 @@ const getNftAssetsOwners = async (context, req, res) => {
   } else {
     resp.success = true;
     resp.asset_owner = [];
-    const representativeLink = histResponseJson.history[0].representative;
-    const representativeAccount = await bananojs.getBananoAccount(representativeLink);
+    const representativeAccount = histResponseJson.history[0].representative;
     loggingUtil.log(ACTION, 'representativeAccount', representativeAccount);
     for (let ix = 0; ix < histResponseJson.history.length; ix++) {
       const historyElt = histResponseJson.history[ix];
+      loggingUtil.log(ACTION, 'historyElt.representative', ix, historyElt.representative);
       if (historyElt.representative == representativeAccount) {
         const linkAccount = await bananojs.getBananoAccount(historyElt.link);
         // loggingUtil.log(ACTION, 'historyElt', ix, historyElt);
@@ -129,7 +136,7 @@ const getNftAssetsOwners = async (context, req, res) => {
       // asset is the hash of the send block that created the asset.
       // owner is who it was sent to.
       const assetOwner = resp.asset_owner[ix];
-      await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, ACTION, assetOwner);
+      await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, dataUtil, ACTION, assetOwner);
     }
   }
 

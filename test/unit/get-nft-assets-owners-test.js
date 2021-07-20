@@ -96,6 +96,8 @@ describe(actionUtil.ACTION, () => {
   const getContext = (histories) => {
     return {
       bananojs: bananojs,
+      dataUtil: {
+      },
       fetch: (resource, options) => {
         loggingUtil.debug('fetch', resource, options);
         if (resource == `${config.ipfsApiUrl}/${goodIpfsCid}`) {
@@ -445,7 +447,8 @@ describe(actionUtil.ACTION, () => {
             hash: goodSendHash4,
             representative: goodAssetRep,
             link: goodOwner4link,
-            type: 'send',
+            type: 'state',
+            subtype: 'send',
           },
         ],
       },
@@ -453,7 +456,8 @@ describe(actionUtil.ACTION, () => {
         account: goodOwner4,
         history: [
           {
-            type: 'receive',
+            type: 'state',
+            subtype: 'receive',
             hash: goodReceiveHash3,
             representative: goodOwner6,
             link: goodSendHash4,

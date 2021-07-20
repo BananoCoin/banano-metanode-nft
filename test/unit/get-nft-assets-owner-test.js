@@ -13,7 +13,9 @@ const ipfsUtil = require('../../scripts/ipfs-util.js');
 // constants
 const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
 const goodOwner2link = '0000000000000000000000000000000000000000000000000000000000000002';
+const goodOwner2 = 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c';
 const goodSendHash4 = '0000000000000000000000000000000000000000000000000000000000000004';
+const goodAssetRep = 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrfg8egjn';
 
 const DEBUG = false;
 
@@ -72,6 +74,8 @@ describe(actionUtil.ACTION, () => {
   const getContext = (histories) => {
     return {
       bananojs: bananojs,
+      dataUtil: {
+      },
       fetch: (resource, options) => {
         loggingUtil.debug('fetch', resource, options);
         if (resource == config.bananodeApiUrl) {
@@ -125,15 +129,10 @@ describe(actionUtil.ACTION, () => {
       },
     };
   };
-  it('get status 200 goodIpfsCid no owner', async () => {
+  it('get status 200 goodIpfsCid no history', async () => {
     const context = getContext([{
       head: goodSendHash4,
       history: [
-        {
-          hash: goodSendHash4,
-          representative: goodIpfsCid,
-          link: goodOwner2link,
-        },
       ]},
     ]);
     let actualResponse;
@@ -143,8 +142,72 @@ describe(actionUtil.ACTION, () => {
       loggingUtil.trace(error);
     }
     const expectedResponse = {
+      success: false,
+      errors: [
+        'no history',
+      ],
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 goodIpfsCid no owner', async () => {
+    const context = getContext([{
+      head: goodSendHash4,
+      history: [
+      ]},
+    ]);
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(context, goodSendHash4);
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      success: false,
+      errors: [
+        'no history',
+      ],
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 goodIpfsCid one owner', async () => {
+    const context = getContext([
+      {
+        head: goodSendHash4,
+        history: [
+          {
+            hash: goodSendHash4,
+            representative: goodAssetRep,
+            link: goodOwner2link,
+          },
+          {
+            hash: goodSendHash4,
+            representative: goodOwner2,
+            link: goodOwner2link,
+          },
+        ]},
+      {
+        account: goodOwner2,
+      },
+    ]);
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(context, goodSendHash4);
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
       success: true,
-      asset_owner: [],
+      asset_owner: [
+        {
+          asset: '0000000000000000000000000000000000000000000000000000000000000004',
+          history: [],
+          owner: 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c',
+        },
+      ],
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);

@@ -200,7 +200,22 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
   return resp;
 };
 
-const updateAssetOwnerHistory = async (fetch, bananojs, action, assetOwner) => {
+const updateAssetOwnerHistory = async (fetch, bananojs, dataUtil, action, assetOwner) => {
+  /* istanbul ignore if */
+  if (fetch === undefined) {
+    throw Error('fetch is required');
+  }
+
+  /* istanbul ignore if */
+  if (bananojs === undefined) {
+    throw Error('bananojs is required');
+  }
+
+  /* istanbul ignore if */
+  if (dataUtil === undefined) {
+    throw Error('dataUtil is required');
+  }
+
   const assetRepresentativeAccount = await bananojs.getBananoAccount(assetOwner.asset);
 
   let sendHash = assetOwner.asset;
@@ -277,11 +292,11 @@ const getReceiveBlock = async (fetch, action, owner, sendHash) => {
   if (histResponseJson.history !== undefined) {
     for (let ix = 0; ix < histResponseJson.history.length; ix++) {
       const historyElt = histResponseJson.history[ix];
-      loggingUtil.log(action, 'getReceiveBlock', 'historyElt', ix, owner, '=>', sendHash, 'link', historyElt, 'match', (historyElt.link == sendHash));
+      loggingUtil.debug(action, 'getReceiveBlock', 'historyElt', ix, owner, '=>', sendHash, 'link', historyElt.link, 'match', (historyElt.link == sendHash));
 
       const isLinkSendHash = () => {
         const retval = historyElt.link == sendHash;
-        loggingUtil.log(action, 'isLinkSendHash', retval, historyElt.link, sendHash);
+        loggingUtil.debug(action, 'isLinkSendHash', retval, historyElt.link, sendHash);
         return retval;
       };
 
@@ -318,21 +333,23 @@ const getNextAssetOwner = async (fetch, bananojs, action, assetRepresentativeAcc
   loggingUtil.debug(action, 'histResponseJson', histRequest);
 
   const isHistoryUndefined = () => {
-    const retval = histResponseJson.history !== undefined;
+    const retval = histResponseJson.history === undefined;
     loggingUtil.log(action, 'isHistoryUndefined', retval, owner);
     return retval;
   };
 
-  if (isHistoryUndefined()) {
+  if (!isHistoryUndefined()) {
     for (let ix = 0; ix < histResponseJson.history.length; ix++) {
       const historyElt = histResponseJson.history[ix];
-      loggingUtil.log(action, 'getNextAssetOwner', ix, 'account', historyElt.account);
-      loggingUtil.log(action, 'getNextAssetOwner', ix, 'receiveHash', receiveHash);
-      loggingUtil.log(action, 'getNextAssetOwner', ix, 'representative', historyElt.representative);
-      loggingUtil.log(action, 'getNextAssetOwner', ix, 'assetRepresentativeAccount', assetRepresentativeAccount);
+      loggingUtil.log(action, 'historyElt', historyElt);
+      loggingUtil.debug(action, 'getNextAssetOwner', ix, 'account', historyElt.account);
+      loggingUtil.debug(action, 'getNextAssetOwner', ix, 'receiveHash', receiveHash);
+      loggingUtil.debug(action, 'getNextAssetOwner', ix, 'representative', historyElt.representative);
+      loggingUtil.debug(action, 'getNextAssetOwner', ix, 'assetRepresentativeAccount', assetRepresentativeAccount);
       const isHistoryEltSend = () => {
-        const retval = historyElt.type == 'send';
-        loggingUtil.log('isHistoryEltSend', retval, historyElt.type);
+        const retval = (historyElt.type == 'send') ||
+          ((historyElt.type == 'state') && (historyElt.subtype == 'send'));
+        loggingUtil.log('isHistoryEltSend', retval, historyElt.type, historyElt.subtype);
         return retval;
       };
       if (isHistoryEltSend()) {
