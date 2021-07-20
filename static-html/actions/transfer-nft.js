@@ -1,16 +1,36 @@
 import {addText, addChildElement, clear} from '../lib/dom.js';
+import {getPreviousHash} from '../lib/previous-hash.js';
 
 const addTransferNft = () => {
   const wrapperElt = document.getElementById('transferNftWrapper');
-  addText(addChildElement(wrapperElt, 'h2'), 'Transfer NFT');
-  addChildElement(wrapperElt, 'div', {
-    'id': 'representativePublicKey',
-    'class': 'selectable',
-  });
   const formElt = addChildElement(wrapperElt, 'form', {
     'method': 'POST',
     'class': '',
     'onsubmit': 'return false;',
+  });
+  addText(addChildElement(formElt, 'button', {
+    'type': 'button', 'onclick': 'return hideTransferNftWrapper();',
+  }), 'Main Menu');
+  addText(addChildElement(formElt, 'h2'), 'Transfer NFT');
+  addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
+  addChildElement(formElt, 'input', {
+    'id': 'transferNftTemplateCid',
+    'class': '',
+    'type': 'text',
+    'size': '66',
+    'max_length': '64',
+    'value': defaultCid,
+  });
+  addChildElement(formElt, 'br');
+  addText(addChildElement(formElt, 'button', {
+    'id': 'mint-nft',
+    'type': 'button',
+    'class': '',
+    'onclick': 'checkTransferNftCID();return false;',
+  }), 'Check CID');
+  addChildElement(formElt, 'div', {
+    'id': 'transferAssets',
+    'class': 'selectable',
   });
   addChildElement(formElt, 'br');
   addText(addChildElement(formElt, 'h3'), 'Hash of Asset to Transfer');
@@ -43,6 +63,42 @@ const addTransferNft = () => {
     'id': 'transferNftInfo',
     'class': 'selectable container column',
   });
+};
+
+window.checkTransferNftCID = async () => {
+  document.getElementById('transferAssets').innerHTML = 'pending...';
+  const cid = document.getElementById('transferNftTemplateCid').value.trim();
+  const response = await fetch('/', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: `{"action": "get_nft_assets_owners" ,"ipfs_cid":"${cid}"}`,
+  });
+  if (response.status == 200) {
+    const responseJson = await response.json();
+    if (responseJson.success) {
+      if (responseJson.asset_owners !== undefined) {
+        let assetHtml = '';
+
+        for (let assetOwnerIx = 0; assetOwnerIx < responseJson.asset_owners.length; assetOwnerIx++) {
+          const assetOwner = responseJson.asset_owners[assetOwnerIx];
+          assetHtml += assetOwner.asset;
+          assetHtml += ` (owned by ${assetOwner.owner})`;
+          if (assetOwner.owner === document.querySelector('#account').innerText) {
+            assetHtml += '(you)';
+          }
+          assetHtml += '<br>';
+        }
+
+        document.getElementById('transferAssets').innerHTML = assetHtml;
+      }
+    }
+    return;
+  }
+
+  document.getElementById('transferAssets').innerHTML =
+    'Error, please check CID Info for errors.';
 };
 
 window.transferNft = async () => {

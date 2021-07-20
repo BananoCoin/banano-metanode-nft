@@ -38,6 +38,11 @@ const addNavigation = () => {
   addText(addChildElement(formElt, 'button', {
     'type': 'button', 'onclick': 'return showMintNftWrapper();',
   }), 'Show Tools to Mint a new Asset from a Nft Template');
+
+  addText(addChildElement(formElt, 'h3'), 'Are you trying to transfer an existing NFT asset to a new owner?');
+  addText(addChildElement(formElt, 'button', {
+    'type': 'button', 'onclick': 'return showTransferNftWrapper();',
+  }), 'Show Tools to Transfer an existing Asset to a new Owner');
 };
 
 window.hideAll = () => {
@@ -111,5 +116,16 @@ window.hideMintNftWrapper = () => {
   show('navigationWrapper');
   hide('mintNftWrapper');
 };
+
+window.showTransferNftWrapper = () => {
+  hide('navigationWrapper');
+  show('transferNftWrapper');
+};
+
+window.hideTransferNftWrapper = () => {
+  show('navigationWrapper');
+  hide('transferNftWrapper');
+};
+
 
 export {addNavigation};

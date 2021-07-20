@@ -1,4 +1,5 @@
 import {addText, addChildElement, clear} from '../lib/dom.js';
+import {getPreviousHash} from '../lib/previous-hash.js';
 
 const addMintNft = () => {
   const wrapperElt = document.getElementById('mintNftWrapper');
@@ -29,7 +30,7 @@ const addMintNft = () => {
   }), 'Check CID');
   addText(addChildElement(formElt, 'h3'), 'Representative');
   addChildElement(formElt, 'div', {
-    'id': 'representativePublicKey',
+    'id': 'mintRepresentativePublicKey',
     'class': 'selectable',
   });
   addChildElement(formElt, 'br');
@@ -58,27 +59,18 @@ window.checkMintNftCID = async () => {
     const responseJson = await response.json();
     if (responseJson.success) {
       if (responseJson.json !== undefined) {
-        document.getElementById('representativePublicKey').innerText =
+        document.getElementById('mintRepresentativePublicKey').innerText =
           responseJson.json.new_representative;
       }
     }
     return;
   }
 
-  document.getElementById('representativePublicKey').innerText =
+  document.getElementById('mintRepresentativePublicKey').innerText =
     'Error, please check CID Info for errors.';
 };
 
-const getPreviousHash = async () => {
-  const seed = window.localStorage.seed;
-  const account = await window.bananocoinBananojs.getBananoAccountFromSeed(seed, seedIx);
-  console.log('getPreviousHash', 'account', account);
-  const accountInfo = await window.bananocoinBananojs.getAccountInfo(account, true);
-  console.log('getPreviousHash', 'accountInfo', accountInfo);
-  const previousHash = accountInfo.frontier;
-  console.log('getPreviousHash', 'previousHash', previousHash);
-  return previousHash;
-};
+
 
 window.mintNft = async () => {
   const seed = window.localStorage.seed;
@@ -86,7 +78,7 @@ window.mintNft = async () => {
   console.log('mintNft', 'withdrawAccount', withdrawAccount);
   const previousHash = await getPreviousHash();
   console.log('mintNft', 'previousHash', previousHash);
-  const representativePublicKey = document.getElementById('representativePublicKey').innerText;
+  const representativePublicKey = document.getElementById('mintRepresentativePublicKey').innerText;
   console.log('mintNft', 'representativePublicKey', representativePublicKey);
   const representative = await window.bananocoinBananojs.getBananoAccount(representativePublicKey);
   console.log('mintNft', 'representative', representative);
