@@ -11,7 +11,6 @@ const actionUtil = require('../../scripts/actions/get-nft-assets-owner.js');
 const ipfsUtil = require('../../scripts/ipfs-util.js');
 
 // constants
-const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
 const goodOwner2link = '0000000000000000000000000000000000000000000000000000000000000002';
 const goodOwner2 = 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c';
 const goodSendHash4 = '0000000000000000000000000000000000000000000000000000000000000004';
