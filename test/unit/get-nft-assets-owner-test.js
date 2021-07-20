@@ -9,6 +9,8 @@ const chai = require('chai');
 const expect = chai.expect;
 const actionUtil = require('../../scripts/actions/get-nft-assets-owner.js');
 const ipfsUtil = require('../../scripts/ipfs-util.js');
+const dataUtil = require('../../scripts/data-util.js');
+const mockFs = require('../util/mock-fs.js');
 
 // constants
 const goodOwner2link = '0000000000000000000000000000000000000000000000000000000000000002';
@@ -24,9 +26,13 @@ const config = {
   fetchTimeout: 0,
   ipfsApiUrl: 'ipfsApiUrlValue',
   bananodeApiUrl: 'bananodeApiUrlValue',
+  receiveBlockHashDataDir: 'receiveBlockHashDataDir',
 };
 const loggingUtil = {};
 loggingUtil.trace = console.trace;
+loggingUtil.isDebugEnabled = () => {
+  return DEBUG;
+};
 if (DEBUG) {
   loggingUtil.debug = console.log;
   loggingUtil.log = console.log;
@@ -73,8 +79,7 @@ describe(actionUtil.ACTION, () => {
   const getContext = (histories) => {
     return {
       bananojs: bananojs,
-      dataUtil: {
-      },
+      fs: mockFs,
       fetch: (resource, options) => {
         loggingUtil.debug('fetch', resource, options);
         if (resource == config.bananodeApiUrl) {
@@ -214,6 +219,7 @@ describe(actionUtil.ACTION, () => {
   });
 
   beforeEach(async () => {
+    dataUtil.init(config, loggingUtil);
     ipfsUtil.init(config, loggingUtil);
     actionUtil.init(config, loggingUtil);
   });
@@ -221,5 +227,7 @@ describe(actionUtil.ACTION, () => {
   afterEach(async () => {
     actionUtil.deactivate();
     ipfsUtil.deactivate();
+    dataUtil.deactivate();
+    mockFs.clear();
   });
 });

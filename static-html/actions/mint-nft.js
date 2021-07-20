@@ -71,7 +71,6 @@ window.checkMintNftCID = async () => {
 };
 
 
-
 window.mintNft = async () => {
   const seed = window.localStorage.seed;
   const withdrawAccount = await window.bananocoinBananojs.getBananoAccountFromSeed(seed, seedIx);

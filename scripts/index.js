@@ -8,7 +8,6 @@ const path = require('path');
 const fs = require('fs');
 
 // modules
-const dataUtil = require('./data-util.js');
 
 // constants
 const config = require('./config.json');
@@ -127,7 +126,7 @@ const initServer = () => {
       const actionFn = actions[req.body.action];
       if (actionFn !== undefined) {
         const context = {};
-        context.dataUtil = dataUtil;
+        context.fs = fs;
         context.bananojs = bananojs;
         context.fetch = fetch;
         return await actionFn(context, req, res);

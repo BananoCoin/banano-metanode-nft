@@ -61,11 +61,11 @@ const getNftAssetsOwners = async (context, req, res) => {
     throw Error('context.bananojs is required');
   }
 
-  const dataUtil = context.dataUtil;
+  const fs = context.fs;
 
   /* istanbul ignore if */
-  if (dataUtil === undefined) {
-    throw Error('context.dataUtil is required');
+  if (fs === undefined) {
+    throw Error('context.fs is required');
   }
 
   /* istanbul ignore if */
@@ -149,7 +149,7 @@ const getNftAssetsOwners = async (context, req, res) => {
       // asset is the hash of the send block that created the asset.
       // owner is who it was sent to.
       const assetOwner = resp.asset_owners[ix];
-      await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, dataUtil, ACTION, assetOwner);
+      await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, assetOwner);
     }
   }
 

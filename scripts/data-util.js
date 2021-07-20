@@ -1,5 +1,6 @@
 'use strict';
 // libraries
+const path = require('path');
 
 // modules
 
@@ -32,5 +33,26 @@ const deactivate = () => {
   /* eslint-enable no-unused-vars */
 };
 
+const getReceiveBlockHashFile = (fs, sendHash) => {
+  return path.join(config.receiveBlockHashDataDir, sendHash);
+};
+
+const hasReceiveBlockHash = (fs, sendHash) => {
+  return fs.existsSync(getReceiveBlockHashFile(fs, sendHash));
+};
+
+const getReceiveBlockHash = (fs, sendHash) => {
+  return fs.readFileSync(getReceiveBlockHashFile(fs, sendHash), 'UTF-8');
+};
+
+const setReceiveBlockHash = (fs, sendHash, receiveHash) => {
+  const filePtr = fs.openSync(getReceiveBlockHashFile(fs, sendHash), 'w');
+  fs.writeSync(filePtr, receiveHash);
+  fs.closeSync(filePtr);
+};
+
 exports.init = init;
 exports.deactivate = deactivate;
+exports.hasReceiveBlockHash = hasReceiveBlockHash;
+exports.getReceiveBlockHash = getReceiveBlockHash;
+exports.setReceiveBlockHash = setReceiveBlockHash;

@@ -2,8 +2,10 @@
 // libraries
 const bs58 = require('bs58');
 const AbortController = require('abort-controller');
+const awaitSemaphore = require('await-semaphore');
 
 // modules
+const dataUtil = require('./data-util.js');
 
 // constants
 
@@ -11,6 +13,7 @@ const AbortController = require('abort-controller');
 /* eslint-disable no-unused-vars */
 let config;
 let loggingUtil;
+let mutex;
 /* eslint-enable no-unused-vars */
 
 // functions
@@ -25,12 +28,14 @@ const init = (_config, _loggingUtil) => {
   }
   config = _config;
   loggingUtil = _loggingUtil;
+  mutex = new awaitSemaphore.Mutex();
 };
 
 const deactivate = () => {
   /* eslint-disable no-unused-vars */
   config = undefined;
   loggingUtil = undefined;
+  mutex = undefined;
   /* eslint-enable no-unused-vars */
 };
 
@@ -200,7 +205,7 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
   return resp;
 };
 
-const updateAssetOwnerHistory = async (fetch, bananojs, dataUtil, action, assetOwner) => {
+const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner) => {
   /* istanbul ignore if */
   if (fetch === undefined) {
     throw Error('fetch is required');
@@ -212,8 +217,8 @@ const updateAssetOwnerHistory = async (fetch, bananojs, dataUtil, action, assetO
   }
 
   /* istanbul ignore if */
-  if (dataUtil === undefined) {
-    throw Error('dataUtil is required');
+  if (fs === undefined) {
+    throw Error('fs is required');
   }
 
   const assetRepresentativeAccount = await bananojs.getBananoAccount(assetOwner.asset);
@@ -221,7 +226,7 @@ const updateAssetOwnerHistory = async (fetch, bananojs, dataUtil, action, assetO
   let sendHash = assetOwner.asset;
 
   // find the receive block that recieved the send.
-  let receiveHash = await getReceiveBlock(fetch, action, assetOwner.owner, sendHash);
+  let receiveHash = await getReceiveBlock(fetch, fs, action, assetOwner.owner, sendHash);
   loggingUtil.log(action, 'getNftAssetsOwners',
       'asset', assetRepresentativeAccount,
       'sendHash', '=>', 'receiveHash',
@@ -244,7 +249,7 @@ const updateAssetOwnerHistory = async (fetch, bananojs, dataUtil, action, assetO
       loggingUtil.log(action, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner, '=>', nextAssetOwner);
       assetOwner.owner = nextAssetOwner.owner;
       sendHash = nextAssetOwner.send;
-      receiveHash = await getReceiveBlock(fetch, action, nextAssetOwner.owner, nextAssetOwner.send);
+      receiveHash = await getReceiveBlock(fetch, fs, action, nextAssetOwner.owner, nextAssetOwner.send);
       loggingUtil.log(action, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner, '=>', nextAssetOwner, 'receiveHash', receiveHash);
 
       const isReceiveHashUndefined = () => {
@@ -269,45 +274,51 @@ const updateAssetOwnerHistory = async (fetch, bananojs, dataUtil, action, assetO
   }
 };
 
+const getReceiveBlock = async (fetch, fs, action, owner, sendHash) => {
+  const mutexRelease = await mutex.acquire();
+  try {
+    if (dataUtil.hasReceiveBlockHash(fs, sendHash)) {
+      return dataUtil.getReceiveBlockHash(fs, sendHash);
+    }
+    const histBody = {
+      action: 'account_history',
+      account: owner,
+      count: -1,
+      raw: true,
+      reverse: false,
+    };
+    const histRequest = {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(histBody),
+    };
+    loggingUtil.debug(action, 'histRequest', histRequest);
+    const histResponse = await fetch(config.bananodeApiUrl, histRequest);
+    const histResponseJson = await histResponse.json();
+    if (histResponseJson.history !== undefined) {
+      for (let ix = 0; ix < histResponseJson.history.length; ix++) {
+        const historyElt = histResponseJson.history[ix];
+        if (loggingUtil.isDebugEnabled()) {
+          loggingUtil.debug(action, 'getReceiveBlock', 'historyElt', ix, owner, '=>', sendHash, 'link', historyElt.link, 'match', (historyElt.link == sendHash));
+        }
 
-const getReceiveBlock = async (fetch, action, owner, sendHash) => {
-  const histBody = {
-    action: 'account_history',
-    account: owner,
-    count: -1,
-    raw: true,
-    reverse: false,
-  };
-  const histRequest = {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify(histBody),
-  };
-  loggingUtil.debug(action, 'histRequest', histRequest);
-  const histResponse = await fetch(config.bananodeApiUrl, histRequest);
-  const histResponseJson = await histResponse.json();
-  if (histResponseJson.history !== undefined) {
-    for (let ix = 0; ix < histResponseJson.history.length; ix++) {
-      const historyElt = histResponseJson.history[ix];
-      loggingUtil.debug(action, 'getReceiveBlock', 'historyElt', ix, owner, '=>', sendHash, 'link', historyElt.link, 'match', (historyElt.link == sendHash));
-
-      const isLinkSendHash = () => {
-        const retval = historyElt.link == sendHash;
-        loggingUtil.debug(action, 'isLinkSendHash', retval, historyElt.link, sendHash);
-        return retval;
-      };
-
-      if (isLinkSendHash()) {
-        loggingUtil.log(action, 'getReceiveBlock', sendHash, '=>', historyElt.hash);
-        return historyElt.hash;
+        dataUtil.setReceiveBlockHash(fs, historyElt.link, historyElt.hash);
       }
     }
+
+    if (dataUtil.hasReceiveBlockHash(fs, sendHash)) {
+      const receiveHash = dataUtil.getReceiveBlockHash(fs, sendHash);
+      loggingUtil.log(action, 'getReceiveBlock', sendHash, '=>', receiveHash);
+      return receiveHash;
+    }
+    loggingUtil.log(action, 'getReceiveBlock', sendHash, 'no receive block');
+    return undefined;
+  } finally {
+    mutexRelease();
   }
-  loggingUtil.log(action, 'getReceiveBlock', sendHash, 'no receive block');
-  return undefined;
 };
 
 const getNextAssetOwner = async (fetch, bananojs, action, assetRepresentativeAccount, owner, receiveHash) => {

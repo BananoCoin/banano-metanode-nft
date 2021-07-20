@@ -25,6 +25,7 @@
   "dependencies": {
     "@bananocoin/bananojs": "^2.4.13",
     "abort-controller": "^3.0.0",
+    "await-semaphore": "^0.1.3",
     "bs58": "^4.0.1",
     "express": "^4.17.1",
     "node-fetch": "^2.6.1",
