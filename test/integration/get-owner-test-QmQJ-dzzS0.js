@@ -51,13 +51,6 @@ if (DEBUG) {
 // variables
 
 // functions
-const writeActualResponse = (response) => {
-  const fs = require('fs');
-  const filePtr = fs.openSync('data/get-owner-test-QmQJ-dzzS0-actual-response.json', 'w');
-  fs.writeSync(filePtr, JSON.stringify(response));
-  fs.closeSync(filePtr);
-};
-
 const getResponse = (context, assetHash) => {
   const actions = {};
   actionUtil.addAction(actions);
