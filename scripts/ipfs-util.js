@@ -56,6 +56,39 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
   if (config.ipfsApiUrl === undefined) {
     throw Error('config.ipfsApiUrl is required');
   }
+  /* istanbul ignore if */
+  if (ipfsCid === undefined) {
+    throw Error('ipfsCid is required');
+  }
+
+  const isValidIpfsCid = () => {
+    const bytes = bs58.decode(ipfsCid);
+    const hex = bytes.toString('hex');
+    const regExp = new RegExp('^1220[0123456789abcdefABCDEF]{64}$');
+    return regExp.test(hex);
+  };
+  try {
+    if (!isValidIpfsCid()) {
+      throw Error(`hex value is not '1220' + 64 hex chars.`);
+    }
+  } catch (error) {
+    const validCharSet = new Set([...'123456789'+
+      'ABCDEFGHJKLMNPQRSTUVWXYZ'+
+      'abcdefghijkmnopqrstuvwxyz']);
+    let invalidCharacters = '';
+    if (error.message == 'Non-base58 character') {
+      [...ipfsCid].forEach((char) => {
+        if (!validCharSet.has(char)) {
+          invalidCharacters = invalidCharacters + char;
+        }
+      });
+    }
+
+    const message = `ipfsCid '${ipfsCid}' is invalid. error '${error.message}'`+
+        ` ${invalidCharacters}`;
+    throw Error(message.trim());
+  }
+
 
   const fetchWithTimeout = async (resource, options) => {
     return new Promise( async (resolve, reject) => {
@@ -301,6 +334,8 @@ const getReceiveBlock = async (fetch, fs, action, owner, sendHash) => {
     if (histResponseJson.history !== undefined) {
       for (let ix = 0; ix < histResponseJson.history.length; ix++) {
         const historyElt = histResponseJson.history[ix];
+
+        /* istanbul ignore if */
         if (loggingUtil.isDebugEnabled()) {
           loggingUtil.debug(action, 'getReceiveBlock', 'historyElt', ix,
               owner, '=>', sendHash, 'link', historyElt.link, 'match',

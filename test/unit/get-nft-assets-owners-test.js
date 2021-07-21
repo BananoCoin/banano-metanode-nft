@@ -13,16 +13,20 @@ const dataUtil = require('../../scripts/data-util.js');
 const mockFs = require('../util/mock-fs.js');
 
 // constants
+const DEBUG = false;
+
+const LOG = false;
+
 const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
 const badContentTypeIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWABADCT';
-const badTimeoutIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQBADTIME';
-const badUnknownIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciqBADUNKNOWN';
-const badJsonIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQBADJSON';
-const badMissingJsonIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUBAD2MISSINGJSON';
-const badJsonBase58Cid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfBADJSONBASE58';
-const badJsonBase58ShortCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knBADJSONBASE58SHORT';
-const badAbortIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAABORT';
-const badAbortOtherIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciqABORTOTHER';
+const badTimeoutIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQBADT1ME';
+const badUnknownIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciqBADUNKNQWN';
+const badJsonIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQBADJSQN';
+const badMissingJsonIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUBAD2M1SS1NGJSQN';
+const badJsonBase58Cid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfBADJSQNBASE58';
+const badJsonBase58ShortCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knBADJSQNBASE58SHQRT';
+const badAbortIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAABQRT';
+const badAbortOtherIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciqABQRTQTHER';
 const goodHead = '0000000000000000000000000000000000000000000000000000000000000000';
 const goodLink = '0000000000000000000000000000000000000000000000000000000000000001';
 const goodOwner4link = '0000000000000000000000000000000000000000000000000000000000000002';
@@ -39,10 +43,6 @@ const goodOwner4 = 'ban_11111111111111111111111111111111111111111111111111147dcw
 const goodOwner6 = 'ban_1111111111111111111111111111111111111111111111111116i3bqjdmq';
 const goodOwnerB = 'ban_111111111111111111111111111111111111111111111111111d7qqrs8tn';
 const goodAssetRep = 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrfg8egjn';
-
-const DEBUG = false;
-
-const LOG = false;
 
 const config = {
   fetchTimeout: 0,
@@ -690,6 +690,26 @@ describe(actionUtil.ACTION, () => {
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);
     expect(actualResponse).to.deep.equal(expectedResponse);
+    const actualResponse2 = await getResponse(context, goodIpfsCid);
+    expect(actualResponse2).to.deep.equal(expectedResponse);
+
+    const expectedErrorResponse1 = {
+      errors: [
+        'ipfsCid \'0O1\' is invalid. error \'Non-base58 character\' 0O',
+      ],
+      success: false,
+    };
+    const actualErrorResponse1 = await getResponse(context, '0O1');
+    expect(actualErrorResponse1).to.deep.equal(expectedErrorResponse1);
+    const actualErrorResponse2 = await getResponse(context, goodIpfsCid + '1');
+    const expectedErrorResponse2 = {
+      errors: [
+        'ipfsCid \''+ goodIpfsCid + '1' +
+        '\' is invalid.' + ` error 'hex value is not '1220' + 64 hex chars.'`,
+      ],
+      success: false,
+    };
+    expect(actualErrorResponse2).to.deep.equal(expectedErrorResponse2);
   });
   it('get status 200 badContentTypeIpfsCid', async () => {
     const context = getContext();
