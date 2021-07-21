@@ -124,7 +124,17 @@ describe(actionUtil.ACTION, () => {
 
             throw Error(`cannot match options.body '${options.body}' with any histories ${JSON.stringify(histories)}`);
           }
-          throw Error(`unknown resource '${resource}'`);
+
+          if (body.action == 'account_info') {
+            return new Promise(async (resolve) => {
+              resolve({
+                text: () => {
+                  return '{"confirmation_height_frontier": ""}';
+                },
+              });
+            });
+          }
+          throw Error(`unknown resource '${resource}' with body ${options.body}`);
         }
 
         return new Promise(async (resolve) => {

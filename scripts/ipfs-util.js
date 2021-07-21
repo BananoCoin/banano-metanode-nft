@@ -238,7 +238,7 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
   return resp;
 };
 
-const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner) => {
+const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, accountInfo) => {
   /* istanbul ignore if */
   if (fetch === undefined) {
     throw Error('fetch is required');
@@ -277,7 +277,7 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner) 
         },
     );
 
-    const nextAssetOwner = await getNextAssetOwner(fetch, fs, bananojs, action, assetRepresentativeAccount, assetOwner.owner, receiveHash);
+    const nextAssetOwner = await getNextAssetOwner(fetch, fs, bananojs, action, assetRepresentativeAccount, assetOwner.owner, receiveHash, accountInfo);
     if (nextAssetOwner !== undefined) {
       loggingUtil.log(action, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner, '=>', nextAssetOwner);
       assetOwner.owner = nextAssetOwner.owner;
@@ -378,10 +378,9 @@ const getAccountInfo = async (fetch, action, owner) => {
   return accountInfoResponseJson;
 };
 
-const getNextAssetOwner = async (fetch, fs, bananojs, action, assetRepresentativeAccount, owner, receiveHash) => {
+const getNextAssetOwner = async (fetch, fs, bananojs, action, assetRepresentativeAccount, owner, receiveHash, accountInfo) => {
   const mutexRelease = await mutex.acquire();
   try {
-    const accountInfo = await getAccountInfo(fetch, action, owner);
     if (dataUtil.hasAccountInfo(fs, owner) &&
         (dataUtil.getAccountInfo(fs, owner) == accountInfo) &&
         dataUtil.hasNextAssetOwner(fs, receiveHash)) {
@@ -482,3 +481,4 @@ exports.init = init;
 exports.deactivate = deactivate;
 exports.getNftInfoForIpfsCid = getNftInfoForIpfsCid;
 exports.updateAssetOwnerHistory = updateAssetOwnerHistory;
+exports.getAccountInfo = getAccountInfo;

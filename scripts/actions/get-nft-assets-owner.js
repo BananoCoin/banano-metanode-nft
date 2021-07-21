@@ -132,11 +132,25 @@ const getNftAssetsOwners = async (context, req, res) => {
         });
       }
     }
+
+    const accountInfoByOwnerMap = new Map();
+
+    const getAccountInfo = async (owner) => {
+      if (accountInfoByOwnerMap.has(owner)) {
+        return accountInfoByOwnerMap.get(owner);
+      } else {
+        const accountInfo = await ipfsUtil.getAccountInfo(fetch, ACTION, owner);
+        accountInfoByOwnerMap.set(owner, accountInfo);
+        return accountInfo;
+      }
+    };
+
     for (let ix = 0; ix < resp.asset_owner.length; ix++) {
       // asset is the hash of the send block that created the asset.
       // owner is who it was sent to.
       const assetOwner = resp.asset_owner[ix];
-      await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, assetOwner);
+      const accountInfo = await getAccountInfo(assetOwner.owner);
+      await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, assetOwner, accountInfo);
     }
   }
 
