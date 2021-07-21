@@ -2,7 +2,9 @@
   "ipfsApiUrl": "https://gateway.pinata.cloud/ipfs",
   "pinataApiUrl": "https://api.pinata.cloud",
   "bananodeApiUrl": "https://kaliumapi.appditto.com/api",
-  "receiveBlockHashDataDir":"data/receiveBlockHashs",
+  "receiveBlockHashDataDir": "data/receiveBlockHashs",
+  "accountInfosDir": "data/accountInfos",
+  "nextAssetOwnerDir": "data/nextAssetOwners",
   "fetchTimeout": 5000,
   "webPort": ""
 }

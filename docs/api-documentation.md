@@ -16,6 +16,7 @@
         *   [Parameters][12]
     *   [getNftInfo][13]
         *   [Parameters][14]
+*   [account][15]
 
 ## Main
 
@@ -25,13 +26,13 @@ gets the bananode url
 
 #### Parameters
 
-*   `context` **[Object][15]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][16]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][15]** the http request.
-*   `res` **[Object][15]** the http response.
+*   `req` **[Object][16]** the http request.
+*   `res` **[Object][16]** the http response.
 
-Returns **[undefined][16]** 
+Returns **[undefined][17]** 
 
 ### getPinataApiUrl
 
@@ -39,13 +40,13 @@ gets the pinata url
 
 #### Parameters
 
-*   `context` **[Object][15]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][16]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][15]** the http request.
-*   `res` **[Object][15]** the http response.
+*   `req` **[Object][16]** the http request.
+*   `res` **[Object][16]** the http response.
 
-Returns **[undefined][16]** 
+Returns **[undefined][17]** 
 
 ### getIpfsApiUrl
 
@@ -53,13 +54,13 @@ gets the ipfs url
 
 #### Parameters
 
-*   `context` **[Object][15]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][16]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][15]** the http request.
-*   `res` **[Object][15]** the http response.
+*   `req` **[Object][16]** the http request.
+*   `res` **[Object][16]** the http response.
 
-Returns **[undefined][16]** 
+Returns **[undefined][17]** 
 
 ## NFT
 
@@ -69,13 +70,13 @@ gets the owners of a NFT's assets
 
 #### Parameters
 
-*   `context` **[Object][15]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][16]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][15]** the http request.
-*   `res` **[Object][15]** the http response.
+*   `req` **[Object][16]** the http request.
+*   `res` **[Object][16]** the http response.
 
-Returns **[undefined][16]** 
+Returns **[undefined][17]** 
 
 ### getNftAssetsOwners
 
@@ -83,13 +84,13 @@ gets the owners of a NFT's assets
 
 #### Parameters
 
-*   `context` **[Object][15]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][16]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][15]** the http request.
-*   `res` **[Object][15]** the http response.
+*   `req` **[Object][16]** the http request.
+*   `res` **[Object][16]** the http response.
 
-Returns **[undefined][16]** 
+Returns **[undefined][17]** 
 
 ### getNftInfo
 
@@ -97,13 +98,17 @@ gets the information about an NFT
 
 #### Parameters
 
-*   `context` **[Object][15]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][16]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][15]** the http request.
-*   `res` **[Object][15]** the http response.
+*   `req` **[Object][16]** the http request.
+*   `res` **[Object][16]** the http response.
 
-Returns **[undefined][16]** 
+Returns **[undefined][17]** 
+
+## account
+
+TODO: remove account:owner as hist should be on recieve hash only
 
 [1]: #main
 
@@ -133,6 +138,8 @@ Returns **[undefined][16]**
 
 [14]: #parameters-5
 
-[15]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[15]: #account
 
-[16]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
+[16]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[17]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined

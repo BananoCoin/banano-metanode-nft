@@ -33,9 +33,14 @@ const clear = () => {
   fileDataMap.clear();
 };
 
+const mkdirSync = (file) => {
+  fileDataMap.set(file, '');
+};
+
 exports.existsSync = existsSync;
 exports.openSync = openSync;
 exports.writeSync = writeSync;
 exports.readFileSync = readFileSync;
 exports.closeSync = closeSync;
 exports.clear = clear;
+exports.mkdirSync = mkdirSync;

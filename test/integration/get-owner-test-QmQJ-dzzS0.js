@@ -1,6 +1,7 @@
 'use strict';
 
 // libraries
+const fs = require('fs');
 const path = require('path');
 const chai = require('chai');
 const fetch = require('node-fetch');
@@ -11,7 +12,6 @@ const expect = chai.expect;
 const actionUtil = require('../../scripts/actions/get-nft-assets-owner.js');
 const ipfsUtil = require('../../scripts/ipfs-util.js');
 const dataUtil = require('../../scripts/data-util.js');
-const mockFs = require('../util/mock-fs.js');
 const actualResponseUtil = require('../util/actual-response-util.js');
 const testData = require('./get-owner-test-QmQJ-dzzS0.json');
 
@@ -25,7 +25,7 @@ const LOG = false;
 const config = require('../../scripts/config.json');
 
 const context = {
-  fs: mockFs,
+  fs: fs,
   bananojs: bananojs,
   fetch: fetch,
 };
@@ -104,6 +104,6 @@ describe(actionUtil.ACTION, () => {
     actionUtil.deactivate();
     ipfsUtil.deactivate();
     dataUtil.deactivate();
-    mockFs.clear();
+    // mockFs.clear();
   });
 });

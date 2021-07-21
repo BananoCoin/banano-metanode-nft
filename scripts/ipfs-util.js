@@ -277,7 +277,7 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner) 
         },
     );
 
-    const nextAssetOwner = await getNextAssetOwner(fetch, bananojs, action, assetRepresentativeAccount, assetOwner.owner, receiveHash);
+    const nextAssetOwner = await getNextAssetOwner(fetch, fs, bananojs, action, assetRepresentativeAccount, assetOwner.owner, receiveHash);
     if (nextAssetOwner !== undefined) {
       loggingUtil.log(action, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner, '=>', nextAssetOwner);
       assetOwner.owner = nextAssetOwner.owner;
@@ -358,9 +358,59 @@ const getReceiveBlock = async (fetch, fs, action, owner, sendHash) => {
   }
 };
 
-const getNextAssetOwner = async (fetch, bananojs, action, assetRepresentativeAccount, owner, receiveHash) => {
+const getAccountInfo = async (fetch, action, owner) => {
+  const accountInfoBody = {
+    action: 'account_info',
+    account: owner,
+  };
+  const accountInfoRequest = {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(accountInfoBody),
+  };
+  loggingUtil.debug(action, 'accountInfoRequest', accountInfoRequest);
+  const accountInfoResponse = await fetch(config.bananodeApiUrl, accountInfoRequest);
+  const accountInfoResponseJson = await accountInfoResponse.text();
+  loggingUtil.debug(action, 'accountInfoResponseJson', accountInfoResponseJson);
+  return accountInfoResponseJson;
+};
+
+const getNextAssetOwner = async (fetch, fs, bananojs, action, assetRepresentativeAccount, owner, receiveHash) => {
+  const mutexRelease = await mutex.acquire();
+  try {
+    const accountInfo = await getAccountInfo(fetch, action, owner);
+    if (dataUtil.hasAccountInfo(fs, owner) &&
+        (dataUtil.getAccountInfo(fs, owner) == accountInfo) &&
+        dataUtil.hasNextAssetOwner(fs, receiveHash)) {
+      const nextAssetOwner = dataUtil.getNextAssetOwner(fs, receiveHash);
+      if (nextAssetOwner.length === 0) {
+        return undefined;
+      }
+      return JSON.parse(nextAssetOwner);
+    } else {
+      const accountInfoJson = JSON.parse(accountInfo);
+      const nextAssetOwner = await getNextAssetOwnerForCache(fetch, bananojs, action, assetRepresentativeAccount, owner, receiveHash, accountInfoJson);
+      dataUtil.setAccountInfo(fs, owner, accountInfo);
+      if (nextAssetOwner === undefined) {
+        dataUtil.setNextAssetOwner(fs, receiveHash, '');
+      } else {
+        dataUtil.setNextAssetOwner(fs, receiveHash, JSON.stringify(nextAssetOwner));
+      }
+      return nextAssetOwner;
+    }
+  } finally {
+    mutexRelease();
+  }
+};
+
+const getNextAssetOwnerForCache = async (fetch, bananojs, action, assetRepresentativeAccount, owner, receiveHash, accountInfoJson) => {
+  const confirmationHeightFrontier = accountInfoJson.confirmation_height_frontier;
   const histBody = {
     action: 'account_history',
+    /** TODO: remove account:owner as hist should be on recieve hash only */
     account: owner,
     count: -1,
     raw: true,
@@ -378,7 +428,7 @@ const getNextAssetOwner = async (fetch, bananojs, action, assetRepresentativeAcc
   loggingUtil.debug(action, 'histRequest', histRequest);
   const histResponse = await fetch(config.bananodeApiUrl, histRequest);
   const histResponseJson = await histResponse.json();
-  loggingUtil.debug(action, 'histResponseJson', histRequest);
+  loggingUtil.debug(action, 'histResponseJson', histResponseJson);
 
   const isHistoryUndefined = () => {
     const retval = histResponseJson.history === undefined;
@@ -410,6 +460,16 @@ const getNextAssetOwner = async (fetch, bananojs, action, assetRepresentativeAcc
             owner: linkAccount,
           };
         }
+      }
+
+      const isConfirmationHeightFrontier = () => {
+        const retval = (historyElt.hash == confirmationHeightFrontier);
+        loggingUtil.log('isConfirmationHeightFrontier', retval, historyElt.hash, confirmationHeightFrontier);
+        return retval;
+      };
+      if (isConfirmationHeightFrontier()) {
+        loggingUtil.log(action, 'getNextAssetOwner', 'reached confirmed frontier with no next asset owner');
+        return undefined;
       }
     }
   }
