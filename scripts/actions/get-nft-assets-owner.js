@@ -35,7 +35,13 @@ const deactivate = () => {
 };
 
 /**
- * gets the owners of a NFT's assets
+ * gets the owner of a single NFT asset.
+ *  note: this will get the owner of a forgery too, it only checks the chain of ownership.
+ * algorithm:
+ *  - starting from a send block, identified by the asset_hash,
+ *  get the representative.
+ *  - call updateAssetOwnerHistory using the asset_hash as the asset,
+*   and the representative as the owner.
  * @memberof NFT
  * @param {Object} context the context, used to get cached data.
  * - from filesystem in nodejs,
@@ -45,8 +51,8 @@ const deactivate = () => {
  * @param {Object} res the http response.
  * @return {undefined}
  */
-const getNftAssetsOwners = async (context, req, res) => {
-  // loggingUtil.log(ACTION, 'getNftAssetsOwners', context, req, res);
+const getNftAssetsOwner = async (context, req, res) => {
+  // loggingUtil.log(ACTION, 'getNftAssetsOwner', context, req, res);
   const fetch = context.fetch;
 
   /* istanbul ignore if */
@@ -88,79 +94,54 @@ const getNftAssetsOwners = async (context, req, res) => {
     throw Error('config.bananodeApiUrl is required');
   }
 
-  const histBody = {
-    action: 'account_history',
-    count: -1,
-    raw: true,
-    head: req.body.asset_hash,
-    reverse: true,
+  const asset = req.body.asset_hash;
+
+  const blockInfoBody = {
+    action: 'block_info',
+    json_block: 'true',
+    hash: asset,
   };
-  const histRequest = {
+  const blockInfoRequest = {
     method: 'POST',
     mode: 'cors',
     headers: {
       'content-type': 'application/json',
     },
-    body: JSON.stringify(histBody),
+    body: JSON.stringify(blockInfoBody),
   };
-  loggingUtil.debug(ACTION, 'histRequest', histRequest);
-  const histResponse = await fetch(config.bananodeApiUrl, histRequest);
-  const histResponseJson = await histResponse.json();
-  loggingUtil.debug(ACTION, 'histResponseJson', histResponseJson);
+  loggingUtil.debug(ACTION, 'blockInfoRequest', blockInfoRequest);
+  const blockInfoResponse = await fetch(config.bananodeApiUrl, blockInfoRequest);
+  const blockInfoResponseJson = await blockInfoResponse.json();
+  loggingUtil.debug(ACTION, 'blockInfoResponseJson', blockInfoResponseJson);
 
   const resp = {};
-  if (histResponseJson.history.length == 0) {
+  if (blockInfoResponseJson.contents === undefined) {
     resp.success = false;
     resp.errors = [];
     resp.errors.push('no history');
   } else {
     resp.success = true;
-    resp.asset_owner = [];
-    const representativeAccount = histResponseJson.history[0].representative;
-    loggingUtil.log(ACTION, 'representativeAccount', representativeAccount);
-    for (let ix = 0; ix < histResponseJson.history.length; ix++) {
-      const historyElt = histResponseJson.history[ix];
-      loggingUtil.log(ACTION, 'historyElt.representative', ix, historyElt.representative);
-      if (historyElt.representative == representativeAccount) {
-        const linkAccount = await bananojs.getBananoAccount(historyElt.link);
-        // loggingUtil.log(ACTION, 'historyElt', ix, historyElt);
-        loggingUtil.debug(ACTION, 'historyElt', ix, historyElt.hash, historyElt.account, '=>', linkAccount);
-        resp.asset_owner.push({
-          asset: historyElt.hash,
-          owner: linkAccount,
-          history: [],
-        });
-      }
-    }
 
-    const accountInfoByOwnerMap = new Map();
+    const owner = blockInfoResponseJson.contents.link_as_account;
 
-    const getAccountInfo = async (owner) => {
-      if (accountInfoByOwnerMap.has(owner)) {
-        return accountInfoByOwnerMap.get(owner);
-      } else {
-        const accountInfo = await ipfsUtil.getAccountInfo(fetch, ACTION, owner);
-        accountInfoByOwnerMap.set(owner, accountInfo);
-        return accountInfo;
-      }
+    resp.asset_owner = {
+      asset: asset,
+      owner: owner,
+      history: [],
     };
 
-    for (let ix = 0; ix < resp.asset_owner.length; ix++) {
-      // asset is the hash of the send block that created the asset.
-      // owner is who it was sent to.
-      const assetOwner = resp.asset_owner[ix];
-      const accountInfo = await getAccountInfo(assetOwner.owner);
-      await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, assetOwner, accountInfo);
-    }
+    const accountInfo = await ipfsUtil.getAccountInfo(fetch, ACTION, owner);
+
+    await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, resp.asset_owner, accountInfo);
   }
 
-  loggingUtil.log(ACTION, 'getNftAssetsOwners', 'resp', resp);
+  loggingUtil.log(ACTION, 'getNftAssetsOwner', 'resp', resp);
 
   res.send(resp);
 };
 
 const addAction = (actions) => {
-  actions[ACTION] = getNftAssetsOwners;
+  actions[ACTION] = getNftAssetsOwner;
 };
 
 exports.init = init;
