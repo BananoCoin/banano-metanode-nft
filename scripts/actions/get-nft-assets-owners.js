@@ -97,7 +97,6 @@ const getNftAssetsOwners = async (context, req, res) => {
     return;
   }
 
-  const startAccount = ipfsResp.json.issuer;
   const startBlock = ipfsResp.json.mint_previous;
   const newRepresentative = ipfsResp.json.new_representative;
 
