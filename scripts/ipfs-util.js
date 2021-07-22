@@ -409,8 +409,6 @@ const getNextAssetOwnerForCache = async (fetch, bananojs, action, assetRepresent
   const confirmationHeightFrontier = accountInfoJson.confirmation_height_frontier;
   const histBody = {
     action: 'account_history',
-    /** TODO: remove account:owner as hist should be on recieve hash only */
-    account: owner,
     count: -1,
     raw: true,
     head: receiveHash,
@@ -475,7 +473,6 @@ const getNextAssetOwnerForCache = async (fetch, bananojs, action, assetRepresent
   loggingUtil.log(action, 'getNextAssetOwner', 'no next asset owner');
   return undefined;
 };
-
 
 exports.init = init;
 exports.deactivate = deactivate;

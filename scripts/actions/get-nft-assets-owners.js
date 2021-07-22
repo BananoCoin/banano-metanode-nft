@@ -103,7 +103,6 @@ const getNftAssetsOwners = async (context, req, res) => {
 
   const histBody = {
     action: 'account_history',
-    account: startAccount,
     count: -1,
     raw: true,
     head: startBlock,

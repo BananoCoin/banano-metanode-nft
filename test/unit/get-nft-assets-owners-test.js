@@ -470,6 +470,7 @@ describe(actionUtil.ACTION, () => {
       },
       {
         account: goodOwner4,
+        head: goodReceiveHash3,
         history: [
           {
             type: 'state',
@@ -559,6 +560,7 @@ describe(actionUtil.ACTION, () => {
       },
       {
         account: goodOwner4,
+        head: goodReceiveHash3,
         history: [
           {
             type: 'receive',
@@ -636,6 +638,7 @@ describe(actionUtil.ACTION, () => {
       },
       {
         account: goodOwner4,
+        head: goodReceiveHash3,
         history: [
           {
             type: 'receive',
@@ -662,6 +665,7 @@ describe(actionUtil.ACTION, () => {
       },
       {
         account: goodOwnerB,
+        head: goodReceiveHash8,
         history: [
           {
             type: 'receive',
