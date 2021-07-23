@@ -117,6 +117,7 @@ const getNftAssetsOwners = async (context, req, res) => {
   };
   loggingUtil.debug(ACTION, 'histRequest', histRequest);
   const histResponse = await fetch(config.bananodeApiUrl, histRequest);
+  loggingUtil.debug(ACTION, 'histResponse', histResponse);
   const histResponseJson = await histResponse.json();
   loggingUtil.debug(ACTION, 'histResponseJson', histResponseJson);
 

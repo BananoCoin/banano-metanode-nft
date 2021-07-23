@@ -135,13 +135,13 @@ window.hideTransferNftWrapper = () => {
 window.showOwnerAssetCheckWrappers = () => {
   hide('navigationWrapper');
   show('ownerAssetCheckWrapper');
-}
+};
 
 window.hideOwnerAssetCheckWrappers = () => {
   show('navigationWrapper');
   hide('ownerAssetCheckWrapper');
-}
+};
 
-ownerAssetCheckWrapper
+ownerAssetCheckWrapper;
 
 export {addNavigation};

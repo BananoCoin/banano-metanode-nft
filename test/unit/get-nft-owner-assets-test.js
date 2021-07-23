@@ -7,6 +7,7 @@ const chai = require('chai');
 
 // modules
 const expect = chai.expect;
+const templateActionUtil = require('../../scripts/actions/get-nft-template-owner.js');
 const actionUtil = require('../../scripts/actions/get-nft-owner-assets.js');
 const ipfsUtil = require('../../scripts/ipfs-util.js');
 const dataUtil = require('../../scripts/data-util.js');
@@ -15,30 +16,151 @@ const mockFetch = require('../util/mock-fetch.js');
 const {config, loggingUtil, getResponse} = require('../util/get-response.js');
 
 // constants
-const goodOwner2 = 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c';
+const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
+const badContentTypeIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWABADCT';
+const badTimeoutIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQBADT1ME';
+const badUnknownIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciqBADUNKNQWN';
+const badJsonIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQBADJSQN';
+const badMissingJsonIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUBAD2M1SS1NGJSQN';
+const badJsonBase58Cid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfBADJSQNBASE58';
+const badJsonBase58ShortCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knBADJSQNBASE58SHQRT';
+const badAbortIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAABQRT';
+const badAbortOtherIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciqABQRTQTHER';
+const goodHead = '0000000000000000000000000000000000000000000000000000000000000000';
+const goodLink = '0000000000000000000000000000000000000000000000000000000000000001';
+const goodOwner4link = '0000000000000000000000000000000000000000000000000000000000000002';
+const goodReceiveHash3 = '0000000000000000000000000000000000000000000000000000000000000003';
+const goodSendHash4 = '0000000000000000000000000000000000000000000000000000000000000004';
+const goodSendHash6 = '0000000000000000000000000000000000000000000000000000000000000006';
+const nextHead = '0000000000000000000000000000000000000000000000000000000000000007';
+const goodReceiveHash8 = '0000000000000000000000000000000000000000000000000000000000000008';
+const goodSendHashA = '000000000000000000000000000000000000000000000000000000000000000A';
+const goodOwnerBlink = '000000000000000000000000000000000000000000000000000000000000000B';
+const goodReceiveHashC = '000000000000000000000000000000000000000000000000000000000000000C';
+const goodOwner3 = 'ban_1111111111111111111111111111111111111111111111111113b8661hfk';
+const goodOwner4 = 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c';
+const goodOwner6 = 'ban_1111111111111111111111111111111111111111111111111116i3bqjdmq';
+const goodOwnerB = 'ban_111111111111111111111111111111111111111111111111111d7qqrs8tn';
+const goodAssetRep = 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrfg8egjn';
 
 // variables
 
 // functions
 describe(actionUtil.ACTION, () => {
   const getContext = (histories, blockInfos) => {
+    const fetchFn = mockFetch.fetch(histories, blockInfos);
     return {
       bananojs: bananojs,
       fs: mockFs,
-      fetch: mockFetch.fetch(histories, blockInfos),
+      fetch: (resource, options) => {
+        loggingUtil.debug('fetch', resource, options);
+        if (resource == `${config.ipfsApiUrl}/${goodIpfsCid}`) {
+          return new Promise(async (resolve) => {
+            resolve({
+              status: 200,
+              headers: {
+                get: (header) => {
+                  if (header == 'content-type') {
+                    return 'application/json';
+                  }
+                },
+              },
+              json: () => {
+                return {
+                  'command': 'mint_nft',
+                  'version': '',
+                  'title': '',
+                  'issuer': '',
+                  'max_supply': '1',
+                  'ipfs_cid': goodIpfsCid,
+                  'mint_previous': goodHead,
+                };
+              },
+            });
+          });
+        }
+        return fetchFn(resource, options);
+      },
     };
   };
-
 
   it('get status 200 goodOwner no history', async () => {
     const context = getContext(
         [
-          {account: goodOwner2},
+          {account: goodOwner4},
         ],
     );
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, {owner: goodOwner2});
+      actualResponse = await getResponse(actionUtil, context, {owner: goodOwner4});
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      success: true,
+      assetInfos: [],
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+
+  it.only('get status 200 one owner with receive', async () => {
+    const context = getContext([
+      {
+        head: goodHead,
+        history: [
+          {
+            hash: goodSendHash4,
+            representative: goodAssetRep,
+            link: goodOwner4link,
+            type: 'state',
+            subtype: 'send',
+          },
+        ],
+      },
+      {
+        account: goodOwner4,
+        head: goodReceiveHash3,
+        history: [
+          {
+            type: 'state',
+            subtype: 'receive',
+            hash: goodReceiveHash3,
+            representative: goodOwner6,
+            link: goodSendHash4,
+          },
+        ],
+      },
+    ]);
+
+    let actualTemplateResponse;
+    try {
+      actualTemplateResponse = await getResponse(templateActionUtil, context, {ipfs_cid: goodIpfsCid});
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedTemplateResponse = {
+      success: true,
+      asset_owners: [
+        {
+          asset: goodSendHash4,
+          history: [
+            {
+              owner: goodOwner4,
+              receive: goodReceiveHash3,
+              send: goodSendHash4,
+            },
+          ],
+          owner: goodOwner4,
+        },
+      ],
+    };
+    expect(actualTemplateResponse).to.deep.equal(expectedTemplateResponse);
+
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(actionUtil, context, {owner: goodOwner4});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -56,9 +178,11 @@ describe(actionUtil.ACTION, () => {
     dataUtil.init(config, loggingUtil);
     ipfsUtil.init(config, loggingUtil);
     actionUtil.init(config, loggingUtil);
+    templateActionUtil.init(config, loggingUtil);
   });
 
   afterEach(async () => {
+    templateActionUtil.deactivate();
     actionUtil.deactivate();
     ipfsUtil.deactivate();
     dataUtil.deactivate();
