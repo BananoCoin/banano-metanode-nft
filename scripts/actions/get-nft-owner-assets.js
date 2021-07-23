@@ -92,7 +92,17 @@ const getNftOwnerAssets = async (context, req, res) => {
 
   const resp = {};
   resp.success = true;
-  resp.assetInfos = await ipfsUtil.getOwnedAssets(fetch, bananojs, fs, ACTION, owner);
+  resp.assetInfos = [];
+
+  const ownedAssets = await ipfsUtil.getOwnedAssets(fetch, bananojs, fs, ACTION, owner);
+  for (let ownedAssetIx = 0; ownedAssetIx < ownedAssets.length; ownedAssetIx++) {
+    const ownedAsset = ownedAssets[ownedAssetIx];
+    resp.assetInfos.push({
+      asset: ownedAsset,
+      // TODO:  add template lookup.
+      template: '',
+    });
+  }
 
   loggingUtil.log(ACTION, 'getNftOwnerAssets', 'resp', resp);
 
