@@ -2,7 +2,6 @@
 // libraries
 const bs58 = require('bs58');
 const AbortController = require('abort-controller');
-const awaitSemaphore = require('await-semaphore');
 
 // modules
 const dataUtil = require('./data-util.js');
@@ -13,7 +12,6 @@ const dataUtil = require('./data-util.js');
 /* eslint-disable no-unused-vars */
 let config;
 let loggingUtil;
-let mutex;
 /* eslint-enable no-unused-vars */
 
 // functions
@@ -28,14 +26,12 @@ const init = (_config, _loggingUtil) => {
   }
   config = _config;
   loggingUtil = _loggingUtil;
-  mutex = new awaitSemaphore.Mutex();
 };
 
 const deactivate = () => {
   /* eslint-disable no-unused-vars */
   config = undefined;
   loggingUtil = undefined;
-  mutex = undefined;
   /* eslint-enable no-unused-vars */
 };
 
@@ -255,26 +251,23 @@ const getOwnedAssets = async (fetch, bananojs, fs, action, owner) => {
   }
   loggingUtil.log(action, 'getOwnedAssets', 'owner', owner);
   const accountInfo = await getAccountInfo(fetch, action, owner);
-  const mutexRelease = await mutex.acquire();
-  try {
-    const dirtyAssets = dataUtil.listOwnerAssets(fs, owner);
-    for (let dirtyAssetIx = 0; dirtyAssetIx < dirtyAssets.length; dirtyAssetIx++) {
-      const dirtyAsset = dirtyAssets[dirtyAssetIx];
-      const dirtyOwnerAsset = {
-        owner: owner,
-        asset: dirtyAsset,
-      };
-      loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset', dirtyOwnerAsset);
-      await updateAssetOwnerHistory(fetch, bananojs, fs, action, dirtyOwnerAsset, accountInfo);
-      loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset', 'realOwner', dirtyOwnerAsset.owner, 'same?', dirtyOwnerAsset.owner !== owner);
-      if (dirtyOwnerAsset.owner !== owner) {
-        dataUtil.deleteOwnerAsset(fs, owner, dirtyOwnerAsset.asset);
-      }
+  loggingUtil.log(action, 'getOwnedAssets', 'accountInfo', accountInfo);
+  const dirtyAssets = dataUtil.listOwnerAssets(fs, owner);
+  for (let dirtyAssetIx = 0; dirtyAssetIx < dirtyAssets.length; dirtyAssetIx++) {
+    const dirtyAsset = dirtyAssets[dirtyAssetIx];
+    const dirtyOwnerAsset = {
+      owner: owner,
+      asset: dirtyAsset,
+      history: [],
+    };
+    loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset', dirtyOwnerAsset);
+    await updateAssetOwnerHistory(fetch, bananojs, fs, action, dirtyOwnerAsset, accountInfo);
+    loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset', 'realOwner', dirtyOwnerAsset.owner, 'same?', dirtyOwnerAsset.owner !== owner);
+    if (dirtyOwnerAsset.owner !== owner) {
+      dataUtil.deleteOwnerAsset(fs, owner, dirtyOwnerAsset.asset);
     }
-    return dataUtil.listOwnerAssets(fs, owner);
-  } finally {
-    mutexRelease();
   }
+  return dataUtil.listOwnerAssets(fs, owner);
 };
 
 const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, accountInfo) => {
@@ -349,54 +342,49 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
 };
 
 const getReceiveBlock = async (fetch, fs, action, owner, sendHash) => {
-  const mutexRelease = await mutex.acquire();
-  try {
-    if (dataUtil.hasReceiveBlockHash(fs, sendHash)) {
-      return dataUtil.getReceiveBlockHash(fs, sendHash);
-    }
-    const histBody = {
-      action: 'account_history',
-      account: owner,
-      count: -1,
-      raw: true,
-      reverse: false,
-    };
-    const histRequest = {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify(histBody),
-    };
-    loggingUtil.debug(action, 'histRequest', histRequest);
-    const histResponse = await fetch(config.bananodeApiUrl, histRequest);
-    const histResponseJson = await histResponse.json();
-    if (histResponseJson.history !== undefined) {
-      for (let ix = 0; ix < histResponseJson.history.length; ix++) {
-        const historyElt = histResponseJson.history[ix];
-
-        /* istanbul ignore if */
-        if (loggingUtil.isDebugEnabled()) {
-          loggingUtil.debug(action, 'getReceiveBlock', 'historyElt', ix,
-              owner, '=>', sendHash, 'link', historyElt.link, 'match',
-              (historyElt.link == sendHash));
-        }
-
-        dataUtil.setReceiveBlockHash(fs, historyElt.link, historyElt.hash);
-      }
-    }
-
-    if (dataUtil.hasReceiveBlockHash(fs, sendHash)) {
-      const receiveHash = dataUtil.getReceiveBlockHash(fs, sendHash);
-      loggingUtil.log(action, 'getReceiveBlock', sendHash, '=>', receiveHash);
-      return receiveHash;
-    }
-    loggingUtil.log(action, 'getReceiveBlock', sendHash, 'no receive block');
-    return undefined;
-  } finally {
-    mutexRelease();
+  if (dataUtil.hasReceiveBlockHash(fs, sendHash)) {
+    return dataUtil.getReceiveBlockHash(fs, sendHash);
   }
+  const histBody = {
+    action: 'account_history',
+    account: owner,
+    count: -1,
+    raw: true,
+    reverse: false,
+  };
+  const histRequest = {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(histBody),
+  };
+  loggingUtil.debug(action, 'histRequest', histRequest);
+  const histResponse = await fetch(config.bananodeApiUrl, histRequest);
+  const histResponseJson = await histResponse.json();
+  if (histResponseJson.history !== undefined) {
+    for (let ix = 0; ix < histResponseJson.history.length; ix++) {
+      const historyElt = histResponseJson.history[ix];
+
+      /* istanbul ignore if */
+      if (loggingUtil.isDebugEnabled()) {
+        loggingUtil.debug(action, 'getReceiveBlock', 'historyElt', ix,
+            owner, '=>', sendHash, 'link', historyElt.link, 'match',
+            (historyElt.link == sendHash));
+      }
+
+      dataUtil.setReceiveBlockHash(fs, historyElt.link, historyElt.hash);
+    }
+  }
+
+  if (dataUtil.hasReceiveBlockHash(fs, sendHash)) {
+    const receiveHash = dataUtil.getReceiveBlockHash(fs, sendHash);
+    loggingUtil.log(action, 'getReceiveBlock', sendHash, '=>', receiveHash);
+    return receiveHash;
+  }
+  loggingUtil.log(action, 'getReceiveBlock', sendHash, 'no receive block');
+  return undefined;
 };
 
 const getAccountInfo = async (fetch, action, owner) => {
@@ -420,29 +408,24 @@ const getAccountInfo = async (fetch, action, owner) => {
 };
 
 const getNextAssetOwner = async (fetch, fs, bananojs, action, assetRepresentativeAccount, owner, receiveHash, accountInfo) => {
-  const mutexRelease = await mutex.acquire();
-  try {
-    if (dataUtil.hasAccountInfo(fs, owner) &&
+  if (dataUtil.hasAccountInfo(fs, owner) &&
         (dataUtil.getAccountInfo(fs, owner) == accountInfo) &&
         dataUtil.hasNextAssetOwner(fs, receiveHash)) {
-      const nextAssetOwner = dataUtil.getNextAssetOwner(fs, receiveHash);
-      if (nextAssetOwner.length === 0) {
-        return undefined;
-      }
-      return JSON.parse(nextAssetOwner);
-    } else {
-      const accountInfoJson = JSON.parse(accountInfo);
-      const nextAssetOwner = await getNextAssetOwnerForCache(fetch, bananojs, action, assetRepresentativeAccount, owner, receiveHash, accountInfoJson);
-      dataUtil.setAccountInfo(fs, owner, accountInfo);
-      if (nextAssetOwner === undefined) {
-        dataUtil.setNextAssetOwner(fs, receiveHash, '');
-      } else {
-        dataUtil.setNextAssetOwner(fs, receiveHash, JSON.stringify(nextAssetOwner));
-      }
-      return nextAssetOwner;
+    const nextAssetOwner = dataUtil.getNextAssetOwner(fs, receiveHash);
+    if (nextAssetOwner.length === 0) {
+      return undefined;
     }
-  } finally {
-    mutexRelease();
+    return JSON.parse(nextAssetOwner);
+  } else {
+    const accountInfoJson = JSON.parse(accountInfo);
+    const nextAssetOwner = await getNextAssetOwnerForCache(fetch, bananojs, action, assetRepresentativeAccount, owner, receiveHash, accountInfoJson);
+    dataUtil.setAccountInfo(fs, owner, accountInfo);
+    if (nextAssetOwner === undefined) {
+      dataUtil.setNextAssetOwner(fs, receiveHash, '');
+    } else {
+      dataUtil.setNextAssetOwner(fs, receiveHash, JSON.stringify(nextAssetOwner));
+    }
+    return nextAssetOwner;
   }
 };
 

@@ -6,6 +6,7 @@ const http = require('http');
 const fetch = require('node-fetch');
 const path = require('path');
 const fs = require('fs');
+const awaitSemaphore = require('await-semaphore');
 
 // modules
 
@@ -40,6 +41,7 @@ loggingUtil.trace = console.trace;
 const modules = [];
 /* eslint-disable no-unused-vars */
 let instance;
+let mutex;
 /* eslint-enable no-unused-vars */
 
 const init = async () => {
@@ -55,6 +57,7 @@ const init = async () => {
   }
 
   bananojs.setBananodeApiUrl(config.bananodeApiUrl);
+  mutex = new awaitSemaphore.Mutex();
 
   addModules();
   await initModules();
@@ -130,7 +133,13 @@ const initServer = () => {
         context.fs = fs;
         context.bananojs = bananojs;
         context.fetch = fetch;
-        return await actionFn(context, req, res);
+
+        const mutexRelease = await mutex.acquire();
+        try {
+          return await actionFn(context, req, res);
+        } finally {
+          mutexRelease();
+        }
       }
 
       const resp = {};
@@ -193,6 +202,8 @@ const initServer = () => {
 const closeProgram = async () => {
   console.info('STARTED closing program.');
   await deactivateModules();
+  instance = undefined;
+  mutex = undefined;
   console.info('SUCCESS closing program.');
   process.exit(0);
 };

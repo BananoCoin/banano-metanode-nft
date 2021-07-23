@@ -30,7 +30,7 @@ const context = {
 // variables
 
 // functions
-describe.only(actionUtil.ACTION, () => {
+describe(actionUtil.ACTION, () => {
   it(owner, async () => {
     let actualResponse;
     try {
