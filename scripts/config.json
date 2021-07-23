@@ -5,6 +5,7 @@
   "receiveBlockHashDataDir": "data/receiveBlockHashs",
   "accountInfosDir": "data/accountInfos",
   "nextAssetOwnerDir": "data/nextAssetOwners",
+  "ownedAssetsDir": "data/ownedAssets",
   "fetchTimeout": 5000,
   "webPort": ""
 }

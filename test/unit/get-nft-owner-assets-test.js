@@ -44,6 +44,7 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
+      assetInfos: [],
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);

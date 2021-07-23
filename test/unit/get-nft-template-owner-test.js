@@ -456,7 +456,7 @@ describe(actionUtil.ACTION, () => {
             type: 'receive',
             hash: goodReceiveHashC,
             representative: goodOwner6,
-            link: '',
+            link: goodOwner4link,
           },
           {
             type: 'receive',

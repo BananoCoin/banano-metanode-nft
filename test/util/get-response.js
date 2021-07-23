@@ -18,6 +18,7 @@ const config = {
   receiveBlockHashDataDir: 'receiveBlockHashDataDir',
   accountInfosDir: 'accountInfosDir',
   nextAssetOwnerDir: 'nextAssetOwnerDir',
+  ownedAssetsDir: 'ownedAssetsDir',
 };
 
 const loggingUtil = {};

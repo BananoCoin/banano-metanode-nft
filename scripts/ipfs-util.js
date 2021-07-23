@@ -238,6 +238,43 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
   return resp;
 };
 
+const getOwnedAssets = async (fetch, bananojs, fs, action, owner) => {
+  /* istanbul ignore if */
+  if (fetch === undefined) {
+    throw Error('fetch is required');
+  }
+
+  /* istanbul ignore if */
+  if (bananojs === undefined) {
+    throw Error('bananojs is required');
+  }
+
+  /* istanbul ignore if */
+  if (fs === undefined) {
+    throw Error('fs is required');
+  }
+  loggingUtil.log(action, 'getOwnedAssets', 'owner', owner);
+  const accountInfo = await getAccountInfo(fetch, action, owner);
+  const mutexRelease = await mutex.acquire();
+  try {
+    const dirtyAssets = dataUtil.listOwnerAssets(fs, owner);
+    for (let dirtyAssetIx = 0; dirtyAssetIx < dirtyAssets.length; dirtyAssetIx++) {
+      const dirtyAsset = dirtyAssets[dirtyAssetIx];
+      const dirtyOwnerAsset = {
+        owner: owner,
+        asset: dirtyAsset,
+      };
+      await updateAssetOwnerHistory(fetch, bananojs, fs, action, assetOwner, accountInfo);
+      if (dirtyOwnerAsset.owner !== owner) {
+        dataUtil.deleteOwnerAsset(fs, owner, dirtyOwnerAsset.asset);
+      }
+    }
+    return dataUtil.listOwnerAssets(fs, owner);
+  } finally {
+    mutexRelease();
+  }
+};
+
 const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, accountInfo) => {
   /* istanbul ignore if */
   if (fetch === undefined) {
@@ -305,6 +342,8 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
       receiveHash = undefined;
     }
   }
+
+  dataUtil.addOwnerAsset(fs, assetOwner.owner, assetOwner.asset);
 };
 
 const getReceiveBlock = async (fetch, fs, action, owner, sendHash) => {
@@ -341,7 +380,7 @@ const getReceiveBlock = async (fetch, fs, action, owner, sendHash) => {
               owner, '=>', sendHash, 'link', historyElt.link, 'match',
               (historyElt.link == sendHash));
         }
-
+        
         dataUtil.setReceiveBlockHash(fs, historyElt.link, historyElt.hash);
       }
     }

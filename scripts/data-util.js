@@ -33,15 +33,27 @@ const deactivate = () => {
   /* eslint-enable no-unused-vars */
 };
 
+const VALID_FILE_STR = '^[a-zA-Z0-9_]+$';
+const validFileRegExp = new RegExp(VALID_FILE_STR);
+
+const checkValidFileStr = (value) => {
+  const isValid = validFileRegExp.test(value);
+  if (!isValid) {
+    throw Error(`value '${value}' does not match regex '${VALID_FILE_STR}'`);
+  }
+};
+
 const getReceiveBlockHashFile = (fs, sendHash) => {
   return path.join(config.receiveBlockHashDataDir, sendHash);
 };
 
 const hasReceiveBlockHash = (fs, sendHash) => {
+  checkValidFileStr(sendHash);
   return fs.existsSync(getReceiveBlockHashFile(fs, sendHash));
 };
 
 const getReceiveBlockHash = (fs, sendHash) => {
+  checkValidFileStr(sendHash);
   return fs.readFileSync(getReceiveBlockHashFile(fs, sendHash), 'UTF-8');
 };
 
@@ -52,6 +64,7 @@ const makeReceiveBlockHashDir = (fs) => {
 };
 
 const setReceiveBlockHash = (fs, sendHash, receiveHash) => {
+  checkValidFileStr(sendHash);
   makeReceiveBlockHashDir(fs);
   const filePtr = fs.openSync(getReceiveBlockHashFile(fs, sendHash), 'w');
   fs.writeSync(filePtr, receiveHash);
@@ -59,14 +72,17 @@ const setReceiveBlockHash = (fs, sendHash, receiveHash) => {
 };
 
 const getAccountInfoFile = (fs, owner) => {
+  checkValidFileStr(owner);
   return path.join(config.accountInfosDir, owner);
 };
 
 const hasAccountInfo = (fs, owner) => {
+  checkValidFileStr(owner);
   return fs.existsSync(getAccountInfoFile(fs, owner));
 };
 
 const getAccountInfo = (fs, owner) => {
+  checkValidFileStr(owner);
   return fs.readFileSync(getAccountInfoFile(fs, owner), 'UTF-8');
 };
 
@@ -88,10 +104,12 @@ const getNextAssetOwnerFile = (fs, owner) => {
 };
 
 const hasNextAssetOwner = (fs, owner) => {
+  checkValidFileStr(owner);
   return fs.existsSync(getNextAssetOwnerFile(fs, owner));
 };
 
 const getNextAssetOwner = (fs, owner) => {
+  checkValidFileStr(owner);
   return fs.readFileSync(getNextAssetOwnerFile(fs, owner), 'UTF-8');
 };
 
@@ -102,10 +120,51 @@ const makeNextAssetOwnerDir = (fs) => {
 };
 
 const setNextAssetOwner = (fs, owner, count) => {
+  checkValidFileStr(owner);
   makeNextAssetOwnerDir(fs);
   const filePtr = fs.openSync(getNextAssetOwnerFile(fs, owner), 'w');
   fs.writeSync(filePtr, count);
   fs.closeSync(filePtr);
+};
+
+const makeOwnedAssetsDir = (fs, owner) => {
+  const ownedAssetsDir = getOwnedAssetsDir(fs, owner);
+  if (!fs.existsSync(ownedAssetsDir)) {
+    fs.mkdirSync(ownedAssetsDir, {recursive: true});
+  }
+};
+
+const getOwnedAssetsDir = (fs, owner) => {
+  return path.join(config.ownedAssetsDir, owner);
+};
+
+const getOwnedAssetsFile = (fs, owner, asset) => {
+  return path.join(getOwnedAssetsDir(fs, owner), asset);
+};
+
+const addOwnerAsset = (fs, owner, asset) => {
+  checkValidFileStr(owner);
+  checkValidFileStr(asset);
+  makeOwnedAssetsDir(fs, owner);
+  const filePtr = fs.openSync(getOwnedAssetsFile(fs, owner, asset), 'w');
+  fs.closeSync(filePtr);
+};
+
+const deleteOwnerAsset = (fs, owner, asset) => {
+  checkValidFileStr(owner);
+  checkValidFileStr(asset);
+  fs.unlinkSync(getOwnedAssetsFile(fs, owner, asset));
+};
+
+const listOwnerAssets = (fs, owner) => {
+  const dir = getOwnedAssetsDir(fs, owner);
+  const assets = [];
+  if (fs.existsSync(dir)) {
+    fs.readdirSync(dir).forEach((fileNm) => {
+      assets.push(fileNm);
+    });
+  }
+  return assets;
 };
 
 exports.init = init;
@@ -119,3 +178,6 @@ exports.setAccountInfo = setAccountInfo;
 exports.hasNextAssetOwner = hasNextAssetOwner;
 exports.getNextAssetOwner = getNextAssetOwner;
 exports.setNextAssetOwner = setNextAssetOwner;
+exports.addOwnerAsset = addOwnerAsset;
+exports.deleteOwnerAsset = deleteOwnerAsset;
+exports.listOwnerAssets = listOwnerAssets;
