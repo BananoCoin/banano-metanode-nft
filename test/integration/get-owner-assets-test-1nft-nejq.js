@@ -14,10 +14,14 @@ const ipfsUtil = require('../../scripts/ipfs-util.js');
 const dataUtil = require('../../scripts/data-util.js');
 const actualResponseUtil = require('../util/actual-response-util.js');
 const {loggingUtil, getResponse} = require('../util/get-response.js');
-const testData = require('./get-template-owner-test-QmQJ-dzzS.json');
+const testData = require('./get-owner-assets-test-1nft-nejq.json');
 
 // constants
-const ipfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
+const owner = 'ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq';
+
+const DEBUG = false;
+
+const LOG = false;
 
 const config = require('../../scripts/config.json');
 
@@ -30,12 +34,11 @@ const context = {
 // variables
 
 // functions
-
 describe(actionUtil.ACTION, () => {
-  it(ipfsCid, async () => {
+  it(owner, async () => {
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: ipfsCid});
+      actualResponse = await getResponse(actionUtil, context, {owner: owner});
     } catch (error) {
       loggingUtil.trace(error);
     }
