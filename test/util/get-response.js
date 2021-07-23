@@ -13,6 +13,7 @@ const LOG = false;
 // functions
 const config = {
   fetchTimeout: 0,
+  pinataApiUrl: 'pinataApiUrlValue',
   ipfsApiUrl: 'ipfsApiUrlValue',
   bananodeApiUrl: 'bananodeApiUrlValue',
   receiveBlockHashDataDir: 'receiveBlockHashDataDir',

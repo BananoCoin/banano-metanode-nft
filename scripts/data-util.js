@@ -169,6 +169,7 @@ const listOwnerAssets = (fs, owner) => {
 
 exports.init = init;
 exports.deactivate = deactivate;
+exports.checkValidFileStr = checkValidFileStr;
 exports.hasReceiveBlockHash = hasReceiveBlockHash;
 exports.getReceiveBlockHash = getReceiveBlockHash;
 exports.setReceiveBlockHash = setReceiveBlockHash;
