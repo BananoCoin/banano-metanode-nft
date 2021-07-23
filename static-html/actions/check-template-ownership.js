@@ -1,6 +1,6 @@
 import {addText, addChildElement} from '../lib/dom.js';
 
-const addOwnerCheck = () => {
+const addTemplateOwnerCheck = () => {
   const wrapperElt = document.getElementById('templateOwnerCheckWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
     'method': 'POST',
@@ -25,20 +25,20 @@ const addOwnerCheck = () => {
     'id': 'check-ownership',
     'type': 'button',
     'class': '',
-    'onclick': 'checkOwnership();return false;',
+    'onclick': 'checkTemplateOwnership();return false;',
   });
   addText(checkCidElt, 'Get Ownership Info');
   addChildElement(wrapperElt, 'div', {
-    'id': 'ownershipInfo',
+    'id': 'templateOwnershipInfo',
     'class': 'selectable container column',
   });
 };
 
 
-window.checkOwnership = async () => {
-  console.log('checkOwnership');
+window.checkTemplateOwnership = async () => {
+  console.log('checkTemplateOwnership');
   const cid = document.getElementById('templateOwnerCid').value.trim();
-  ownershipInfo.innerHTML = 'pending...';
+  templateOwnershipInfo.innerHTML = 'pending...';
   const callback = async () => {
     const response = await fetch('/', {
       method: 'POST',
@@ -47,7 +47,7 @@ window.checkOwnership = async () => {
       },
       body: `{"action": "get_nft_template_owner", "ipfs_cid":"${cid}"}`,
     });
-    console.log('checkOwnership', response);
+    console.log('checkTemplateOwnership', response);
     const responseJson = await response.json();
     let html = '';
     if (responseJson.success) {
@@ -78,9 +78,9 @@ window.checkOwnership = async () => {
         html += '</span>';
       }
     }
-    ownershipInfo.innerHTML = html;
+    templateOwnershipInfo.innerHTML = html;
   };
   setTimeout(callback, 0);
 };
 
-export {addOwnerCheck};
+export {addTemplateOwnerCheck};

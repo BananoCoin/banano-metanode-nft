@@ -19,6 +19,11 @@ const addNavigation = () => {
     'type': 'button', 'onclick': 'return showSeedAndAccountWrappers();',
   }), 'Show Seed And Account');
 
+  addText(addChildElement(formElt, 'h3'), 'Are you trying to view your owned assets?');
+  addText(addChildElement(formElt, 'button', {
+    'type': 'button', 'onclick': 'return showOwnerAssetCheckWrappers();',
+  }), 'Show Owned Assets');
+
   addText(addChildElement(formElt, 'h3'), 'Are you trying to create a new NFT template?');
   addText(addChildElement(formElt, 'button', {
     'type': 'button', 'onclick': 'return showCreateNftTemplateWrappers();',
@@ -127,5 +132,16 @@ window.hideTransferNftWrapper = () => {
   hide('transferNftWrapper');
 };
 
+window.showOwnerAssetCheckWrappers = () => {
+  hide('navigationWrapper');
+  show('ownerAssetCheckWrapper');
+}
+
+window.hideOwnerAssetCheckWrappers = () => {
+  show('navigationWrapper');
+  hide('ownerAssetCheckWrapper');
+}
+
+ownerAssetCheckWrapper
 
 export {addNavigation};

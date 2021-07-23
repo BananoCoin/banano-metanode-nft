@@ -92,6 +92,7 @@ const getNftOwnerAssets = async (context, req, res) => {
 
   const resp = {};
   resp.success = true;
+  resp.assetInfos = [];
 
   loggingUtil.log(ACTION, 'getNftOwnerAssets', 'resp', resp);
 

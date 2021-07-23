@@ -3,8 +3,9 @@ import {addCidPinInfo} from './actions/cid-pin.js';
 import {addCidInfo} from './actions/cid-info.js';
 import {addNavigation} from './actions/navigation.js';
 import {addTransferNft} from './actions/transfer-nft.js';
-import {addOwnerCheck} from './actions/check-template-ownership.js';
+import {addTemplateOwnerCheck} from './actions/check-template-ownership.js';
 import {addMintNft} from './actions/mint-nft.js';
+import {addOwnerAssetCheck} from './actions/check-owner-assets.js';
 
 window.bananoApiUrl = '';
 
@@ -28,9 +29,10 @@ window.onLoad = async () => {
   addAccountAndInfo();
   addCidPinInfo();
   addCidInfo();
-  addOwnerCheck();
+  addTemplateOwnerCheck();
   addMintNft();
   addTransferNft();
+  addOwnerAssetCheck();
   updateSeedAndAccountInfo();
 };
 
