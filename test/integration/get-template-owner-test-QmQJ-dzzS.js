@@ -30,7 +30,6 @@ const context = {
 // variables
 
 // functions
-
 describe(actionUtil.ACTION, () => {
   it(ipfsCid, async () => {
     let actualResponse;

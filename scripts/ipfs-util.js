@@ -264,7 +264,9 @@ const getOwnedAssets = async (fetch, bananojs, fs, action, owner) => {
         owner: owner,
         asset: dirtyAsset,
       };
-      await updateAssetOwnerHistory(fetch, bananojs, fs, action, assetOwner, accountInfo);
+      loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset', dirtyOwnerAsset);
+      await updateAssetOwnerHistory(fetch, bananojs, fs, action, dirtyOwnerAsset, accountInfo);
+      loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset', 'realOwner', dirtyOwnerAsset.owner, 'same?', dirtyOwnerAsset.owner !== owner);
       if (dirtyOwnerAsset.owner !== owner) {
         dataUtil.deleteOwnerAsset(fs, owner, dirtyOwnerAsset.asset);
       }
@@ -343,7 +345,7 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
     }
   }
 
-  dataUtil.addOwnerAsset(fs, assetOwner.owner, assetOwner.asset);
+  loggingUtil.log(action, 'addOwnerAsset', assetOwner.owner, assetOwner.asset);
 };
 
 const getReceiveBlock = async (fetch, fs, action, owner, sendHash) => {
@@ -380,7 +382,7 @@ const getReceiveBlock = async (fetch, fs, action, owner, sendHash) => {
               owner, '=>', sendHash, 'link', historyElt.link, 'match',
               (historyElt.link == sendHash));
         }
-        
+
         dataUtil.setReceiveBlockHash(fs, historyElt.link, historyElt.hash);
       }
     }
@@ -518,3 +520,4 @@ exports.deactivate = deactivate;
 exports.getNftInfoForIpfsCid = getNftInfoForIpfsCid;
 exports.updateAssetOwnerHistory = updateAssetOwnerHistory;
 exports.getAccountInfo = getAccountInfo;
+exports.getOwnedAssets = getOwnedAssets;

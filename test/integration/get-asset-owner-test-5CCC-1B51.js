@@ -19,10 +19,6 @@ const testData = require('./get-asset-owner-test-5CCC-1B51.json');
 // constants
 const assetHash = '5CCCBA25B221D9437B07E15C20D0F5997B23262E3194CCB3B7A4374BF4DA1B51';
 
-const DEBUG = false;
-
-const LOG = false;
-
 const config = require('../../scripts/config.json');
 
 const context = {

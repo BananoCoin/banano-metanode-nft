@@ -92,7 +92,7 @@ const getNftOwnerAssets = async (context, req, res) => {
 
   const resp = {};
   resp.success = true;
-  resp.assetInfos = [];
+  resp.assetInfos = await ipfsUtil.getOwnedAssets(fetch, bananojs, fs, ACTION, owner);
 
   loggingUtil.log(ACTION, 'getNftOwnerAssets', 'resp', resp);
 

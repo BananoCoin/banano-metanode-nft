@@ -1,3 +1,6 @@
 {
-  
+  "expectedResponse": {
+    "assetInfos": [],
+    "success": true
+  }
 }

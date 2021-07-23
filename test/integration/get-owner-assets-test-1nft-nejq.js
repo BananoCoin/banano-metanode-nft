@@ -9,7 +9,7 @@ const bananojs = require('@bananocoin/bananojs');
 
 // modules
 const expect = chai.expect;
-const actionUtil = require('../../scripts/actions/get-nft-template-owner.js');
+const actionUtil = require('../../scripts/actions/get-nft-owner-assets.js');
 const ipfsUtil = require('../../scripts/ipfs-util.js');
 const dataUtil = require('../../scripts/data-util.js');
 const actualResponseUtil = require('../util/actual-response-util.js');
@@ -18,10 +18,6 @@ const testData = require('./get-owner-assets-test-1nft-nejq.json');
 
 // constants
 const owner = 'ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq';
-
-const DEBUG = false;
-
-const LOG = false;
 
 const config = require('../../scripts/config.json');
 
@@ -34,7 +30,7 @@ const context = {
 // variables
 
 // functions
-describe(actionUtil.ACTION, () => {
+describe.only(actionUtil.ACTION, () => {
   it(owner, async () => {
     let actualResponse;
     try {
