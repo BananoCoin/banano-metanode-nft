@@ -105,7 +105,7 @@ describe(actionUtil.ACTION, () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
 
-  it.only('get status 200 one owner with receive', async () => {
+  it('get status 200 one owner with receive', async () => {
     const context = getContext([
       {
         head: goodHead,

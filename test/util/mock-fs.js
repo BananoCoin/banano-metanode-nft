@@ -37,6 +37,10 @@ const mkdirSync = (file) => {
   fileDataMap.set(file, '');
 };
 
+const readdirSync = (file) => {
+  return [];
+};
+
 exports.existsSync = existsSync;
 exports.openSync = openSync;
 exports.writeSync = writeSync;
@@ -44,3 +48,4 @@ exports.readFileSync = readFileSync;
 exports.closeSync = closeSync;
 exports.clear = clear;
 exports.mkdirSync = mkdirSync;
+exports.readdirSync = readdirSync;
