@@ -337,7 +337,7 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
       receiveHash = undefined;
     }
   }
-
+  dataUtil.addOwnerAsset(fs, assetOwner.owner, assetOwner.asset);
   loggingUtil.log(action, 'addOwnerAsset', assetOwner.owner, assetOwner.asset);
 };
 
