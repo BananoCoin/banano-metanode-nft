@@ -86,15 +86,6 @@ window.checkCid = async () => {
   }
 
   cidInfoElt.innerHTML = html;
-
-
-  const representativePublicKey = document.getElementById('representativePublicKey');
-  if (responseJson.success) {
-    representativePublicKey.innerText = responseJson.json.new_representative;
-  } else {
-    representativePublicKey.innerText = '';
-  }
-  console.log('representativePublicKey', representativePublicKey.innerText);
 };
 
 

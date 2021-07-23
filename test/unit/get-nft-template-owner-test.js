@@ -7,16 +7,14 @@ const chai = require('chai');
 
 // modules
 const expect = chai.expect;
-const actionUtil = require('../../scripts/actions/get-nft-assets-owners.js');
+const actionUtil = require('../../scripts/actions/get-nft-template-owner.js');
 const ipfsUtil = require('../../scripts/ipfs-util.js');
 const dataUtil = require('../../scripts/data-util.js');
 const mockFs = require('../util/mock-fs.js');
+const mockFetch = require('../util/mock-fetch.js');
+const {config, loggingUtil, getResponse} = require('../util/get-response.js');
 
 // constants
-const DEBUG = false;
-
-const LOG = false;
-
 const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
 const badContentTypeIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWABADCT';
 const badTimeoutIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQBADT1ME';
@@ -44,63 +42,14 @@ const goodOwner6 = 'ban_1111111111111111111111111111111111111111111111111116i3bq
 const goodOwnerB = 'ban_111111111111111111111111111111111111111111111111111d7qqrs8tn';
 const goodAssetRep = 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrfg8egjn';
 
-const config = {
-  fetchTimeout: 0,
-  ipfsApiUrl: 'ipfsApiUrlValue',
-  bananodeApiUrl: 'bananodeApiUrlValue',
-  receiveBlockHashDataDir: 'receiveBlockHashDataDir',
-  accountInfosDir: 'accountInfosDir',
-  nextAssetOwnerDir: 'nextAssetOwnerDir',
-};
-const loggingUtil = {};
-loggingUtil.trace = console.trace;
-loggingUtil.isDebugEnabled = () => {
-  return DEBUG;
-};
-if (DEBUG) {
-  loggingUtil.debug = console.log;
-  loggingUtil.log = console.log;
-} else {
-  if (LOG) {
-    loggingUtil.log = console.log;
-    loggingUtil.debug = () => {};
-  } else {
-    loggingUtil.log = () => {};
-    loggingUtil.debug = () => {};
-  }
-}
-
 // variables
 
 // functions
-const getResponse = (context, ipfsCd) => {
-  const actions = {};
-  actionUtil.addAction(actions);
-  const fn = actions[actionUtil.ACTION];
 
-  return new Promise(async (resolve) => {
-    const req = {};
-    req.body = {};
-    req.body.ipfs_cid = ipfsCd;
-    const res = {};
-    res.send = (sent) => {
-      loggingUtil.debug('called', fn, sent);
-      resolve(sent);
-    };
-    loggingUtil.debug('calling', fn);
-    fn(context, req, res)
-        .catch((error) => {
-          loggingUtil.debug('error', fn, error);
-          resolve({
-            success: false,
-            errors: [error.message],
-          });
-        });
-  });
-};
 
 describe(actionUtil.ACTION, () => {
-  const getContext = (histories) => {
+  const getContext = (histories, blockInfos) => {
+    const fetchFn = mockFetch.fetch(histories, blockInfos);
     return {
       bananojs: bananojs,
       fs: mockFs,
@@ -273,71 +222,12 @@ describe(actionUtil.ACTION, () => {
             reject(Error('The user aborted a request.'));
           });
         }
-
         if (resource == `${config.ipfsApiUrl}/${badAbortOtherIpfsCid}`) {
           return new Promise(async (resolve, reject) => {
             reject(Error('The user aborted a request with a wierd message.'));
           });
         }
-
-        if (resource == config.bananodeApiUrl) {
-          const body = JSON.parse(options.body);
-          if (body.action == 'account_history') {
-            for (let historiesIx = 0; historiesIx < histories.length; historiesIx++) {
-              const historiesElt = histories[historiesIx];
-              const head = historiesElt.head;
-              const account = historiesElt.account;
-              loggingUtil.debug('histories check', body.head, head, body.account, account);
-
-              let match = false;
-              if (body.head !== undefined) {
-                if (body.head == head) {
-                  loggingUtil.debug('histories match head', body.head, head);
-                  match = true;
-                }
-              }
-              if (body.account !== undefined) {
-                if (body.account == account) {
-                  loggingUtil.debug('histories match account', body.account, account);
-                  match = true;
-                }
-              }
-
-              if (match) {
-                return new Promise(async (resolve) => {
-                  resolve({
-                    json: () => {
-                      const history = historiesElt.history;
-                      // if(history == undefined) {
-                      //   console.trace('history', body.account, history == undefined);
-                      // }
-                      return {
-                        history: history,
-                      };
-                    },
-                  });
-                });
-              }
-            }
-
-            throw Error(`cannot match options.body '${options.body}' with any histories ${JSON.stringify(histories)}`);
-          }
-
-          if (body.action == 'account_info') {
-            return new Promise(async (resolve) => {
-              resolve({
-                text: () => {
-                  return '{"confirmation_height_frontier": ""}';
-                },
-              });
-            });
-          }
-          throw Error(`unknown resource '${resource}' with body ${options.body}`);
-        }
-
-        return new Promise(async (resolve) => {
-          resolve();
-        });
+        return fetchFn(resource, options);
       },
     };
   };
@@ -354,7 +244,7 @@ describe(actionUtil.ACTION, () => {
     ]);
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, goodIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -379,7 +269,7 @@ describe(actionUtil.ACTION, () => {
     ]);
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, goodIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -403,7 +293,7 @@ describe(actionUtil.ACTION, () => {
     ]);
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, goodIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -436,7 +326,7 @@ describe(actionUtil.ACTION, () => {
     ]);
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, goodIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -484,7 +374,7 @@ describe(actionUtil.ACTION, () => {
     ]);
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, goodIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -527,7 +417,7 @@ describe(actionUtil.ACTION, () => {
     ]);
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, goodIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -594,7 +484,7 @@ describe(actionUtil.ACTION, () => {
     ]);
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, goodIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -678,7 +568,7 @@ describe(actionUtil.ACTION, () => {
     ]);
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, goodIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -706,18 +596,17 @@ describe(actionUtil.ACTION, () => {
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);
     expect(actualResponse).to.deep.equal(expectedResponse);
-    const actualResponse2 = await getResponse(context, goodIpfsCid);
+    const actualResponse2 = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     expect(actualResponse2).to.deep.equal(expectedResponse);
-
     const expectedErrorResponse1 = {
       errors: [
         'ipfsCid \'0O1\' is invalid. error \'Non-base58 character\' 0O',
       ],
       success: false,
     };
-    const actualErrorResponse1 = await getResponse(context, '0O1');
+    const actualErrorResponse1 = await getResponse(actionUtil, context, {ipfs_cid: '0O1'});
     expect(actualErrorResponse1).to.deep.equal(expectedErrorResponse1);
-    const actualErrorResponse2 = await getResponse(context, goodIpfsCid + '1');
+    const actualErrorResponse2 = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid + '1'});
     const expectedErrorResponse2 = {
       errors: [
         'ipfsCid \''+ goodIpfsCid + '1' +
@@ -731,7 +620,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext();
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, badContentTypeIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badContentTypeIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -753,7 +642,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext();
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, badTimeoutIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badTimeoutIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -773,7 +662,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext();
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, badUnknownIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badUnknownIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -795,7 +684,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext();
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, badJsonIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badJsonIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -827,7 +716,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext();
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, badMissingJsonIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badMissingJsonIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -855,7 +744,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext();
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, badJsonBase58Cid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badJsonBase58Cid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -886,7 +775,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext();
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, badJsonBase58ShortCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badJsonBase58ShortCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -928,7 +817,7 @@ describe(actionUtil.ACTION, () => {
     ]);
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, badAbortIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badAbortIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -957,7 +846,7 @@ describe(actionUtil.ACTION, () => {
     ]);
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, badAbortOtherIpfsCid);
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badAbortOtherIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -975,6 +864,7 @@ describe(actionUtil.ACTION, () => {
   });
 
   beforeEach(async () => {
+    mockFetch.init(config, loggingUtil);
     dataUtil.init(config, loggingUtil);
     ipfsUtil.init(config, loggingUtil);
     actionUtil.init(config, loggingUtil);
@@ -984,6 +874,7 @@ describe(actionUtil.ACTION, () => {
     actionUtil.deactivate();
     ipfsUtil.deactivate();
     dataUtil.deactivate();
+    mockFetch.deactivate();
     mockFs.clear();
   });
 });

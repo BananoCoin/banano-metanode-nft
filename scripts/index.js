@@ -72,8 +72,9 @@ const addModules = () => {
   modules.push(require('./actions/get-bananode-api-url.js'));
   modules.push(require('./actions/get-pinata-api-url.js'));
   modules.push(require('./actions/get-ipfs-api-url.js'));
-  modules.push(require('./actions/get-nft-assets-owners.js'));
-  modules.push(require('./actions/get-nft-assets-owner.js'));
+  modules.push(require('./actions/get-nft-asset-owner.js'));
+  modules.push(require('./actions/get-nft-owner-assets.js'));
+  modules.push(require('./actions/get-nft-template-owner.js'));
   modules.push(require('./actions/get-nft-info.js'));
 };
 
@@ -131,6 +132,12 @@ const initServer = () => {
         context.fetch = fetch;
         return await actionFn(context, req, res);
       }
+
+      const resp = {};
+      resp.success = false;
+      resp.errors = [];
+      resp.errors.push(`unknown action '${req.body.action}'`);
+      res.send(resp);
     } catch (error) {
       /* istanbul ignore next */
       console.trace(error);

@@ -5,7 +5,9 @@
 const ipfsUtil = require('../ipfs-util.js');
 
 // constants
-const ACTION = 'get_nft_assets_owner';
+// TODO: rename to get_nft_asset_owner
+
+const ACTION = 'get_nft_asset_owner';
 
 // variables
 /* eslint-disable no-unused-vars */

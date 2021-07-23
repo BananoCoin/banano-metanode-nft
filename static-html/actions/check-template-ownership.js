@@ -45,7 +45,7 @@ window.checkOwnership = async () => {
       headers: {
         'content-type': 'application/json',
       },
-      body: `{"action": "get_nft_assets_owners", "ipfs_cid":"${cid}"}`,
+      body: `{"action": "get_nft_template_owner", "ipfs_cid":"${cid}"}`,
     });
     console.log('checkOwnership', response);
     const responseJson = await response.json();
