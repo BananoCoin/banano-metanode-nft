@@ -234,7 +234,7 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
   return resp;
 };
 
-const getOwnedAssets = async (fetch, bananojs, fs, action, owner) => {
+const getOwnedAssets = async (fetch, bananojs, fs, action, owner, chainAccountInfoCache) => {
   /* istanbul ignore if */
   if (fetch === undefined) {
     throw Error('fetch is required');
@@ -249,9 +249,8 @@ const getOwnedAssets = async (fetch, bananojs, fs, action, owner) => {
   if (fs === undefined) {
     throw Error('fs is required');
   }
+
   loggingUtil.log(action, 'getOwnedAssets', 'owner', owner);
-  const accountInfo = await getAccountInfo(fetch, action, owner);
-  loggingUtil.log(action, 'getOwnedAssets', 'accountInfo', accountInfo);
   const dirtyAssets = dataUtil.listOwnerAssets(fs, owner);
   for (let dirtyAssetIx = 0; dirtyAssetIx < dirtyAssets.length; dirtyAssetIx++) {
     const dirtyAsset = dirtyAssets[dirtyAssetIx];
@@ -261,7 +260,7 @@ const getOwnedAssets = async (fetch, bananojs, fs, action, owner) => {
       history: [],
     };
     loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset', dirtyOwnerAsset);
-    await updateAssetOwnerHistory(fetch, bananojs, fs, action, dirtyOwnerAsset, accountInfo);
+    await updateAssetOwnerHistory(fetch, bananojs, fs, action, dirtyOwnerAsset, chainAccountInfoCache);
     loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset', 'realOwner', dirtyOwnerAsset.owner, 'same?', dirtyOwnerAsset.owner !== owner);
     if (dirtyOwnerAsset.owner !== owner) {
       dataUtil.deleteOwnerAsset(fs, owner, dirtyOwnerAsset.asset);
@@ -270,7 +269,7 @@ const getOwnedAssets = async (fetch, bananojs, fs, action, owner) => {
   return dataUtil.listOwnerAssets(fs, owner);
 };
 
-const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, accountInfo) => {
+const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, chainAccountInfoCache) => {
   /* istanbul ignore if */
   if (fetch === undefined) {
     throw Error('fetch is required');
@@ -285,6 +284,23 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
   if (fs === undefined) {
     throw Error('fs is required');
   }
+
+  /* istanbul ignore if */
+  if (action === undefined) {
+    throw Error('action is required');
+  }
+
+  /* istanbul ignore if */
+  if (assetOwner === undefined) {
+    throw Error('assetOwner is required');
+  }
+
+  /* istanbul ignore if */
+  if (chainAccountInfoCache === undefined) {
+    throw Error('chainAccountInfoCache is required');
+  }
+
+  const getChainAccountInfo = chainAccountInfoCache.getChainAccountInfo;
 
   const assetRepresentativeAccount = await bananojs.getBananoAccount(assetOwner.asset);
 
@@ -309,9 +325,9 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
         },
     );
 
-    const nextAssetOwner = await getNextAssetOwner(fetch, fs, bananojs, action, assetRepresentativeAccount, assetOwner.owner, receiveHash, accountInfo);
+    const nextAssetOwner = await getNextAssetOwner(fetch, fs, bananojs, action, assetRepresentativeAccount, assetOwner.owner, receiveHash, getChainAccountInfo);
     if (nextAssetOwner !== undefined) {
-      loggingUtil.log(action, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner, '=>', nextAssetOwner);
+      loggingUtil.log(action, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner.owner, '=>', nextAssetOwner.owner);
       assetOwner.owner = nextAssetOwner.owner;
       sendHash = nextAssetOwner.send;
       receiveHash = await getReceiveBlock(fetch, fs, action, nextAssetOwner.owner, nextAssetOwner.send);
@@ -337,6 +353,7 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
       receiveHash = undefined;
     }
   }
+
   dataUtil.addOwnerAsset(fs, assetOwner.owner, assetOwner.asset);
   loggingUtil.log(action, 'addOwnerAsset', assetOwner.owner, assetOwner.asset);
 };
@@ -407,19 +424,33 @@ const getAccountInfo = async (fetch, action, owner) => {
   return accountInfoResponseJson;
 };
 
-const getNextAssetOwner = async (fetch, fs, bananojs, action, assetRepresentativeAccount, owner, receiveHash, accountInfo) => {
-  if (dataUtil.hasAccountInfo(fs, owner) &&
-        (dataUtil.getAccountInfo(fs, owner) == accountInfo) &&
+const getNextAssetOwner = async (fetch, fs, bananojs, action, assetRepresentativeAccount, owner, receiveHash, getChainAccountInfo) => {
+  let useCachedAccountInfo = false;
+  const chainAccountInfo = await getChainAccountInfo(owner);
+  if (dataUtil.hasAccountInfo(fs, owner)) {
+    const cacheAccountInfo = dataUtil.getAccountInfo(fs, owner);
+    // console.log('getNextAssetOwner', 'owner', owner);
+    // console.log('getNextAssetOwner', 'cached account info', JSON.parse(cacheAccountInfo).confirmation_height);
+    // console.log('getNextAssetOwner', 'chains account info', JSON.parse(chainAccountInfo).confirmation_height);
+    if ((cacheAccountInfo == chainAccountInfo) &&
         dataUtil.hasNextAssetOwner(fs, receiveHash)) {
+      // if we have cached the account info
+      // and the cached account info is the same as the provided account info,
+      // then no send blocks were published, and we can returned the cached data.
+      useCachedAccountInfo = true;
+    }
+  }
+  // console.log('getNextAssetOwner', 'owner', owner, 'useCachedAccountInfo', useCachedAccountInfo);
+  if (useCachedAccountInfo) {
     const nextAssetOwner = dataUtil.getNextAssetOwner(fs, receiveHash);
     if (nextAssetOwner.length === 0) {
+      // console.log('getNextAssetOwner', 'owner', owner, 'nextAssetOwner', 'undefined');
       return undefined;
     }
     return JSON.parse(nextAssetOwner);
   } else {
-    const accountInfoJson = JSON.parse(accountInfo);
+    const accountInfoJson = JSON.parse(chainAccountInfo);
     const nextAssetOwner = await getNextAssetOwnerForCache(fetch, bananojs, action, assetRepresentativeAccount, owner, receiveHash, accountInfoJson);
-    dataUtil.setAccountInfo(fs, owner, accountInfo);
     if (nextAssetOwner === undefined) {
       dataUtil.setNextAssetOwner(fs, receiveHash, '');
     } else {
@@ -498,9 +529,35 @@ const getNextAssetOwnerForCache = async (fetch, bananojs, action, assetRepresent
   return undefined;
 };
 
+const getChainAccountInfoCache = (fetch, action) => {
+  const accountInfoByOwnerMap = new Map();
+  const getChainAccountInfoFromMap = async (owner) => {
+    if (accountInfoByOwnerMap.has(owner)) {
+      return accountInfoByOwnerMap.get(owner);
+    } else {
+      const accountInfo = await getAccountInfo(fetch, action, owner);
+      accountInfoByOwnerMap.set(owner, accountInfo);
+      return accountInfo;
+    }
+  };
+
+  const putChainAccountInfoFromMap = (fs) => {
+    accountInfoByOwnerMap.forEach((accountInfo, owner) => {
+      loggingUtil.log('putChainAccountInfoFromMap', owner);
+      dataUtil.setAccountInfo(fs, owner, accountInfo);
+    });
+  };
+
+  return {
+    getChainAccountInfo: getChainAccountInfoFromMap,
+    putChainAccountInfo: putChainAccountInfoFromMap,
+  };
+};
+
 exports.init = init;
 exports.deactivate = deactivate;
 exports.getNftInfoForIpfsCid = getNftInfoForIpfsCid;
 exports.updateAssetOwnerHistory = updateAssetOwnerHistory;
 exports.getAccountInfo = getAccountInfo;
 exports.getOwnedAssets = getOwnedAssets;
+exports.getChainAccountInfoCache = getChainAccountInfoCache;

@@ -14,7 +14,7 @@ const ipfsUtil = require('../../scripts/ipfs-util.js');
 const dataUtil = require('../../scripts/data-util.js');
 const actualResponseUtil = require('../util/actual-response-util.js');
 const {loggingUtil, getResponse} = require('../util/get-response.js');
-const testData = require('./get-template-owner-test-QmQJ-dzzS.json');
+const testData = require('./000-get-template-owner-test-QmQJ-dzzS.json');
 
 // constants
 const ipfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
@@ -44,6 +44,17 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = testData.expectedResponse;
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);
+    expect({length: actualResponse.asset_owners.length})
+        .to.deep.equal({length: expectedResponse.asset_owners.length});
+
+    const maxIx = Math.max(actualResponse.asset_owners.length, expectedResponse.asset_owners.length);
+    for (let ix = 0; ix < maxIx; ix++) {
+      const actualAssetOwner = actualResponse.asset_owners[ix];
+      const expectedAssetOwner = expectedResponse.asset_owners[ix];
+      expect({ix: ix, ao: actualAssetOwner})
+          .to.deep.equal({ix: ix, ao: expectedAssetOwner});
+    }
+
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
 

@@ -73,6 +73,33 @@
             "receive": "E676DA9280B8719D8EF5C2428C4D22EC744719F04709CEA742C3548DD6246379"
           }
         ]
+      },
+      {
+        "asset": "16A875870DEFB2A3E3CBD9A41E07059481E1C4CF030F2B344B13E3EF328D79AE",
+        "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+        "history": [
+          {
+            "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+            "send": "16A875870DEFB2A3E3CBD9A41E07059481E1C4CF030F2B344B13E3EF328D79AE",
+            "receive": "2794DA925C16346F609723F013F1DDB7C9384ABBB4E1AB327671C353916CD4D3"
+          }
+        ]
+      },
+      {
+        "asset": "71DDA4D97A2E0CA021B4A4F8A0092F1317A6E125EA51A1AF84009C6716A623C8",
+        "owner": "ban_1b4x5c7t1jazh8jiddzp5a5e3jmofkk3baepmsu7cegg8ysmx7jb4s5nuspo",
+        "history": [
+          {
+            "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+            "send": "71DDA4D97A2E0CA021B4A4F8A0092F1317A6E125EA51A1AF84009C6716A623C8",
+            "receive": "50E20F03FCE72BC56D015B900F63459A10856798D0DEB366D286F3164C6751CA"
+          },
+          {
+            "owner": "ban_1b4x5c7t1jazh8jiddzp5a5e3jmofkk3baepmsu7cegg8ysmx7jb4s5nuspo",
+            "send": "7C77E265D0A0C72911CF03388014F7E69DE0AA8006B7781A2741024E6B222558",
+            "receive": "EC15FD4CE41B0643879697CA79AAD377D1FD912C62CC23B8690B6E8D1C83CA98"
+          }
+        ]
       }
     ]
   }

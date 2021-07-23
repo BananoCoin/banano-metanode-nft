@@ -1,6 +1,11 @@
 {
   "expectedResponse": {
+    "success": true,
     "assetInfos": [
+      {
+        "asset": "16A875870DEFB2A3E3CBD9A41E07059481E1C4CF030F2B344B13E3EF328D79AE",
+        "template": ""
+      },
       {
         "asset": "5CCCBA25B221D9437B07E15C20D0F5997B23262E3194CCB3B7A4374BF4DA1B51",
         "template": ""
@@ -9,7 +14,6 @@
         "asset": "809439EB07AE146239D2FA52D107E62D5672BE18D284B2F054D04CDC067CFAB6",
         "template": ""
       }
-    ],
-    "success": true
+    ]
   }
 }

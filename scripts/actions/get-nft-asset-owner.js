@@ -132,9 +132,12 @@ const getNftAssetsOwner = async (context, req, res) => {
       history: [],
     };
 
-    const accountInfo = await ipfsUtil.getAccountInfo(fetch, ACTION, owner);
+    const chainAccountInfoCache =
+      ipfsUtil.getChainAccountInfoCache(fetch, ACTION);
 
-    await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, resp.asset_owner, accountInfo);
+    await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, resp.asset_owner, chainAccountInfoCache);
+
+    chainAccountInfoCache.putChainAccountInfo(fs);
   }
 
   loggingUtil.log(ACTION, 'getNftAssetsOwner', 'resp', resp);
