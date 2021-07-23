@@ -9,14 +9,14 @@ const bananojs = require('@bananocoin/bananojs');
 
 // modules
 const expect = chai.expect;
-const actionUtil = require('../../scripts/actions/get-nft-assets-owner.js');
+const actionUtil = require('../../scripts/actions/get-nft-template-owner.js');
 const ipfsUtil = require('../../scripts/ipfs-util.js');
 const dataUtil = require('../../scripts/data-util.js');
 const actualResponseUtil = require('../util/actual-response-util.js');
-const testData = require('./get-owner-test-QmQJ-dzzS0.json');
+const testData = require('./get-template-owner-test-QmQJ-dzzS.json');
 
 // constants
-const assetHash = '5CCCBA25B221D9437B07E15C20D0F5997B23262E3194CCB3B7A4374BF4DA1B51';
+const ipfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
 
 const DEBUG = false;
 
@@ -51,7 +51,7 @@ if (DEBUG) {
 // variables
 
 // functions
-const getResponse = (context, assetHash) => {
+const getResponse = (context, ipfsCid) => {
   const actions = {};
   actionUtil.addAction(actions);
   const fn = actions[actionUtil.ACTION];
@@ -59,7 +59,7 @@ const getResponse = (context, assetHash) => {
   return new Promise(async (resolve) => {
     const req = {};
     req.body = {};
-    req.body.asset_hash = assetHash;
+    req.body.ipfs_cid = ipfsCid;
     const res = {};
     res.send = (sent) => {
       loggingUtil.debug('called', fn, sent);
@@ -78,10 +78,10 @@ const getResponse = (context, assetHash) => {
 };
 
 describe(actionUtil.ACTION, () => {
-  it(assetHash, async () => {
+  it(ipfsCid, async () => {
     let actualResponse;
     try {
-      actualResponse = await getResponse(context, assetHash);
+      actualResponse = await getResponse(context, ipfsCid);
     } catch (error) {
       loggingUtil.trace(error);
     }
