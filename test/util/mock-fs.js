@@ -1,19 +1,23 @@
 'use strict';
 // libraries
+const path = require('path');
 
 // modules
 
 // constants
 const fileDataMap = new Map();
+const dirDataMap = new Map();
 
 // variables
 
 // functions
 const existsSync = (file) => {
-  return fileDataMap.has(file);
+  return fileDataMap.has(file) || dirDataMap.has(file);
 };
 
 const openSync = (file) => {
+  const dir = path.dirname(file);
+  dirDataMap.get(dir).add(path.basename(file));
   return file;
 };
 
@@ -34,11 +38,12 @@ const clear = () => {
 };
 
 const mkdirSync = (file) => {
-  fileDataMap.set(file, '');
+  dirDataMap.set(file, new Set());
 };
 
 const readdirSync = (file) => {
-  return [];
+  const dirSync = dirDataMap.get(file);
+  return [...dirSync];
 };
 
 exports.existsSync = existsSync;

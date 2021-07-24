@@ -17,12 +17,15 @@ const {config, loggingUtil, getResponse} = require('../util/get-response.js');
 // constants
 const goodOwner2 = 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c';
 const goodSendHash4 = '0000000000000000000000000000000000000000000000000000000000000004';
+const goodSendHash6 = '0000000000000000000000000000000000000000000000000000000000000006';
 
 const blockInfos = {};
 blockInfos[goodSendHash4] = {
   contents: {
     link_as_account: goodOwner2,
   },
+};
+blockInfos[goodSendHash6] = {
 };
 // variables
 
@@ -55,6 +58,29 @@ describe(actionUtil.ACTION, () => {
         owner: 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c',
       },
       success: true,
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 goodSendHash no blockInfo', async () => {
+    const context = getContext(
+        [
+          {head: goodSendHash6},
+          {account: goodOwner2},
+        ],
+    );
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(actionUtil, context, {asset_hash: goodSendHash6});
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      errors: [
+        'no history',
+      ],
+      success: false,
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);

@@ -80,7 +80,12 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
-      assetInfos: [],
+      assetInfos: [
+        {
+          'asset': goodSendHash4,
+          'template': '',
+        },
+      ],
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);
@@ -148,7 +153,12 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
-      assetInfos: [],
+      assetInfos: [
+        {
+          'asset': goodSendHash4,
+          'template': '',
+        },
+      ],
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);
