@@ -28,11 +28,13 @@ const goodOwner6 = 'ban_1111111111111111111111111111111111111111111111111116i3bq
 const goodAssetRep = 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrfg8egjn';
 
 // variables
+const accountInfos = {};
+accountInfos[goodOwner4] = `{"confirmation_height_frontier": "${goodReceiveHash3}"}`;
 
 // functions
 describe(actionUtil.ACTION, () => {
   const getContext = (histories, blockInfos) => {
-    const fetchFn = mockFetch.fetch(histories, blockInfos);
+    const fetchFn = mockFetch.fetch(histories, blockInfos, accountInfos);
     return {
       bananojs: bananojs,
       fs: mockFs,

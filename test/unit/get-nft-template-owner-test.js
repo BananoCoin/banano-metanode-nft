@@ -43,13 +43,14 @@ const goodOwnerB = 'ban_111111111111111111111111111111111111111111111111111d7qqr
 const goodAssetRep = 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrfg8egjn';
 
 // variables
+const accountInfos = {};
+accountInfos[goodOwner4] = '{"confirmation_height_frontier": ""}';
+accountInfos[goodOwnerB] = '{"confirmation_height_frontier": ""}';
 
 // functions
-
-
 describe(actionUtil.ACTION, () => {
   const getContext = (histories, blockInfos) => {
-    const fetchFn = mockFetch.fetch(histories, blockInfos);
+    const fetchFn = mockFetch.fetch(histories, blockInfos, accountInfos);
     return {
       bananojs: bananojs,
       fs: mockFs,

@@ -92,7 +92,8 @@ const makeAccountInfoDir = (fs) => {
   }
 };
 
-const setAccountInfo = (fs, owner, accountInfo) => {
+const setAccountInfo = (fs, owner, accountInfo) => {  
+  // TODO: find a way to only store confirmation_height_frontier
   makeAccountInfoDir(fs);
   const filePtr = fs.openSync(getAccountInfoFile(fs, owner), 'w');
   fs.writeSync(filePtr, accountInfo);

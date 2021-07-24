@@ -32,7 +32,7 @@ const deactivate = () => {
   /* eslint-enable no-unused-vars */
 };
 
-const fetch = (histories, blockInfos) => {
+const fetch = (histories, blockInfos, accountInfos) => {
   const fetchFn = (resource, options) => {
     loggingUtil.debug('fetch', resource, options);
     if (resource == config.bananodeApiUrl) {
@@ -82,8 +82,7 @@ const fetch = (histories, blockInfos) => {
         return new Promise(async (resolve) => {
           resolve({
             text: () => {
-            // TODO: find a way to only store confirmation_height_frontier
-              return '{"confirmation_height_frontier": ""}';
+              return accountInfos[body.account];
             },
           });
         });
