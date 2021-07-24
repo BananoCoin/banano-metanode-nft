@@ -7,6 +7,7 @@ const chai = require('chai');
 const expect = chai.expect;
 const dataUtil = require('../../scripts/data-util.js');
 const {config, loggingUtil} = require('../util/get-response.js');
+const mockFs = require('../util/mock-fs.js');
 
 // constants
 
@@ -35,6 +36,11 @@ describe('data-util', () => {
   });
   it('checkValidFileStr \\', async () => {
     checkForError('\\', `value '\\' does not match regex '^[a-zA-Z0-9_]+$'`);
+  });
+  it('listOwnerAssets', async () => {
+    const actualResponse = dataUtil.listOwnerAssets(mockFs, '');
+    const expectedResponse = [];
+    expect(actualResponse).to.deep.equal(expectedResponse);
   });
 
   beforeEach(async () => {

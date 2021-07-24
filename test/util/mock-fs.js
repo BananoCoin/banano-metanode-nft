@@ -46,6 +46,11 @@ const readdirSync = (file) => {
   return [...dirSync];
 };
 
+const unlinkSync = (file) => {
+  const dir = path.dirname(file);
+  dirDataMap.get(dir).delete(path.basename(file));
+};
+
 exports.existsSync = existsSync;
 exports.openSync = openSync;
 exports.writeSync = writeSync;
@@ -54,3 +59,4 @@ exports.closeSync = closeSync;
 exports.clear = clear;
 exports.mkdirSync = mkdirSync;
 exports.readdirSync = readdirSync;
+exports.unlinkSync = unlinkSync;

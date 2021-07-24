@@ -82,7 +82,11 @@ const fetch = (histories, blockInfos, accountInfos) => {
         return new Promise(async (resolve) => {
           resolve({
             text: () => {
-              return accountInfos[body.account];
+              const accountInfo = accountInfos[body.account];
+              if (accountInfo == undefined) {
+                console.trace('accountInfos', body.account, accountInfo == undefined);
+              }
+              return accountInfo;
             },
           });
         });

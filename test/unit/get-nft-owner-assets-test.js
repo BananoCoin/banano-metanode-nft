@@ -23,13 +23,17 @@ const goodOwnerBlink = '00000000000000000000000000000000000000000000000000000000
 const goodOwnerB = 'ban_111111111111111111111111111111111111111111111111111d7qqrs8tn';
 const goodReceiveHash3 = '0000000000000000000000000000000000000000000000000000000000000003';
 const goodSendHash4 = '0000000000000000000000000000000000000000000000000000000000000004';
+const goodSendHash6 = '0000000000000000000000000000000000000000000000000000000000000004';
+const goodReceiveHash8 = '0000000000000000000000000000000000000000000000000000000000000008';
+const goodSendHashA = '000000000000000000000000000000000000000000000000000000000000000A';
 const goodOwner4 = 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c';
 const goodOwner6 = 'ban_1111111111111111111111111111111111111111111111111116i3bqjdmq';
 const goodAssetRep = 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrfg8egjn';
 
 // variables
 const accountInfos = {};
-accountInfos[goodOwner4] = `{"confirmation_height_frontier": "${goodReceiveHash3}"}`;
+accountInfos[goodOwner4] = `{"confirmation_height_frontier": "${goodReceiveHash8}"}`;
+accountInfos[goodOwnerB] = `{"confirmation_height_frontier": "${goodReceiveHash8}"}`;
 
 // functions
 describe(actionUtil.ACTION, () => {
@@ -128,6 +132,13 @@ describe(actionUtil.ACTION, () => {
             representative: goodOwner4,
             link: goodSendHash4,
           },
+            {
+              type: 'state',
+              subtype: 'receive',
+              hash: goodReceiveHash8,
+              representative: goodOwner6,
+              link: goodReceiveHash8,
+            },
         ],
       },
     ]);
@@ -182,6 +193,104 @@ describe(actionUtil.ACTION, () => {
           'template': '',
         },
       ],
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+
+  it('get status 200 two owner with receive', async () => {
+    const context = getContext([
+      {
+        head: goodHead,
+        history: [
+          {
+            hash: goodSendHash4,
+            representative: goodAssetRep,
+            link: goodOwner4link,
+            type: 'send',
+          },
+        ],
+      },
+      {
+        account: goodOwner4,
+        head: goodReceiveHash3,
+        history: [
+          {
+            type: 'receive',
+            hash: goodReceiveHash3,
+            representative: goodOwner6,
+            link: goodSendHash4,
+          },
+          {
+            hash: goodSendHash6,
+            representative: goodOwner4,
+            link: goodOwnerBlink,
+            type: 'send',
+          },
+          {
+            hash: goodSendHashA,
+            representative: goodOwner6,
+            link: goodOwnerBlink,
+            type: 'send',
+          },
+        ],
+      },
+      {
+        head: goodReceiveHash8,
+      },
+      {
+        account: goodOwnerB,
+        head: goodReceiveHash8,
+        history: [
+          {
+            type: 'receive',
+            hash: goodReceiveHash8,
+            representative: goodOwner6,
+            link: goodSendHashA,
+          },
+        ],
+      },
+    ]);
+
+    let actualTemplateResponse;
+    try {
+      actualTemplateResponse = await getResponse(templateActionUtil, context, {ipfs_cid: goodIpfsCid});
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedTemplateResponse = {
+      success: true,
+      asset_owners: [
+        {
+          asset: goodSendHash4,
+          history: [
+            {
+              owner: goodOwner4,
+              receive: goodReceiveHash3,
+              send: goodSendHash4,
+            },
+            {
+              owner: goodOwnerB,
+              receive: goodReceiveHash8,
+              send: goodSendHashA,
+            },
+          ],
+          owner: goodOwnerB,
+        },
+      ],
+    };
+    expect(actualTemplateResponse).to.deep.equal(expectedTemplateResponse);
+
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(actionUtil, context, {owner: goodOwner4});
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      success: true,
+      assetInfos: [],
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);

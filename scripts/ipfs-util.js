@@ -261,7 +261,8 @@ const getOwnedAssets = async (fetch, bananojs, fs, action, owner, chainAccountIn
     };
     loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset', dirtyOwnerAsset);
     await updateAssetOwnerHistory(fetch, bananojs, fs, action, dirtyOwnerAsset, chainAccountInfoCache);
-    loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset', 'realOwner', dirtyOwnerAsset.owner, 'same?', dirtyOwnerAsset.owner !== owner);
+    loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset.owner',
+        dirtyOwnerAsset.owner, 'owner', owner, 'same?', dirtyOwnerAsset.owner !== owner);
     if (dirtyOwnerAsset.owner !== owner) {
       dataUtil.deleteOwnerAsset(fs, owner, dirtyOwnerAsset.asset);
     }
