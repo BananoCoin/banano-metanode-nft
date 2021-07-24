@@ -431,6 +431,8 @@ const getNextAssetOwner = async (fetch, fs, bananojs, action, assetRepresentativ
   if (dataUtil.hasAccountInfo(fs, owner)) {
     const cacheAccountInfo = dataUtil.getAccountInfo(fs, owner);
     // console.log('getNextAssetOwner', 'owner', owner);
+    // console.log('getNextAssetOwner', 'cached account info', JSON.parse(cacheAccountInfo));
+    // console.log('getNextAssetOwner', 'chains account info', JSON.parse(chainAccountInfo));
     // console.log('getNextAssetOwner', 'cached account info', JSON.parse(cacheAccountInfo).confirmation_height);
     // console.log('getNextAssetOwner', 'chains account info', JSON.parse(chainAccountInfo).confirmation_height);
     if ((cacheAccountInfo == chainAccountInfo) &&

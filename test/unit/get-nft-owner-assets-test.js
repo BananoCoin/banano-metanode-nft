@@ -32,8 +32,8 @@ const goodAssetRep = 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrf
 
 // variables
 const accountInfos = {};
-accountInfos[goodOwner4] = `{"confirmation_height_frontier": "${goodReceiveHash8}"}`;
-accountInfos[goodOwnerB] = `{"confirmation_height_frontier": "${goodReceiveHash8}"}`;
+accountInfos[goodOwner4] = `{"confirmation_height":"1","confirmation_height_frontier": "${goodReceiveHash8}"}`;
+accountInfos[goodOwnerB] = `{"confirmation_height":"1","confirmation_height_frontier": "${goodReceiveHash8}"}`;
 
 // functions
 describe(actionUtil.ACTION, () => {
@@ -132,13 +132,13 @@ describe(actionUtil.ACTION, () => {
             representative: goodOwner4,
             link: goodSendHash4,
           },
-            {
-              type: 'state',
-              subtype: 'receive',
-              hash: goodReceiveHash8,
-              representative: goodOwner6,
-              link: goodReceiveHash8,
-            },
+          {
+            type: 'state',
+            subtype: 'receive',
+            hash: goodReceiveHash8,
+            representative: goodOwner6,
+            link: goodReceiveHash8,
+          },
         ],
       },
     ]);
@@ -280,6 +280,15 @@ describe(actionUtil.ACTION, () => {
         },
       ],
     };
+    expect(actualTemplateResponse).to.deep.equal(expectedTemplateResponse);
+
+    accountInfos[goodOwnerB] = `{"confirmation_height":"2","confirmation_height_frontier":"${goodReceiveHash8}"}`;
+
+    try {
+      actualTemplateResponse = await getResponse(templateActionUtil, context, {ipfs_cid: goodIpfsCid});
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
     expect(actualTemplateResponse).to.deep.equal(expectedTemplateResponse);
 
     let actualResponse;
