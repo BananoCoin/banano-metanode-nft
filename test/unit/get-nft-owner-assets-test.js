@@ -19,6 +19,8 @@ const {config, loggingUtil, getResponse} = require('../util/get-response.js');
 const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
 const goodHead = '0000000000000000000000000000000000000000000000000000000000000000';
 const goodOwner4link = '0000000000000000000000000000000000000000000000000000000000000002';
+const goodOwnerBlink = '000000000000000000000000000000000000000000000000000000000000000B';
+const goodOwnerB = 'ban_111111111111111111111111111111111111111111111111111d7qqrs8tn';
 const goodReceiveHash3 = '0000000000000000000000000000000000000000000000000000000000000003';
 const goodSendHash4 = '0000000000000000000000000000000000000000000000000000000000000004';
 const goodOwner4 = 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c';
@@ -104,6 +106,13 @@ describe(actionUtil.ACTION, () => {
             type: 'state',
             subtype: 'send',
           },
+          {
+            hash: goodSendHash4,
+            representative: goodAssetRep,
+            link: goodOwner4link,
+            type: 'state',
+            subtype: 'send',
+          },
         ],
       },
       {
@@ -114,7 +123,7 @@ describe(actionUtil.ACTION, () => {
             type: 'state',
             subtype: 'receive',
             hash: goodReceiveHash3,
-            representative: goodOwner6,
+            representative: goodOwner4,
             link: goodSendHash4,
           },
         ],
@@ -141,6 +150,18 @@ describe(actionUtil.ACTION, () => {
           ],
           owner: goodOwner4,
         },
+        {
+          asset: goodSendHash4,
+          history: [
+            {
+              owner: goodOwner4,
+              receive: goodReceiveHash3,
+              send: goodSendHash4,
+            },
+          ],
+          owner: goodOwner4,
+        },
+
       ],
     };
     expect(actualTemplateResponse).to.deep.equal(expectedTemplateResponse);
