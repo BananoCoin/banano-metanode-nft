@@ -20,6 +20,7 @@ const config = {
   accountInfosDir: 'accountInfosDir',
   nextAssetOwnerDir: 'nextAssetOwnerDir',
   ownedAssetsDir: 'ownedAssetsDir',
+  assetTemplateDataDir: 'assetTemplateDataDir',
 };
 
 const loggingUtil = {};

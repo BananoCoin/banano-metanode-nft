@@ -168,6 +168,35 @@ const listOwnerAssets = (fs, owner) => {
   return assets;
 };
 
+const getTemplateForAssetFile = (fs, asset) => {
+  return path.join(config.assetTemplateDataDir, asset);
+};
+
+const hasTemplateForAsset = (fs, asset) => {
+  checkValidFileStr(asset);
+  return fs.existsSync(getTemplateForAssetFile(fs, asset));
+};
+
+const getTemplateForAsset = (fs, asset) => {
+  checkValidFileStr(asset);
+  return fs.readFileSync(getTemplateForAssetFile(fs, asset), 'UTF-8');
+};
+
+const makeTemplateForAssetDir = (fs) => {
+  if (!fs.existsSync(config.assetTemplateDataDir)) {
+    fs.mkdirSync(config.assetTemplateDataDir, {recursive: true});
+  }
+};
+
+const setTemplateForAsset = (fs, asset, template) => {
+  checkValidFileStr(asset);
+  checkValidFileStr(template);
+  makeTemplateForAssetDir(fs);
+  const filePtr = fs.openSync(getTemplateForAssetFile(fs, asset), 'w');
+  fs.writeSync(filePtr, template);
+  fs.closeSync(filePtr);
+};
+
 exports.init = init;
 exports.deactivate = deactivate;
 exports.checkValidFileStr = checkValidFileStr;
@@ -183,3 +212,6 @@ exports.setNextAssetOwner = setNextAssetOwner;
 exports.addOwnerAsset = addOwnerAsset;
 exports.deleteOwnerAsset = deleteOwnerAsset;
 exports.listOwnerAssets = listOwnerAssets;
+exports.hasTemplateForAsset = hasTemplateForAsset;
+exports.getTemplateForAsset = getTemplateForAsset;
+exports.setTemplateForAsset = setTemplateForAsset;

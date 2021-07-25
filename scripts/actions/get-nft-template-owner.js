@@ -137,9 +137,13 @@ const getNftAssetsOwners = async (context, req, res) => {
         const linkAccount = await bananojs.getBananoAccount(historyElt.link);
         // loggingUtil.log(ACTION, 'historyElt', ix, historyElt);
         loggingUtil.debug(ACTION, 'historyElt', ix, historyElt.hash, historyElt.account, '=>', linkAccount);
+        const asset = historyElt.hash;
+        const template = ipfsCid;
+        ipfsUtil.setTemplateForAsset(fs, ACTION, asset, template);
         resp.asset_owners.push({
-          asset: historyElt.hash,
+          asset: asset,
           owner: linkAccount,
+          template: template,
           history: [],
         });
       }

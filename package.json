@@ -39,7 +39,7 @@
     "documentation": "^13.2.5",
     "eslint": "^7.31.0",
     "eslint-config-google": "^0.14.0",
-    "mocha": "^9.0.1",
+    "mocha": "^9.0.3",
     "nyc": "^15.1.0"
   }
 }

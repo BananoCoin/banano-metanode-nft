@@ -557,6 +557,18 @@ const getChainAccountInfoCache = (fetch, action) => {
   };
 };
 
+const getTemplateForAsset = (fs, action, asset) => {
+  if (dataUtil.hasTemplateForAsset(fs, asset)) {
+    return dataUtil.getTemplateForAsset(fs, asset);
+  } else {
+    return '';
+  }
+};
+
+const setTemplateForAsset = (fs, action, asset, template) => {
+  dataUtil.setTemplateForAsset(fs, asset, template);
+};
+
 exports.init = init;
 exports.deactivate = deactivate;
 exports.getNftInfoForIpfsCid = getNftInfoForIpfsCid;
@@ -564,3 +576,5 @@ exports.updateAssetOwnerHistory = updateAssetOwnerHistory;
 exports.getAccountInfo = getAccountInfo;
 exports.getOwnedAssets = getOwnedAssets;
 exports.getChainAccountInfoCache = getChainAccountInfoCache;
+exports.getTemplateForAsset = getTemplateForAsset;
+exports.setTemplateForAsset = setTemplateForAsset;

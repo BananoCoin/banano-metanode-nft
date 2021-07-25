@@ -281,6 +281,7 @@ describe(actionUtil.ACTION, () => {
           asset: goodSendHash4,
           history: [],
           owner: goodOwner3,
+          template: goodIpfsCid,
         },
       ],
     };
@@ -338,6 +339,7 @@ describe(actionUtil.ACTION, () => {
           asset: goodSendHash4,
           history: [],
           owner: goodOwner3,
+          template: goodIpfsCid,
         },
       ],
     };
@@ -392,6 +394,7 @@ describe(actionUtil.ACTION, () => {
             },
           ],
           owner: goodOwner4,
+          template: goodIpfsCid,
         },
       ],
     };
@@ -429,6 +432,7 @@ describe(actionUtil.ACTION, () => {
           asset: goodSendHash4,
           history: [],
           owner: goodOwner4,
+          template: goodIpfsCid,
         },
       ],
     };
@@ -495,6 +499,7 @@ describe(actionUtil.ACTION, () => {
         {
           asset: goodSendHash4,
           owner: goodOwnerB,
+          template: goodIpfsCid,
           history: [
             {
               owner: goodOwner4,
@@ -579,6 +584,7 @@ describe(actionUtil.ACTION, () => {
         {
           asset: goodSendHash4,
           owner: goodOwnerB,
+          template: goodIpfsCid,
           history: [
             {
               owner: goodOwner4,

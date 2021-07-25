@@ -162,6 +162,7 @@ describe(actionUtil.ACTION, () => {
             },
           ],
           owner: goodOwner4,
+          template: goodIpfsCid,
         },
         {
           asset: goodSendHash4,
@@ -173,6 +174,7 @@ describe(actionUtil.ACTION, () => {
             },
           ],
           owner: goodOwner4,
+          template: goodIpfsCid,
         },
 
       ],
@@ -190,7 +192,7 @@ describe(actionUtil.ACTION, () => {
       assetInfos: [
         {
           'asset': goodSendHash4,
-          'template': '',
+          'template': goodIpfsCid,
         },
       ],
     };
@@ -277,6 +279,7 @@ describe(actionUtil.ACTION, () => {
             },
           ],
           owner: goodOwnerB,
+          template: goodIpfsCid,
         },
       ],
     };

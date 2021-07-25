@@ -6,6 +6,7 @@
   "accountInfosDir": "data/accountInfos",
   "nextAssetOwnerDir": "data/nextAssetOwners",
   "ownedAssetsDir": "data/ownedAssets",
+  "assetTemplateDataDir": "data/assetTemplates",
   "fetchTimeout": 5000,
   "webPort": ""
 }
