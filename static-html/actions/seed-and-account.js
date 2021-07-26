@@ -1,5 +1,5 @@
 import {getRandomHex32} from '../lib/randomHex32.js';
-import {addText, addChildElement, clear} from '../lib/dom.js';
+import {addText, addChildElement, hide, show, clear} from '../lib/dom.js';
 
 const loadSeed = () => {
   if (window.localStorage.seed == undefined) {
