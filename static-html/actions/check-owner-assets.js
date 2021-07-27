@@ -1,4 +1,5 @@
 import {addText, addChildElement} from '../lib/dom.js';
+import {shorten} from '../lib/asset-name.js';
 
 const addOwnerAssetCheck = () => {
   const wrapperElt = document.getElementById('ownerAssetCheckWrapper');
@@ -40,7 +41,9 @@ window.checkOwnerAssets = async () => {
   console.log('checkOwnerAssets');
   const assetOwnerAccount = document.getElementById('assetOwnerAccount').value.trim();
   ownerAssetsInfo.innerHTML = 'pending...';
+
   const callback = async () => {
+    const templatesToLoad = {};
     const response = await fetch('/', {
       method: 'POST',
       headers: {
@@ -54,12 +57,20 @@ window.checkOwnerAssets = async () => {
     if (responseJson.success) {
       html = `<span><strong>Success!</strong>`;
       if (responseJson.assetInfos !== undefined) {
-        html += '<span class="bordered container column">';
-        html += `<span><h2>owners</h2></span>`;
+        html += `<span><h2>Owned Assets</h2></span>`;
+        html += '<span class="bordered container row">';
         for (let assetInfoIx = 0; assetInfoIx < responseJson.assetInfos.length; assetInfoIx++) {
           const assetInfo = responseJson.assetInfos[assetInfoIx];
-          html += `<span>Asset:${assetInfo.asset}</span>`;
-          html += `<span>Template:${assetInfo.template}</span>`;
+
+          html += '<span class="bordered">';
+          html += `<span title="${assetInfo.asset}"><h3>${shorten(assetInfo.asset)}</h3></span>`;
+          html += `<span><span id="${assetInfo.asset}">loading image ....</span></span>`;
+          html += '</span>';
+
+          if (templatesToLoad[assetInfo.template] == undefined) {
+            templatesToLoad[assetInfo.template] = [];
+          }
+          templatesToLoad[assetInfo.template].push(assetInfo.asset);
         }
         html += '</span>';
       }
@@ -75,6 +86,45 @@ window.checkOwnerAssets = async () => {
       }
     }
     ownerAssetsInfo.innerHTML = html;
+
+    Object.keys(templatesToLoad).forEach(async (jsonIpfsCid) => {
+      const assets = templatesToLoad[jsonIpfsCid];
+      const templateUrl = ipfsApiUrl + '/' + jsonIpfsCid;
+      const templateResponse = await fetch(templateUrl, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+      const templateRsponseJson = await templateResponse.json();
+      const title = templateRsponseJson.title;
+      const imageIpfsCid = templateRsponseJson.ipfs_cid;
+      const imageUrl = ipfsApiUrl + '/' + imageIpfsCid;
+      const imageResponse = await fetch(imageUrl, {
+        method: 'GET',
+        headers: {
+          'content-type': 'image',
+        },
+      });
+      const imageContentType = imageResponse.headers.get('content-type');
+      const imageBlob = await imageResponse.blob();
+      let html = '';
+      html += `<h4>${title}</h4>`;
+      if (imageContentType == 'image/svg+xml') {
+        html += `<object title="${imageIpfsCid}" width="30vmin" type="image/svg+xml" data="${imageBlob}"></object>`;
+      } else {
+        console.log(`defaulting to image for content type ${imageContentType}`);
+        // console.log('imageBlob', imageBlob);
+        const imageObjectUrl = URL.createObjectURL(imageBlob);
+        html += `<img title="${imageIpfsCid}" style="width:30vmin;height30vmin;" src="${imageObjectUrl}"></img>`;
+      }
+      for (let assetIx = 0; assetIx < assets.length; assetIx++) {
+        const asset = assets[assetIx];
+        const span = document.getElementById(asset);
+
+        span.innerHTML = html;
+      }
+    });
   };
   setTimeout(callback, 0);
 };

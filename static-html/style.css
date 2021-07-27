@@ -19,6 +19,10 @@
   flex-direction: column;
 }
 
+.row {
+  flex-direction: row;
+}
+
 .nowrap {
   flex-wrap: nowrap;
 }
