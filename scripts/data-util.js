@@ -197,6 +197,35 @@ const setTemplateForAsset = (fs, asset, template) => {
   fs.closeSync(filePtr);
 };
 
+const getTemplateCounterForAssetFile = (fs, asset) => {
+  return path.join(config.assetTemplateCounterDataDir, asset);
+};
+
+const hasTemplateCounterForAsset = (fs, asset) => {
+  checkValidFileStr(asset);
+  return fs.existsSync(getTemplateCounterForAssetFile(fs, asset));
+};
+
+const getTemplateCounterForAsset = (fs, asset) => {
+  checkValidFileStr(asset);
+  return fs.readFileSync(getTemplateCounterForAssetFile(fs, asset), 'UTF-8');
+};
+
+const makeTemplateCounterForAssetDir = (fs) => {
+  if (!fs.existsSync(config.assetTemplateCounterDataDir)) {
+    fs.mkdirSync(config.assetTemplateCounterDataDir, {recursive: true});
+  }
+};
+
+const setTemplateCounterForAsset = (fs, asset, template) => {
+  checkValidFileStr(asset);
+  checkValidFileStr(template);
+  makeTemplateCounterForAssetDir(fs);
+  const filePtr = fs.openSync(getTemplateCounterForAssetFile(fs, asset), 'w');
+  fs.writeSync(filePtr, template);
+  fs.closeSync(filePtr);
+};
+
 exports.init = init;
 exports.deactivate = deactivate;
 exports.checkValidFileStr = checkValidFileStr;
@@ -215,3 +244,6 @@ exports.listOwnerAssets = listOwnerAssets;
 exports.hasTemplateForAsset = hasTemplateForAsset;
 exports.getTemplateForAsset = getTemplateForAsset;
 exports.setTemplateForAsset = setTemplateForAsset;
+exports.hasTemplateCounterForAsset = hasTemplateCounterForAsset;
+exports.getTemplateCounterForAsset = getTemplateCounterForAsset;
+exports.setTemplateCounterForAsset = setTemplateCounterForAsset;

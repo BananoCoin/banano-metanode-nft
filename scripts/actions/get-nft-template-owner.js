@@ -117,7 +117,7 @@ const getNftAssetsOwners = async (context, req, res) => {
   };
   loggingUtil.debug(ACTION, 'histRequest', histRequest);
   const histResponse = await fetch(config.bananodeApiUrl, histRequest);
-  loggingUtil.debug(ACTION, 'histResponse', histResponse);
+  // loggingUtil.debug(ACTION, 'histResponse', histResponse);
   const histResponseJson = await histResponse.json();
   loggingUtil.debug(ACTION, 'histResponseJson', histResponseJson);
 
@@ -131,6 +131,7 @@ const getNftAssetsOwners = async (context, req, res) => {
     resp.asset_owners = [];
     const representativeAccount = await bananojs.getBananoAccount(newRepresentative);
     loggingUtil.log(ACTION, 'representativeAccount', representativeAccount);
+    let templateAssetCounter = 0;
     for (let ix = 0; ix < histResponseJson.history.length; ix++) {
       const historyElt = histResponseJson.history[ix];
       if (historyElt.representative == representativeAccount) {
@@ -140,12 +141,19 @@ const getNftAssetsOwners = async (context, req, res) => {
         const asset = historyElt.hash;
         const template = ipfsCid;
         ipfsUtil.setTemplateForAsset(fs, ACTION, asset, template);
-        resp.asset_owners.push({
+        ipfsUtil.setTemplateCounterForAsset(fs, ACTION, asset, templateAssetCounter);
+        const assetOwner = {
           asset: asset,
+          mint_number: templateAssetCounter.toFixed(0),
           owner: linkAccount,
           template: template,
           history: [],
-        });
+        };
+        if (ipfsResp.json.max_supply !== undefined) {
+          assetOwner.max_supply = parseInt(ipfsResp.json.max_supply).toFixed(0);
+        }
+        resp.asset_owners.push(assetOwner);
+        templateAssetCounter++;
       }
     }
 

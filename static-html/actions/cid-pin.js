@@ -58,7 +58,7 @@ const addCidPinInfo = () => {
   addField('version', 'Version', '1.0.0');
   addField('title', 'Title', '');
   addField('issuer', 'Issuer (Banano Account)', '');
-  addField('max_supply', 'Maximum Mint Count (Max Supply)', '1');
+  addField('max_supply', 'Maximum Mint Count (Max Supply), (Leave Blank for Unlimited)', '1');
   addField('ipfs_cid', 'Artwork IPFS CID', '');
   addField('mint_previous', 'Head block of Issuer account', '');
   addChildElement(formElt, 'br');
@@ -92,6 +92,9 @@ window.pinCid = async () => {
       mint_previous: document.getElementById('mint_previous').value.trim(),
     },
   };
+  if (body.pinataContent.max_supply.length == 0) {
+    delete body.pinataContent.max_supply;
+  }
   console.log('pinCid', 'request', body);
   console.log('pinCid', 'Bearer', window.localStorage.pinataApiTokenJWT);
   const response = await fetch(url, {

@@ -21,6 +21,7 @@ const config = {
   nextAssetOwnerDir: 'nextAssetOwnerDir',
   ownedAssetsDir: 'ownedAssetsDir',
   assetTemplateDataDir: 'assetTemplateDataDir',
+  assetTemplateCounterDataDir: 'assetTemplateCounterDataDir',
 };
 
 const loggingUtil = {};

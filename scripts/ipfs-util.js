@@ -165,10 +165,7 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
         resp.errors.push(`issuer undefined`);
       }
 
-      if (resp.json.max_supply === undefined) {
-        resp.success = false;
-        resp.errors.push(`max_supply undefined`);
-      } else {
+      if (resp.json.max_supply !== undefined) {
         const regExp = new RegExp('^[0-9]+$');
         if (!regExp.test(resp.json.max_supply.toString())) {
           resp.success = false;
@@ -569,6 +566,18 @@ const setTemplateForAsset = (fs, action, asset, template) => {
   dataUtil.setTemplateForAsset(fs, asset, template);
 };
 
+const getTemplateCounterForAsset = (fs, action, asset) => {
+  if (dataUtil.hasTemplateCounterForAsset(fs, asset)) {
+    return dataUtil.getTemplateCounterForAsset(fs, asset);
+  } else {
+    return '';
+  }
+};
+
+const setTemplateCounterForAsset = (fs, action, asset, template) => {
+  dataUtil.setTemplateCounterForAsset(fs, asset, template);
+};
+
 exports.init = init;
 exports.deactivate = deactivate;
 exports.getNftInfoForIpfsCid = getNftInfoForIpfsCid;
@@ -578,3 +587,5 @@ exports.getOwnedAssets = getOwnedAssets;
 exports.getChainAccountInfoCache = getChainAccountInfoCache;
 exports.getTemplateForAsset = getTemplateForAsset;
 exports.setTemplateForAsset = setTemplateForAsset;
+exports.getTemplateCounterForAsset = getTemplateCounterForAsset;
+exports.setTemplateCounterForAsset = setTemplateCounterForAsset;

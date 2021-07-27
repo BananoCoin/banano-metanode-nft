@@ -282,6 +282,8 @@ describe(actionUtil.ACTION, () => {
           history: [],
           owner: goodOwner3,
           template: goodIpfsCid,
+          max_supply: '1',
+          mint_number: '0',
         },
       ],
     };
@@ -340,6 +342,8 @@ describe(actionUtil.ACTION, () => {
           history: [],
           owner: goodOwner3,
           template: goodIpfsCid,
+          max_supply: '1',
+          mint_number: '0',
         },
       ],
     };
@@ -395,6 +399,8 @@ describe(actionUtil.ACTION, () => {
           ],
           owner: goodOwner4,
           template: goodIpfsCid,
+          max_supply: '1',
+          mint_number: '0',
         },
       ],
     };
@@ -433,6 +439,8 @@ describe(actionUtil.ACTION, () => {
           history: [],
           owner: goodOwner4,
           template: goodIpfsCid,
+          max_supply: '1',
+          mint_number: '0',
         },
       ],
     };
@@ -500,6 +508,8 @@ describe(actionUtil.ACTION, () => {
           asset: goodSendHash4,
           owner: goodOwnerB,
           template: goodIpfsCid,
+          max_supply: '1',
+          mint_number: '0',
           history: [
             {
               owner: goodOwner4,
@@ -585,6 +595,8 @@ describe(actionUtil.ACTION, () => {
           asset: goodSendHash4,
           owner: goodOwnerB,
           template: goodIpfsCid,
+          max_supply: '1',
+          mint_number: '0',
           history: [
             {
               owner: goodOwner4,
@@ -734,7 +746,6 @@ describe(actionUtil.ACTION, () => {
         'version undefined',
         'title undefined',
         'issuer undefined',
-        'max_supply undefined',
         'ipfs_cid undefined',
         'mint_previous undefined',
       ],

@@ -7,6 +7,7 @@
   "nextAssetOwnerDir": "data/nextAssetOwners",
   "ownedAssetsDir": "data/ownedAssets",
   "assetTemplateDataDir": "data/assetTemplates",
+  "assetTemplateCounterDataDir": "data/assetTemplateCounter",
   "fetchTimeout": 5000,
   "webPort": ""
 }

@@ -90,8 +90,9 @@ describe(actionUtil.ACTION, () => {
       success: true,
       assetInfos: [
         {
-          'asset': goodSendHash4,
-          'template': '',
+          asset: goodSendHash4,
+          template: '',
+          mint_number: '',
         },
       ],
     };
@@ -163,6 +164,8 @@ describe(actionUtil.ACTION, () => {
           ],
           owner: goodOwner4,
           template: goodIpfsCid,
+          max_supply: '1',
+          mint_number: '0',
         },
         {
           asset: goodSendHash4,
@@ -175,6 +178,8 @@ describe(actionUtil.ACTION, () => {
           ],
           owner: goodOwner4,
           template: goodIpfsCid,
+          max_supply: '1',
+          mint_number: '1',
         },
 
       ],
@@ -191,8 +196,9 @@ describe(actionUtil.ACTION, () => {
       success: true,
       assetInfos: [
         {
-          'asset': goodSendHash4,
-          'template': goodIpfsCid,
+          asset: goodSendHash4,
+          template: goodIpfsCid,
+          mint_number: 1,
         },
       ],
     };
@@ -278,6 +284,8 @@ describe(actionUtil.ACTION, () => {
               send: goodSendHashA,
             },
           ],
+          max_supply: '1',
+          mint_number: '0',
           owner: goodOwnerB,
           template: goodIpfsCid,
         },
