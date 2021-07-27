@@ -12,7 +12,6 @@ An RPC node for issuing NFTs on the banano blockchain.
   [installation instructions](docs/installation.md)
 
 #todo
-- add template and asset counter to owned assets and template information.
 - do more input validation on the site. such as for bad banano addresses or bad hashes.
 - change 'transfer nft' to a dropdown.
 - add whitelisted template owners, template owner forgeries, and template asset forgeries (over asset count)

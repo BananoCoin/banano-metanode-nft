@@ -574,8 +574,8 @@ const getTemplateCounterForAsset = (fs, action, asset) => {
   }
 };
 
-const setTemplateCounterForAsset = (fs, action, asset, template) => {
-  dataUtil.setTemplateCounterForAsset(fs, asset, template);
+const setTemplateCounterForAsset = (fs, action, asset, counter) => {
+  dataUtil.setTemplateCounterForAsset(fs, asset, parseInt(counter).toFixed(0));
 };
 
 exports.init = init;

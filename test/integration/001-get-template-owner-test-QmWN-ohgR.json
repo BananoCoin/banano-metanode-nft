@@ -1,22 +1,3 @@
 {
-  "expectedResponse": {
-    "status": 200,
-    "ipfs_cid": "QmWNckc4jmTFsSSrhsSNJMhkmDbH19owXB6UL8jVEaohgR",
-    "success": false,
-    "content_type": "application/json",
-    "json": {
-      "command": "mint_nft",
-      "version": "1.0.0",
-      "title": "Monkey Bananochita Volcana",
-      "issuer": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
-      "ipfs_cid": "QmXpzcQUmDGWTeu13FwFfscBC9SDwe2xAAm6KHyefX95AY",
-      "mint_previous": "C2E97EC6A65BAF9F2B0B4C65F94D091FDB82874AC0F6C365A9386B09C727CBAB",
-      "ipfs_cid_hex": "12208cfbf2ab0e95f7e2106dfc1577a1fae881527599cb9e70ebd552049438bc40d9",
-      "ipfs_cid_hex_base58": "QmXpzcQUmDGWTeu13FwFfscBC9SDwe2xAAm6KHyefX95AY",
-      "new_representative": "8cfbf2ab0e95f7e2106dfc1577a1fae881527599cb9e70ebd552049438bc40d9",
-      "new_representative_account": "ban_359uycoix7hqwaa8uz1ogyizot63cbtsmkwyg5oxcni6kiwdri8szfomapoo"
-    },
-    "errors": ["max_supply undefined"]
-  }
-
+  "expectedResponse": { "success": true, "asset_owners": [] }
 }

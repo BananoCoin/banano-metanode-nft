@@ -4,7 +4,9 @@
     "asset_owners": [
       {
         "asset": "5CCCBA25B221D9437B07E15C20D0F5997B23262E3194CCB3B7A4374BF4DA1B51",
+        "mint_number": "0",
         "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+        "template": "QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS",
         "history": [
           {
             "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
@@ -51,11 +53,14 @@
             "send": "A6B4BDCDAB06F8CADF1C9D14D09E408468307FA74C4700CFFFCBCD1281D569C9",
             "receive": "C433B79AA88162C79E38EDEB59BD7D6ACE765F03485D76DD214B10AC3FC71EE3"
           }
-        ]
+        ],
+        "max_supply": "1"
       },
       {
         "asset": "809439EB07AE146239D2FA52D107E62D5672BE18D284B2F054D04CDC067CFAB6",
+        "mint_number": "1",
         "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+        "template": "QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS",
         "history": [
           {
             "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
@@ -72,22 +77,28 @@
             "send": "5137DD9DE5F5A0B626EB2E10399C14B0BCC6F8DDFB54DEF5F61FF2FB9030EB84",
             "receive": "E676DA9280B8719D8EF5C2428C4D22EC744719F04709CEA742C3548DD6246379"
           }
-        ]
+        ],
+        "max_supply": "1"
       },
       {
         "asset": "16A875870DEFB2A3E3CBD9A41E07059481E1C4CF030F2B344B13E3EF328D79AE",
+        "mint_number": "2",
         "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+        "template": "QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS",
         "history": [
           {
             "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
             "send": "16A875870DEFB2A3E3CBD9A41E07059481E1C4CF030F2B344B13E3EF328D79AE",
             "receive": "2794DA925C16346F609723F013F1DDB7C9384ABBB4E1AB327671C353916CD4D3"
           }
-        ]
+        ],
+        "max_supply": "1"
       },
       {
         "asset": "71DDA4D97A2E0CA021B4A4F8A0092F1317A6E125EA51A1AF84009C6716A623C8",
+        "mint_number": "3",
         "owner": "ban_1b4x5c7t1jazh8jiddzp5a5e3jmofkk3baepmsu7cegg8ysmx7jb4s5nuspo",
+        "template": "QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS",
         "history": [
           {
             "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
@@ -99,8 +110,67 @@
             "send": "7C77E265D0A0C72911CF03388014F7E69DE0AA8006B7781A2741024E6B222558",
             "receive": "EC15FD4CE41B0643879697CA79AAD377D1FD912C62CC23B8690B6E8D1C83CA98"
           }
-        ]
+        ],
+        "max_supply": "1"
+      },
+      {
+        "asset": "130A10C93AE7098ED1AA1D92FDF2AA46443D064EB87B57CBD7C0C84BAB988F8F",
+        "mint_number": "4",
+        "owner": "ban_1mdjh7j8wotzpobq5n76rsagfjkboxo6umdhc97r17cqgak18oexuqpwdux6",
+        "template": "QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS",
+        "history": [
+          {
+            "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+            "send": "130A10C93AE7098ED1AA1D92FDF2AA46443D064EB87B57CBD7C0C84BAB988F8F",
+            "receive": "F39AACAE0DDB6DA82A11DD3EB1D859D143DE0821EDCF3EA4E7DCFB50EF700845"
+          },
+          {
+            "owner": "ban_1jsdpfa46qh5u49t3mbhisngtqunj43zc1k9x73okk6syi54zkugy1psyer1",
+            "send": "7C6E3C5524D5FFA249AAA815F449E6C724500881468A37373C4903F81CE6A6F4",
+            "receive": "DB5663E0A71E6331D252C6BA15F4CFD721CC7F01DE56C40B69BF34C958C8848A"
+          },
+          {
+            "owner": "ban_1mdjh7j8wotzpobq5n76rsagfjkboxo6umdhc97r17cqgak18oexuqpwdux6",
+            "send": "F12E5A6BB52393B26A0ACD2F162104ADBA8C0C52AE70F0A57F756B0259845061",
+            "receive": ""
+          }
+        ],
+        "max_supply": "1"
+      },
+      {
+        "asset": "3A710E5DC893F567CF3C74E74F54D9687FD6D5FF6DF0CA6E11C32E86ED42C36A",
+        "mint_number": "5",
+        "owner": "ban_1jsdpfa46qh5u49t3mbhisngtqunj43zc1k9x73okk6syi54zkugy1psyer1",
+        "template": "QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS",
+        "history": [
+          {
+            "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+            "send": "3A710E5DC893F567CF3C74E74F54D9687FD6D5FF6DF0CA6E11C32E86ED42C36A",
+            "receive": "9F155B8806F43B4C5481B8C3816417409A629D820510E2C9045755537A51BD1A"
+          },
+          {
+            "owner": "ban_1jsdpfa46qh5u49t3mbhisngtqunj43zc1k9x73okk6syi54zkugy1psyer1",
+            "send": "3369E3E5AB8492B20A9AA6F8701DA5395DFDBE8F87B29263B5B2D27B5BA9A53A",
+            "receive": "23FA295604BEB5B1EEA776E6B0609E6A228EB7DF568619C92A8452E4B26A1FD6"
+          }
+        ],
+        "max_supply": "1"
+      },
+      {
+        "asset": "FC8D96FA09FC5BDED1D2653BE6A862B60FFC83F69DEFEBB35DFA42841D00F065",
+        "mint_number": "6",
+        "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+        "template": "QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS",
+        "history": [
+          {
+            "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+            "send": "FC8D96FA09FC5BDED1D2653BE6A862B60FFC83F69DEFEBB35DFA42841D00F065",
+            "receive": "C2E97EC6A65BAF9F2B0B4C65F94D091FDB82874AC0F6C365A9386B09C727CBAB"
+          }
+        ],
+        "max_supply": "1"
       }
     ]
   }
+
 }

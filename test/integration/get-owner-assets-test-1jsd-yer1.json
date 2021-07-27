@@ -1,7 +1,12 @@
 {
   "expectedResponse": {
+    "success": true,
     "assetInfos": [
-    ],
-    "success": true
+      {
+        "asset": "3A710E5DC893F567CF3C74E74F54D9687FD6D5FF6DF0CA6E11C32E86ED42C36A",
+        "template": "QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS",
+        "mint_number": "5"
+      }
+    ]
   }
 }
