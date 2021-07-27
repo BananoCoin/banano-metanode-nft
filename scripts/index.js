@@ -120,7 +120,7 @@ const initServer = () => {
     }
   });
   app.use(cors({
-    origin: [ipfsApiUrl],
+    origin: [config.ipfsApiUrl],
   }));
 
   const actions = {};
