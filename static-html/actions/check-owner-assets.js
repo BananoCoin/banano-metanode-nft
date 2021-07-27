@@ -91,7 +91,6 @@ window.checkOwnerAssets = async () => {
       const assets = templatesToLoad[jsonIpfsCid];
       const templateUrl = ipfsApiUrl + '/' + jsonIpfsCid;
       const templateResponse = await fetch(templateUrl, {
-        mode: 'no-cors',
         method: 'GET',
         headers: {
           'content-type': 'application/json',
@@ -102,7 +101,6 @@ window.checkOwnerAssets = async () => {
       const imageIpfsCid = templateRsponseJson.ipfs_cid;
       const imageUrl = ipfsApiUrl + '/' + imageIpfsCid;
       const imageResponse = await fetch(imageUrl, {
-        mode: 'no-cors',
         method: 'GET',
         headers: {
           'content-type': 'image',

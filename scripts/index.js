@@ -7,7 +7,6 @@ const fetch = require('node-fetch');
 const path = require('path');
 const fs = require('fs');
 const awaitSemaphore = require('await-semaphore');
-const cors = require('cors');
 
 // modules
 
@@ -119,9 +118,6 @@ const initServer = () => {
       next();
     }
   });
-  app.use(cors({
-    origin: [config.ipfsApiUrl],
-  }));
 
   const actions = {};
   app.get('/', async (req, res) => {
