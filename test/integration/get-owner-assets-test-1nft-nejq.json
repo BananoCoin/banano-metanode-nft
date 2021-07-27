@@ -8,6 +8,11 @@
         "mint_number": "2"
       },
       {
+        "asset": "4446EBE2BF2B8432CD2D50CB18C38E6718C19EA559207257631A705DB45F4098",
+        "mint_number": "0",
+        "template": "QmWNckc4jmTFsSSrhsSNJMhkmDbH19owXB6UL8jVEaohgR"
+      },
+      {
         "asset": "5CCCBA25B221D9437B07E15C20D0F5997B23262E3194CCB3B7A4374BF4DA1B51",
         "template": "QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS",
         "mint_number": "0"

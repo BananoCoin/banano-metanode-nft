@@ -1,3 +1,14 @@
 {
-  "expectedResponse": { "success": true, "asset_owners": [] }
+  "expectedResponse": {
+    "success": true,
+    "asset_owners": [
+      {
+        "asset": "4446EBE2BF2B8432CD2D50CB18C38E6718C19EA559207257631A705DB45F4098",
+        "history": [],
+        "mint_number": "0",
+        "owner": "ban_1nftdfyadn1ynf9bz3n8rmdejnga6b7dhdeociscsmidtuy6r4s6jzf6nejq",
+        "template": "QmWNckc4jmTFsSSrhsSNJMhkmDbH19owXB6UL8jVEaohgR"
+      }
+    ]
+  }
 }

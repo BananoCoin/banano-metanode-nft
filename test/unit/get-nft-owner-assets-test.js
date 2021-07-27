@@ -198,7 +198,7 @@ describe(actionUtil.ACTION, () => {
         {
           asset: goodSendHash4,
           template: goodIpfsCid,
-          mint_number: 1,
+          mint_number: '1',
         },
       ],
     };

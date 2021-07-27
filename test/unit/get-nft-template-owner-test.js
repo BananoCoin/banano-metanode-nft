@@ -15,6 +15,7 @@ const mockFetch = require('../util/mock-fetch.js');
 const {config, loggingUtil, getResponse} = require('../util/get-response.js');
 
 // constants
+const goodIpfsCidNoMaxSupply = 'QmWNckc4jmTFsSSrhsSNJMhkmDbH19owXB6UL8jVEaohgR';
 const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
 const badContentTypeIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWABADCT';
 const badTimeoutIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQBADT1ME';
@@ -41,6 +42,7 @@ const goodOwner4 = 'ban_11111111111111111111111111111111111111111111111111147dcw
 const goodOwner6 = 'ban_1111111111111111111111111111111111111111111111111116i3bqjdmq';
 const goodOwnerB = 'ban_111111111111111111111111111111111111111111111111111d7qqrs8tn';
 const goodAssetRep = 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrfg8egjn';
+const goodAssetRepNoMaxSupply = 'ban_1xtyg8zyc3tkg8byfakcrw5qkfdob96p7dn7ga8ys59qrtcw3aqgqdszk5zz';
 
 // variables
 const accountInfos = {};
@@ -228,6 +230,32 @@ describe(actionUtil.ACTION, () => {
             reject(Error('The user aborted a request with a wierd message.'));
           });
         }
+
+        if (resource == `${config.ipfsApiUrl}/${goodIpfsCidNoMaxSupply}`) {
+          return new Promise(async (resolve) => {
+            resolve({
+              status: 200,
+              headers: {
+                get: (header) => {
+                  if (header == 'content-type') {
+                    return 'application/json';
+                  }
+                },
+              },
+              json: () => {
+                return {
+                  'command': 'mint_nft',
+                  'version': '',
+                  'title': '',
+                  'issuer': '',
+                  'ipfs_cid': goodIpfsCidNoMaxSupply,
+                  'mint_previous': goodHead,
+                };
+              },
+            });
+          });
+        }
+
         return fetchFn(resource, options);
       },
     };
@@ -876,6 +904,63 @@ describe(actionUtil.ACTION, () => {
       'status': 408,
       'success': false,
     };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 goodIpfsCidNoMaxSupply undefined head history', async () => {
+    const context = getContext([
+      {
+        head: goodHead,
+        history: [
+          {
+            hash: goodSendHash4,
+            representative: goodAssetRepNoMaxSupply,
+            link: goodOwner4link,
+            type: 'state',
+            subtype: 'send',
+          },
+        ],
+      },
+      {
+        account: goodOwner4,
+        head: goodReceiveHash3,
+        history: [
+          {
+            type: 'state',
+            subtype: 'receive',
+            hash: goodReceiveHash3,
+            representative: goodOwner6,
+            link: goodSendHash4,
+          },
+        ],
+      },
+    ]);
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCidNoMaxSupply});
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      asset_owners: [
+        {
+          asset: goodSendHash4,
+          history: [
+            {
+              owner: goodOwner4,
+              receive: goodReceiveHash3,
+              send: goodSendHash4,
+            },
+          ],
+          mint_number: '0',
+          owner: goodOwner4,
+          template: goodIpfsCidNoMaxSupply,
+        },
+      ],
+      success: true,
+    };
+
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);
     expect(actualResponse).to.deep.equal(expectedResponse);
