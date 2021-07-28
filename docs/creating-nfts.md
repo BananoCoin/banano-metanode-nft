@@ -20,7 +20,7 @@ Before you start making an NFT on banano, collect the following information:
 
 ### Pinata API key
 
-if using pinata to upload the JSON you need a pinata api key. We use the JWT.
+if using pinata to upload the JSON you need a pinata api key. We use the JWT type (JSON Web Token).
 
         https://pinata.cloud/documentation
 
