@@ -2,6 +2,10 @@
 
 An RPC node for issuing NFTs on the banano blockchain.
 
+# NFT Minting documentation
+
+  [NFT Minting documentation](docs/creating-nfts.md)
+
 # RPC documentation
 
   [RPC documentation](docs/documentation.md)
