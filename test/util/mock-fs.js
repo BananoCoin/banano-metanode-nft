@@ -12,7 +12,9 @@ const dirDataMap = new Map();
 
 // functions
 const existsSync = (file) => {
-  return fileDataMap.has(file) || dirDataMap.has(file);
+  const retval = fileDataMap.has(file) || dirDataMap.has(file);
+  // console.log('existsSync', file, retval);
+  return retval;
 };
 
 const openSync = (file) => {
@@ -35,6 +37,7 @@ const closeSync = (file) => {
 
 const clear = () => {
   fileDataMap.clear();
+  dirDataMap.clear();
 };
 
 const mkdirSync = (file) => {

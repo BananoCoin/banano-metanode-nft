@@ -147,6 +147,7 @@ const addOwnerAsset = (fs, owner, asset) => {
   checkValidFileStr(owner);
   checkValidFileStr(asset);
   makeOwnedAssetsDir(fs, owner);
+  // console.log('addOwnerAsset', owner, asset);
   const filePtr = fs.openSync(getOwnedAssetsFile(fs, owner, asset), 'w');
   fs.closeSync(filePtr);
 };
@@ -165,6 +166,7 @@ const listOwnerAssets = (fs, owner) => {
       assets.push(fileNm);
     });
   }
+  // console.log('listOwnerAssets', owner, assets);
   return assets;
 };
 

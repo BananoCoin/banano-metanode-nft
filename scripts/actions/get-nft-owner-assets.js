@@ -97,6 +97,8 @@ const getNftOwnerAssets = async (context, req, res) => {
   const chainAccountInfoCache =
         ipfsUtil.getChainAccountInfoCache(fetch, ACTION);
   const ownedAssets = await ipfsUtil.getOwnedAssets(fetch, bananojs, fs, ACTION, owner, chainAccountInfoCache);
+
+  loggingUtil.log(ACTION, 'getNftOwnerAssets', 'ownedAssets', ownedAssets);
   for (let ownedAssetIx = 0; ownedAssetIx < ownedAssets.length; ownedAssetIx++) {
     const ownedAsset = ownedAssets[ownedAssetIx];
     const template = ipfsUtil.getTemplateForAsset(fs, ACTION, ownedAsset);

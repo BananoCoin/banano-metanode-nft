@@ -16,6 +16,7 @@ const mockFetch = require('../util/mock-fetch.js');
 const {config, loggingUtil, getResponse} = require('../util/get-response.js');
 
 // constants
+const artIpfsCid = 'QmbzTMo42KADUbLwc43KR9Se6aV3N6wfKqFbSr2qN1gJqR';
 const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
 const goodHead = '0000000000000000000000000000000000000000000000000000000000000000';
 const goodOwner4link = '0000000000000000000000000000000000000000000000000000000000000002';
@@ -62,7 +63,7 @@ describe(actionUtil.ACTION, () => {
                   'title': '',
                   'issuer': '',
                   'max_supply': '1',
-                  'ipfs_cid': goodIpfsCid,
+                  'ipfs_cid': artIpfsCid,
                   'mint_previous': goodHead,
                 };
               },
@@ -88,13 +89,7 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
-      assetInfos: [
-        {
-          asset: goodSendHash4,
-          template: '',
-          mint_number: '',
-        },
-      ],
+      assetInfos: [],
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);
@@ -208,6 +203,7 @@ describe(actionUtil.ACTION, () => {
   });
 
   it('get status 200 two owner with receive', async () => {
+    dataUtil.addOwnerAsset(mockFs, goodOwner4, goodSendHash4);
     const context = getContext([
       {
         head: goodHead,

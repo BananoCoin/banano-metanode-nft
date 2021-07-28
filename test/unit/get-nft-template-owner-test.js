@@ -147,6 +147,7 @@ describe(actionUtil.ACTION, () => {
                   'max_supply': '',
                   'ipfs_cid': '',
                   'mint_previous': '',
+                  'transferable': '',
                 };
               },
             });
@@ -736,24 +737,26 @@ describe(actionUtil.ACTION, () => {
       loggingUtil.trace(error);
     }
     const expectedResponse = {
-      'content_type': 'application/json',
-      'errors': [
+      content_type: 'application/json',
+      errors: [
         'max_supply:\'\' not an integer',
+        'transferable:\'\' not a boolean',
         'ipfs_cid:\'\' not Qm+base58',
         'mint_previous:\'\' not 64 hex characters',
       ],
-      'ipfs_cid': badJsonIpfsCid,
-      'json': {
-        'command': 'mint_nft',
-        'ipfs_cid': '',
-        'issuer': '',
-        'max_supply': '',
-        'mint_previous': '',
-        'title': '',
-        'version': '',
+      ipfs_cid: badJsonIpfsCid,
+      json: {
+        command: 'mint_nft',
+        ipfs_cid: '',
+        issuer: '',
+        max_supply: '',
+        mint_previous: '',
+        transferable: '',
+        title: '',
+        version: '',
       },
-      'status': 200,
-      'success': false,
+      status: 200,
+      success: false,
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);

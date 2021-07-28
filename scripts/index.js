@@ -101,7 +101,14 @@ const deactivateModules = async () => {
 const initServer = () => {
   const app = express();
 
-  app.use(express.static('static-html'));
+  app.use(express.static('static-html', {
+    setHeaders: function(res, path) {
+      res.setHeader('Access-Control-Allow-Origin', config.ipfsApiUrl);
+      res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'content-type');
+    },
+  }));
+
   app.use(express.urlencoded({
     limit: '50mb',
     extended: true,
@@ -110,13 +117,6 @@ const initServer = () => {
     limit: '50mb',
     extended: true,
   }));
-
-  app.use(function (req, res, next) {
-      res.setHeader('Access-Control-Allow-Origin', config.ipfsApiUrl);
-      res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'content-type');
-      next();
-  });
 
   app.use((err, req, res, next) => {
     if (err) {

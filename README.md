@@ -23,3 +23,5 @@ An RPC node for issuing NFTs on the banano blockchain.
 - (bug) figure out why you have to refresh the template before the ownership change shows up.
 
   [todo](https://github.com/BananoCoin/banano-metanode-nft/issues)
+
+1. add a issue to add non_transferable.

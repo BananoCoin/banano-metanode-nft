@@ -173,29 +173,19 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
         }
       }
 
+      if (resp.json.transferable !== undefined) {
+        const regExp = new RegExp('^true|false$');
+        if (!regExp.test(resp.json.transferable.toString())) {
+          resp.success = false;
+          resp.errors.push(`transferable:'${resp.json.transferable}' not a boolean`);
+        }
+      }
+
       if (resp.json.ipfs_cid === undefined) {
         resp.success = false;
         resp.errors.push(`ipfs_cid undefined`);
       } else {
-        const regExp = new RegExp('^Qm[0-9A-Za-z]{0,64}$');
-        if (!regExp.test(resp.json.ipfs_cid)) {
-          resp.success = false;
-          resp.errors.push(`ipfs_cid:'${resp.json.ipfs_cid}' not Qm+base58`);
-        } else {
-          const bytes = bs58.decode(resp.json.ipfs_cid);
-          resp.json.ipfs_cid_hex = bytes.toString('hex');
-          resp.json.ipfs_cid_hex_base58 = bs58.encode(Buffer.from(bytes));
-
-          const regExp = new RegExp('^1220[0123456789abcdefABCDEF]{64}$');
-          if (!regExp.test(resp.json.ipfs_cid_hex)) {
-            resp.success = false;
-            // check https://github.com/multiformats/js-cid
-            resp.errors.push(`ipfs_cid_hex:'${resp.json.ipfs_cid_hex}' not 64 hex characters after prefix 1220, ${resp.json.ipfs_cid_hex.length}`);
-          } else {
-            resp.json.new_representative = resp.json.ipfs_cid_hex.substring(4);
-            resp.json.new_representative_account = await bananojs.getBananoAccount(resp.json.new_representative);
-          }
-        }
+        resp.success = await addRep(bananojs, resp.json, 'art_', resp.errors);
       }
 
       if (resp.json.mint_previous === undefined) {
@@ -210,7 +200,19 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
       }
 
       if (resp.success) {
+        // only add ipfs_cid representative_account if everything is correct.
+        // so malformed json can't be used to mint assets.
+        resp.success = await addRep(bananojs, resp, '', resp.errors);
+      }
+
+      if (resp.success) {
         delete resp.errors;
+        delete resp.ipfs_cid_hex;
+        delete resp.ipfs_cid_hex_base58;
+        delete resp.json.ipfs_cid_hex;
+        delete resp.json.ipfs_cid_hex_base58;
+        delete resp.json.art_representative;
+        delete resp.json.art_representative_account;
       }
     } else {
       resp.errors = ['unsupported content_type'];
@@ -249,6 +251,7 @@ const getOwnedAssets = async (fetch, bananojs, fs, action, owner, chainAccountIn
 
   loggingUtil.log(action, 'getOwnedAssets', 'owner', owner);
   const dirtyAssets = dataUtil.listOwnerAssets(fs, owner);
+  loggingUtil.log(action, 'getOwnedAssets', 'dirtyAssets', dirtyAssets);
   for (let dirtyAssetIx = 0; dirtyAssetIx < dirtyAssets.length; dirtyAssetIx++) {
     const dirtyAsset = dirtyAssets[dirtyAssetIx];
     const dirtyOwnerAsset = {
@@ -357,6 +360,10 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
 };
 
 const getReceiveBlock = async (fetch, fs, action, owner, sendHash) => {
+  /* istanbul ignore if */
+  if (owner === undefined) {
+    throw Error('owner is required');
+  }
   if (dataUtil.hasReceiveBlockHash(fs, sendHash)) {
     return dataUtil.getReceiveBlockHash(fs, sendHash);
   }
@@ -461,6 +468,10 @@ const getNextAssetOwner = async (fetch, fs, bananojs, action, assetRepresentativ
 };
 
 const getNextAssetOwnerForCache = async (fetch, bananojs, action, assetRepresentativeAccount, owner, receiveHash, accountInfoJson) => {
+  /* istanbul ignore if */
+  if (receiveHash === undefined) {
+    throw Error('receiveHash is required');
+  }
   const confirmationHeightFrontier = accountInfoJson.confirmation_height_frontier;
   const histBody = {
     action: 'account_history',
@@ -576,6 +587,32 @@ const getTemplateCounterForAsset = (fs, action, asset) => {
 
 const setTemplateCounterForAsset = (fs, action, asset, counter) => {
   dataUtil.setTemplateCounterForAsset(fs, asset, parseInt(counter).toFixed(0));
+};
+
+
+const addRep = async (bananojs, json, fieldNmPrefix, errors) => {
+  const regExp = new RegExp('^Qm[0-9A-Za-z]{0,64}$');
+  if (!regExp.test(json.ipfs_cid)) {
+    errors.push(`ipfs_cid:'${json.ipfs_cid}' not Qm+base58`);
+    return false;
+  } else {
+    const bytes = bs58.decode(json.ipfs_cid);
+    json.ipfs_cid_hex = bytes.toString('hex');
+    json.ipfs_cid_hex_base58 = bs58.encode(Buffer.from(bytes));
+
+    const regExp = new RegExp('^1220[0123456789abcdefABCDEF]{64}$');
+    if (!regExp.test(json.ipfs_cid_hex)) {
+      // check https://github.com/multiformats/js-cid
+      errors.push(`ipfs_cid_hex:'${json.ipfs_cid_hex}' not 64 hex characters after prefix 1220, ${json.ipfs_cid_hex.length}`);
+      return false;
+    } else {
+      const representativeFieldNm = `${fieldNmPrefix}representative`;
+      const representativeAccountFieldNm = `${fieldNmPrefix}representative_account`;
+      json[representativeFieldNm] = json.ipfs_cid_hex.substring(4);
+      json[representativeAccountFieldNm] = await bananojs.getBananoAccount(json[representativeFieldNm]);
+      return true;
+    }
+  }
 };
 
 exports.init = init;
