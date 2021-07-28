@@ -1,4 +1,4 @@
-import {addText, addChildElement} from '../lib/dom.js';
+import {addText, addChildElement, hide, show} from '../lib/dom.js';
 
 const addCidPinInfo = () => {
   const wrapperElt = document.getElementById('cidPinWrapper');
