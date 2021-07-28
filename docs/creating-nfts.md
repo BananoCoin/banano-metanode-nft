@@ -30,11 +30,11 @@ here's the instructions so far:
 
         - go to https://nft.coranos.cc/
         - under 'Seed and Account' make sure the seed and account are the ones you want,
-        and make sure they are backed up.
+          and make sure they are backed up.
         - under 'create an NFT template' make sure the API key JWT is the one you want,
-        and is backed up.
+          and is backed up.
         - go to 'create an NFT template' and fill out the JSON form with the 
-        title, account, max supply, artwork CID, and head block.
+          title, account, max supply, artwork CID, and head block.
         - it will return a CID. click 'GET CID Info' and type in the new CID.
         - if CID info says the CID is valid click 'mint nft'.
         - go to 'check ownership' to check that you own it.
