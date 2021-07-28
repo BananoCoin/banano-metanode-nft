@@ -103,11 +103,13 @@ const getNftOwnerAssets = async (context, req, res) => {
     const ownedAsset = ownedAssets[ownedAssetIx];
     const template = ipfsUtil.getTemplateForAsset(fs, ACTION, ownedAsset);
     const templateCounter = ipfsUtil.getTemplateCounterForAsset(fs, ACTION, ownedAsset);
-    resp.assetInfos.push({
-      asset: ownedAsset,
-      template: template,
-      mint_number: templateCounter,
-    });
+    if ((template.length > 0) && (templateCounter.length > 0)) {
+      resp.assetInfos.push({
+        asset: ownedAsset,
+        template: template,
+        mint_number: templateCounter,
+      });
+    }
   }
 
   chainAccountInfoCache.putChainAccountInfo(fs);

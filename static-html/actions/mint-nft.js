@@ -60,7 +60,7 @@ window.checkMintNftCID = async () => {
     if (responseJson.success) {
       if (responseJson.json !== undefined) {
         document.getElementById('mintRepresentativePublicKey').innerText =
-          responseJson.json.new_representative;
+          responseJson.representative;
       }
     }
     return;

@@ -113,6 +113,7 @@ const initServer = () => {
     limit: '50mb',
     extended: true,
   }));
+
   app.use(express.json({
     limit: '50mb',
     extended: true,
@@ -125,6 +126,17 @@ const initServer = () => {
     } else {
       next();
     }
+  });
+
+  app.use(function(req, res, next) {
+    // console.log('req.originalUrl', req.originalUrl);
+    // console.log('req.method', req.method);
+    if (req.method == 'GET') {
+      res.setHeader('Access-Control-Allow-Origin', config.ipfsApiUrl);
+      res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'content-type');
+    }
+    next();
   });
 
   const actions = {};

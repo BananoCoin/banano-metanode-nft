@@ -68,8 +68,8 @@ window.checkOwnerAssets = async () => {
       },
       body: `{"action": "get_nft_owner_assets", "owner":"${assetOwnerAccount}"}`,
     });
-    console.log('checkOwnerAssets', response);
     const responseJson = await response.json();
+    console.log('checkOwnerAssets', responseJson);
     let html = '';
     if (responseJson.success) {
       html = `<span><strong>Success!</strong>`;
@@ -83,7 +83,6 @@ window.checkOwnerAssets = async () => {
           html += `<span title="${assetInfo.asset}"><h3>${shorten(assetInfo.asset)}</h3></span>`;
           html += `<span><span id="${assetInfo.asset}">loading image ....</span></span>`;
           html += '</span>';
-
           if (templatesToLoad[assetInfo.template] == undefined) {
             templatesToLoad[assetInfo.template] = [];
           }

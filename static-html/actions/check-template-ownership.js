@@ -47,8 +47,8 @@ window.checkTemplateOwnership = async () => {
       },
       body: `{"action": "get_nft_template_owner", "ipfs_cid":"${cid}"}`,
     });
-    console.log('checkTemplateOwnership', response);
     const responseJson = await response.json();
+    console.log('checkTemplateOwnership', responseJson);
     let html = '';
     if (responseJson.success) {
       html = `<span><strong>Success!</strong>`;
