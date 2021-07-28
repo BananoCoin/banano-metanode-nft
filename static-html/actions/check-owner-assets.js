@@ -1,6 +1,8 @@
 import {addText, addChildElement} from '../lib/dom.js';
 import {shorten} from '../lib/asset-name.js';
 
+const loadOwnerAssetWorkerInst = new Worker('./actions/load-owner-asset-worker.js');
+
 const addOwnerAssetCheck = () => {
   const wrapperElt = document.getElementById('ownerAssetCheckWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
@@ -103,46 +105,24 @@ window.checkOwnerAssets = async () => {
     }
     ownerAssetsInfo.innerHTML = html;
 
-    Object.keys(templatesToLoad).forEach(async (jsonIpfsCid) => {
+    Object.keys(templatesToLoad).forEach((jsonIpfsCid) => {
       const assets = templatesToLoad[jsonIpfsCid];
-      const templateUrl = ipfsApiUrl + '/' + jsonIpfsCid;
-      const templateResponse = await fetch(templateUrl, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-        },
-      });
-      const templateRsponseJson = await templateResponse.json();
-      const title = templateRsponseJson.title;
-      const imageIpfsCid = templateRsponseJson.ipfs_cid;
-      const imageUrl = ipfsApiUrl + '/' + imageIpfsCid;
-      const imageResponse = await fetch(imageUrl, {
-        method: 'GET',
-        headers: {
-          'content-type': 'image',
-        },
-      });
-      const imageContentType = imageResponse.headers.get('content-type');
-      const imageBlob = await imageResponse.blob();
-      let html = '';
-      html += `<h4>${title}</h4>`;
-      if (imageContentType == 'image/svg+xml') {
-        html += `<object title="${imageIpfsCid}" width="30vmin" type="image/svg+xml" data="${imageBlob}"></object>`;
-      } else {
-        console.log(`defaulting to image for content type ${imageContentType}`);
-        // console.log('imageBlob', imageBlob);
-        const imageObjectUrl = URL.createObjectURL(imageBlob);
-        html += `<img title="${imageIpfsCid}" style="width:30vmin;height30vmin;" src="${imageObjectUrl}"></img>`;
-      }
-      for (let assetIx = 0; assetIx < assets.length; assetIx++) {
-        const asset = assets[assetIx];
-        const span = document.getElementById(asset);
-
-        span.innerHTML = html;
-      }
+      loadOwnerAssetWorkerInst.postMessage([ipfsApiUrl, jsonIpfsCid, assets]);
     });
   };
   setTimeout(callback, 0);
 };
+
+loadOwnerAssetWorkerInst.onmessage = function(e) {
+  const html = e.data[0];
+  const assets = e.data[1];
+  for (let assetIx = 0; assetIx < assets.length; assetIx++) {
+    const asset = assets[assetIx];
+    const span = document.getElementById(asset);
+
+    span.innerHTML = html;
+  }
+};
+
 
 export {addOwnerAssetCheck};
