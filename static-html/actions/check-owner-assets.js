@@ -13,15 +13,32 @@ const addOwnerAssetCheck = () => {
   }), 'Main Menu');
   addText(addChildElement(formElt, 'h2'), 'Check Owner Assets');
   addText(addChildElement(formElt, 'h3'), 'Banano Account that owns Assets');
-  addChildElement(formElt, 'input', {
+  const getValue = () => {
+    return window.localStorage.assetOwnerAccount || '';
+  };
+  const getHref = () => {
+    return `?assetOwnerAccount=${getValue()}#showOwnerAssetCheckWrappers`;
+  };
+  const shareHrefElt = addChildElement(formElt, 'a', {
+    target: '_blank',
+    href: getHref(),
+  });
+  addText(shareHrefElt, 'Share');
+  addChildElement(formElt, 'br');
+  const assetOwnerAccountElt = addChildElement(formElt, 'input', {
     'id': 'assetOwnerAccount',
     'class': '',
     'type': 'text',
     'size': '66',
     'max_length': '64',
-    'value': '',
+    'value': getValue(),
     'placeholder': 'Banano Account',
   });
+  assetOwnerAccountElt.addEventListener('input', () => {
+    window.localStorage.assetOwnerAccount = assetOwnerAccountElt.value;
+    shareHrefElt.href = getHref();
+  });
+
   addChildElement(formElt, 'br');
   const checkCidElt = addChildElement(formElt, 'button', {
     'id': 'check-ownership',
