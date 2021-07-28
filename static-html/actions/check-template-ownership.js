@@ -40,7 +40,7 @@ window.checkTemplateOwnership = async () => {
   const cid = document.getElementById('templateOwnerCid').value.trim();
   templateOwnershipInfo.innerHTML = 'pending...';
   const callback = async () => {
-    const response = await fetch('/', {
+    const response = await fetch(nftApiUrl, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

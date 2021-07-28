@@ -48,7 +48,7 @@ const addMintNft = () => {
 
 window.checkMintNftCID = async () => {
   const cid = document.getElementById('mintNftTemplateCid').value.trim();
-  const response = await fetch('/', {
+  const response = await fetch(nftApiUrl, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',

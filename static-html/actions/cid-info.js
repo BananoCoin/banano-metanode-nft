@@ -38,7 +38,7 @@ window.checkCid = async () => {
   const cidInfoElt = document.getElementById('cidInfo');
   clear(cidInfoElt);
   const cid = document.getElementById('cid').value.trim();
-  const response = await fetch('/', {
+  const response = await fetch(nftApiUrl, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',

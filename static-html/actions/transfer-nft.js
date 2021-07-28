@@ -68,7 +68,7 @@ const addTransferNft = () => {
 window.checkTransferNftCID = async () => {
   document.getElementById('transferAssets').innerHTML = 'pending...';
   const cid = document.getElementById('transferNftTemplateCid').value.trim();
-  const response = await fetch('/', {
+  const response = await fetch(nftApiUrl, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',

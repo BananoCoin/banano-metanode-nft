@@ -61,7 +61,7 @@ window.checkOwnerAssets = async () => {
 
   const callback = async () => {
     const templatesToLoad = {};
-    const response = await fetch('/', {
+    const response = await fetch(nftApiUrl, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

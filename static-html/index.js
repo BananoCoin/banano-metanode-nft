@@ -18,6 +18,8 @@ window.seedIx = 0;
 
 window.maxPending = 10;
 
+window.nftApiUrl = '/';
+
 window.defaultCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
 
 window.onLoad = async () => {
