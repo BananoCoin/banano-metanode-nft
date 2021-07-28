@@ -5,14 +5,18 @@
 Before you start making an NFT on banano, collect the following information:
 
 1. What image do you want to use? 
-    - You must own the copyright to the image or have a license.
-    - You must upload the image to IPFS and have the image's CID.
-    - The image can be svg or image types. we use <object> for svgs and <img> for everything else.
+
+        - You must own the copyright to the image or have a license.
+        - You must upload the image to IPFS and have the image's CID.
+        - The image can be svg or image types. we use <object> for svgs and <img> for everything else.
+
 2. What title do you want to use for the NFT?
 3. What banano account do you want to use to mint the NFTs? Do you want to create a vanity account?
 4. How many copies of the NFT can be minted? In technical terms: How many assets do you want the template to have?
 5. What is the current head block of the account? (currently required, may become optional in the future).
 6. Do you have a pinata API key? We use pinata to upload the NFT template as JSON to IPFS.
+
+
 
 ### Pinata API key
 
