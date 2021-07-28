@@ -110,6 +110,14 @@ const initServer = () => {
     limit: '50mb',
     extended: true,
   }));
+
+  app.use(function (req, res, next) {
+      res.setHeader('Access-Control-Allow-Origin', config.ipfsApiUrl);
+      res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'content-type');
+      next();
+  });
+
   app.use((err, req, res, next) => {
     if (err) {
       loggingUtil.info(dateUtil.getDate(), 'error', req.url, err.message, err.body);
@@ -120,9 +128,6 @@ const initServer = () => {
   });
 
   const actions = {};
-  app.get('/', async (req, res) => {
-    res.redirect(302, config.getRedirectUrl);
-  });
 
   app.post('/', async (req, res) => {
     try {
