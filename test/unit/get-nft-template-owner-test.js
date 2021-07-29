@@ -343,6 +343,26 @@ describe(actionUtil.ACTION, () => {
   });
   it('get status 200 goodIpfsCid undefined head history', async () => {
     const context = getContext([
+      {head: goodHead},
+    ], {});
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      success: false,
+      errors: [
+        'no history',
+      ],
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 goodIpfsCid one owner with undefined head history', async () => {
+    const context = getContext([
       {
         head: goodHead,
         history: [
