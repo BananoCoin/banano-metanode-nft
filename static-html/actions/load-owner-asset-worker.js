@@ -2,11 +2,13 @@ onmessage = (e) => {
   const ipfsApiUrl = e.data[0];
   const jsonIpfsCid = e.data[1];
   const assets = e.data[2];
+  console.log('onmessage', e.data);
   loadOwnerAssetWorker(ipfsApiUrl, jsonIpfsCid, assets);
 };
 
 const loadOwnerAssetWorker = async (ipfsApiUrl, jsonIpfsCid, assets) => {
   const templateUrl = ipfsApiUrl + '/' + jsonIpfsCid;
+  console.log('templateUrl',templateUrl);
   const templateResponse = await fetch(templateUrl, {
     method: 'GET',
     headers: {
@@ -15,7 +17,7 @@ const loadOwnerAssetWorker = async (ipfsApiUrl, jsonIpfsCid, assets) => {
   });
   const templateRsponseJson = await templateResponse.json();
   const title = templateRsponseJson.title;
-  const imageIpfsCid = templateRsponseJson.ipfs_cid;
+  const imageIpfsCid = templateRsponseJson.art_data_ipfs_cid;
   const imageUrl = ipfsApiUrl + '/' + imageIpfsCid;
   const imageResponse = await fetch(imageUrl, {
     method: 'GET',

@@ -1,5 +1,8 @@
 import {addText, addChildElement, clear} from '../lib/dom.js';
 
+const loadOwnerAssetWorkerInst = new Worker('./actions/load-owner-asset-worker.js');
+
+
 const addCidInfo = () => {
   const wrapperElt = document.getElementById('cidInfoWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
@@ -54,6 +57,8 @@ window.checkCid = async () => {
     return;
   }
   const responseJson = await response.json();
+  const assets = [];
+  let jsonIpfsCid = '';
 
   let html = '';
   if (responseJson.success) {
@@ -72,9 +77,13 @@ window.checkCid = async () => {
       const value = responseJson.json[key];
       html += `<span>'${key}':'${value}'</span>`;
     });
-    html += `<img style="width:30vmin;height30vmin;" src="${ipfsApiUrl}/${responseJson.json.ipfs_cid}">${responseJson.json.ipfs_cid}</img>`;
-    html += '</span>';
-    html += '</span>';
+
+    html += `<span id="cidInfoAsset">loading image ....</span>`;
+
+    // TODO: use responseJson.json.art_data_ipfs_cid;
+    // as the use of responseJson.ipfs_cid causes an extra step.
+    jsonIpfsCid = responseJson.ipfs_cid;
+    assets.push('cidInfoAsset');
   }
   if (responseJson.errors !== undefined) {
     html += '<span class="bordered container column">';
@@ -86,7 +95,22 @@ window.checkCid = async () => {
   }
 
   cidInfoElt.innerHTML = html;
+
+  if (assets.length > 0) {
+    const data = [ipfsApiUrl, jsonIpfsCid, assets];
+    console.log('postMessage', data);
+    loadOwnerAssetWorkerInst.postMessage(data);
+  }
 };
 
+loadOwnerAssetWorkerInst.onmessage = function(e) {
+  const html = e.data[0];
+  const assets = e.data[1];
+  for (let assetIx = 0; assetIx < assets.length; assetIx++) {
+    const asset = assets[assetIx];
+    const span = document.getElementById(asset);
+    span.innerHTML = html;
+  }
+};
 
 export {addCidInfo};
