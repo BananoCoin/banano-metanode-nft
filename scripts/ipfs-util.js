@@ -599,9 +599,10 @@ const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors,
   const regExp = new RegExp('^Qm[0-9A-Za-z]{0,64}$');
   const key = `${inFieldNmPrefix}ipfs_cid`;
   const value = json[key];
-  if (value == undefined) {
-    errors.push(`'${key}' not a key in ${Object.keys(json)}`);
-    return false;
+
+  /* istanbul ignore if */
+  if (value === undefined) {
+    throw Error(`'${key}' not a key in ${Object.keys(json)}`);
   }
   if (!regExp.test(value)) {
     errors.push(`${key}:'${value}' not Qm+base58`);
