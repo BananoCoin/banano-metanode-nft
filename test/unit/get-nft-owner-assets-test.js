@@ -58,13 +58,13 @@ describe(actionUtil.ACTION, () => {
               },
               json: () => {
                 return {
-                  'command': 'mint_nft',
-                  'version': '',
-                  'title': '',
-                  'issuer': '',
-                  'max_supply': '1',
-                  'ipfs_cid': artIpfsCid,
-                  'mint_previous': goodHead,
+                  command: 'nft_template',
+                  version: '0.0.1',
+                  title: '',
+                  issuer: '',
+                  max_supply: '1',
+                  art_data_ipfs_cid: artIpfsCid,
+                  previous: goodHead,
                 };
               },
             });
@@ -79,7 +79,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext(
         [
           {account: goodOwner4},
-        ],
+        ], {},
     );
     let actualResponse;
     try {
@@ -137,7 +137,7 @@ describe(actionUtil.ACTION, () => {
           },
         ],
       },
-    ]);
+    ], {});
 
     let actualTemplateResponse;
     try {
@@ -255,7 +255,7 @@ describe(actionUtil.ACTION, () => {
           },
         ],
       },
-    ]);
+    ], {});
 
     let actualTemplateResponse;
     try {

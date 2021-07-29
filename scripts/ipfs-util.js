@@ -145,14 +145,19 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
       resp.success = true;
       resp.errors = [];
 
-      if (resp.json.command !== 'mint_nft') {
+      if (resp.json.command !== 'nft_template') {
         resp.success = false;
-        resp.errors.push(`command:'${resp.json.command}' !== 'mint_nft'`);
+        resp.errors.push(`command:'${resp.json.command}' !== 'nft_template'`);
       }
 
       if (resp.json.version === undefined) {
         resp.success = false;
         resp.errors.push(`version undefined`);
+      } else {
+        if (!config.supportedVersions.includes(resp.json.version)) {
+          resp.success = false;
+          resp.errors.push(`unsupported version:'${resp.json.version}' supported versions:${JSON.stringify(config.supportedVersions)}`);
+        }
       }
 
       if (resp.json.title === undefined) {
@@ -181,36 +186,42 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
         }
       }
 
-      if (resp.json.ipfs_cid === undefined) {
+      if (resp.json.art_data_ipfs_cid === undefined) {
         resp.success = false;
-        resp.errors.push(`ipfs_cid undefined`);
+        resp.errors.push(`art_data_ipfs_cid undefined`);
       } else {
-        resp.success = await addRep(bananojs, resp.json, 'art_', resp.errors);
+        const success = await addRep(bananojs, resp.json, 'art_data_', 'art_', resp.errors);
+        if (!success) {
+          resp.success = false;
+        }
       }
 
-      if (resp.json.mint_previous === undefined) {
+      if (resp.json.previous === undefined) {
         resp.success = false;
-        resp.errors.push(`mint_previous undefined`);
+        resp.errors.push(`previous undefined`);
       } else {
         const regExp = new RegExp('^[0123456789abcdefABCDEF]{64}$');
-        if (!regExp.test(resp.json.mint_previous)) {
+        if (!regExp.test(resp.json.previous)) {
           resp.success = false;
-          resp.errors.push(`mint_previous:'${resp.json.mint_previous}' not 64 hex characters`);
+          resp.errors.push(`previous:'${resp.json.previous}' not 64 hex characters`);
         }
       }
 
       if (resp.success) {
         // only add ipfs_cid representative_account if everything is correct.
         // so malformed json can't be used to mint assets.
-        resp.success = await addRep(bananojs, resp, '', resp.errors);
+        const success = await addRep(bananojs, resp, '', '', resp.errors);
+        if (!success) {
+          resp.success = false;
+        }
       }
 
       if (resp.success) {
         delete resp.errors;
         delete resp.ipfs_cid_hex;
         delete resp.ipfs_cid_hex_base58;
-        delete resp.json.ipfs_cid_hex;
-        delete resp.json.ipfs_cid_hex_base58;
+        delete resp.json.art_ipfs_cid_hex;
+        delete resp.json.art_ipfs_cid_hex_base58;
         delete resp.json.art_representative;
         delete resp.json.art_representative_account;
       }
@@ -590,26 +601,42 @@ const setTemplateCounterForAsset = (fs, action, asset, counter) => {
 };
 
 
-const addRep = async (bananojs, json, fieldNmPrefix, errors) => {
+const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors) => {
+  // console.log('addRep', json, inFieldNmPrefix, outFieldNmPrefix);
   const regExp = new RegExp('^Qm[0-9A-Za-z]{0,64}$');
-  if (!regExp.test(json.ipfs_cid)) {
-    errors.push(`ipfs_cid:'${json.ipfs_cid}' not Qm+base58`);
+  const key = `${inFieldNmPrefix}ipfs_cid`;
+  const value = json[key];
+  if (value == undefined) {
+    errors.push(`'${key}' not a key in ${Object.keys(json)}`);
+    // console.log('addRep', 'errors', errors);
+    return false;
+  }
+  if (!regExp.test(value)) {
+    errors.push(`${key}:'${value}' not Qm+base58`);
+    // console.log('addRep', 'errors', errors);
     return false;
   } else {
-    const bytes = bs58.decode(json.ipfs_cid);
-    json.ipfs_cid_hex = bytes.toString('hex');
-    json.ipfs_cid_hex_base58 = bs58.encode(Buffer.from(bytes));
+    const bytes = bs58.decode(value);
+
+    const hexFieldNm = `${outFieldNmPrefix}ipfs_cid_hex`;
+    const hexBase58FieldNm = `${outFieldNmPrefix}ipfs_cid_hex_base58`;
+
+    const hexValue = bytes.toString('hex');
+    json[hexFieldNm] = hexValue;
+    json[hexBase58FieldNm] = bs58.encode(Buffer.from(bytes));
 
     const regExp = new RegExp('^1220[0123456789abcdefABCDEF]{64}$');
-    if (!regExp.test(json.ipfs_cid_hex)) {
+    if (!regExp.test(hexValue)) {
       // check https://github.com/multiformats/js-cid
-      errors.push(`ipfs_cid_hex:'${json.ipfs_cid_hex}' not 64 hex characters after prefix 1220, ${json.ipfs_cid_hex.length}`);
+      errors.push(`${hexFieldNm}:'${hexValue}' not 64 hex characters after prefix 1220, ${hexValue.length}`);
+      // console.log('addRep', 'errors', errors);
       return false;
     } else {
-      const representativeFieldNm = `${fieldNmPrefix}representative`;
-      const representativeAccountFieldNm = `${fieldNmPrefix}representative_account`;
-      json[representativeFieldNm] = json.ipfs_cid_hex.substring(4);
+      const representativeFieldNm = `${outFieldNmPrefix}representative`;
+      const representativeAccountFieldNm = `${outFieldNmPrefix}representative_account`;
+      json[representativeFieldNm] = hexValue.substring(4);
       json[representativeAccountFieldNm] = await bananojs.getBananoAccount(json[representativeFieldNm]);
+      // console.log('addRep', 'success', errors);
       return true;
     }
   }

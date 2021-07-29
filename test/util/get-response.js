@@ -22,6 +22,7 @@ const config = {
   ownedAssetsDir: 'ownedAssetsDir',
   assetTemplateDataDir: 'assetTemplateDataDir',
   assetTemplateCounterDataDir: 'assetTemplateCounterDataDir',
+  supportedVersions: ['0.0.1'],
 };
 
 const loggingUtil = {};

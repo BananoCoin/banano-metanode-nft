@@ -35,7 +35,7 @@ describe(actionUtil.ACTION, () => {
     return {
       bananojs: bananojs,
       fs: mockFs,
-      fetch: mockFetch.fetch(histories, blockInfos),
+      fetch: mockFetch.fetch(histories, blockInfos, {}),
     };
   };
   it('get status 200 goodSendHash no history', async () => {

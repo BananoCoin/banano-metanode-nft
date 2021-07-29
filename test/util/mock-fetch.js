@@ -33,11 +33,21 @@ const deactivate = () => {
 };
 
 const fetch = (histories, blockInfos, accountInfos) => {
+  if (histories === undefined) {
+    throw Error('histories is required');
+  }
+  if (blockInfos === undefined) {
+    throw Error('blockInfos is required');
+  }
+  if (accountInfos === undefined) {
+    throw Error('accountInfos is required');
+  }
   const fetchFn = (resource, options) => {
     loggingUtil.debug('fetch', resource, options);
     if (resource == config.bananodeApiUrl) {
       const body = JSON.parse(options.body);
       if (body.action == 'account_history') {
+        loggingUtil.debug('histories length', histories.length);
         for (let historiesIx = 0; historiesIx < histories.length; historiesIx++) {
           const historiesElt = histories[historiesIx];
           const head = historiesElt.head;

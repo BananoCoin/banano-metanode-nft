@@ -38,14 +38,14 @@ describe(actionUtil.ACTION, () => {
               },
               json: () => {
                 return {
-                  command: 'mint_nft',
-                  version: '',
+                  command: 'nft_template',
+                  version: '0.0.1',
                   title: '',
                   issuer: '',
                   max_supply: '1',
                   transferable: 'true',
-                  ipfs_cid: artIpfsCid,
-                  mint_previous: goodHead,
+                  art_data_ipfs_cid: artIpfsCid,
+                  previous: goodHead,
                 };
               },
             });
@@ -65,14 +65,14 @@ describe(actionUtil.ACTION, () => {
       representative: '1d2c906def1e5e04841de91c8b65e0f37c30a3d45c6a2c454fd332d2906f8d57',
       representative_account: 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrfg8egjn',
       json: {
-        command: 'mint_nft',
+        command: 'nft_template',
         issuer: '',
         max_supply: '1',
         transferable: 'true',
-        mint_previous: goodHead,
-        ipfs_cid: artIpfsCid,
+        previous: goodHead,
+        art_data_ipfs_cid: artIpfsCid,
         title: '',
-        version: '',
+        version: '0.0.1',
       },
       status: 200,
       success: true,

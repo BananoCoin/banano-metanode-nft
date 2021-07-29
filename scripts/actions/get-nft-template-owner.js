@@ -91,14 +91,24 @@ const getNftAssetsOwners = async (context, req, res) => {
   const ipfsCid = req.body.ipfs_cid;
   loggingUtil.debug(ACTION, 'getNftInfoForIpfsCid', ipfsCid);
   const ipfsResp = await ipfsUtil.getNftInfoForIpfsCid(fetch, bananojs, ipfsCid);
-  loggingUtil.debug(ACTION, 'getNftInfoForIpfsCid', 'ipfsResp', ipfsResp);
+  loggingUtil.debug(ACTION, 'getNftInfoForIpfsCid', 'ipfsCid', ipfsCid, 'ipfsResp', ipfsResp);
   if (!ipfsResp.success) {
     res.send(ipfsResp);
     return;
   }
 
-  const startBlock = ipfsResp.json.mint_previous;
-  const newRepresentative = ipfsResp.representative;
+  const startBlock = ipfsResp.json.previous;
+  const representative = ipfsResp.representative;
+
+  /* istanbul ignore if */
+  if (ipfsResp.json.previous === undefined) {
+    throw Error('ipfsResp.json.previous is required');
+  }
+
+  /* istanbul ignore if */
+  if (ipfsResp.representative === undefined) {
+    throw Error('ipfsResp.representative is required');
+  }
 
   const histBody = {
     action: 'account_history',
@@ -122,14 +132,19 @@ const getNftAssetsOwners = async (context, req, res) => {
   loggingUtil.debug(ACTION, 'histResponseJson', histResponseJson);
 
   const resp = {};
-  if (histResponseJson.history.length == 0) {
+
+  if (histResponseJson.history === undefined) {
+    resp.success = false;
+    resp.errors = [];
+    resp.errors.push('no history');
+  } else if (histResponseJson.history.length == 0) {
     resp.success = false;
     resp.errors = [];
     resp.errors.push('no history');
   } else {
     resp.success = true;
     resp.asset_owners = [];
-    const representativeAccount = await bananojs.getBananoAccount(newRepresentative);
+    const representativeAccount = await bananojs.getBananoAccount(representative);
     loggingUtil.log(ACTION, 'representativeAccount', representativeAccount);
     let templateAssetCounter = 0;
     for (let ix = 0; ix < histResponseJson.history.length; ix++) {

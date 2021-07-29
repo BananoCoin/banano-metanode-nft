@@ -15,6 +15,7 @@ const mockFetch = require('../util/mock-fetch.js');
 const {config, loggingUtil, getResponse} = require('../util/get-response.js');
 
 // constants
+const artIpfsCid = 'QmbzTMo42KADUbLwc43KR9Se6aV3N6wfKqFbSr2qN1gJqR';
 const goodIpfsCidNoMaxSupply = 'QmWNckc4jmTFsSSrhsSNJMhkmDbH19owXB6UL8jVEaohgR';
 const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
 const badContentTypeIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWABADCT';
@@ -71,13 +72,13 @@ describe(actionUtil.ACTION, () => {
               },
               json: () => {
                 return {
-                  'command': 'mint_nft',
-                  'version': '',
+                  'command': 'nft_template',
+                  'version': '0.0.1',
                   'title': '',
                   'issuer': '',
                   'max_supply': '1',
-                  'ipfs_cid': goodIpfsCid,
-                  'mint_previous': goodHead,
+                  'art_data_ipfs_cid': artIpfsCid,
+                  'previous': goodHead,
                 };
               },
             });
@@ -140,13 +141,13 @@ describe(actionUtil.ACTION, () => {
               },
               json: () => {
                 return {
-                  'command': 'mint_nft',
+                  'command': 'nft_template',
                   'version': '',
                   'title': '',
                   'issuer': '',
                   'max_supply': '',
-                  'ipfs_cid': '',
-                  'mint_previous': '',
+                  'art_data_ipfs_cid': '',
+                  'previous': '',
                   'transferable': '',
                 };
               },
@@ -184,13 +185,13 @@ describe(actionUtil.ACTION, () => {
               },
               json: () => {
                 return {
-                  'command': 'mint_nft',
-                  'version': '',
+                  'command': 'nft_template',
+                  'version': '0.0.1',
                   'title': '',
                   'issuer': '',
                   'max_supply': '1',
-                  'ipfs_cid': 'Qm#',
-                  'mint_previous': 'AB',
+                  'art_data_ipfs_cid': 'Qm#',
+                  'previous': 'AB',
                 };
               },
             });
@@ -209,13 +210,13 @@ describe(actionUtil.ACTION, () => {
               },
               json: () => {
                 return {
-                  'command': 'mint_nft',
-                  'version': '',
+                  'command': 'nft_template',
+                  'version': '0.0.1',
                   'title': '',
                   'issuer': '',
                   'max_supply': '1',
-                  'ipfs_cid': 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz',
-                  'mint_previous': 'AB',
+                  'art_data_ipfs_cid': 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz',
+                  'previous': 'AB',
                 };
               },
             });
@@ -245,12 +246,12 @@ describe(actionUtil.ACTION, () => {
               },
               json: () => {
                 return {
-                  'command': 'mint_nft',
-                  'version': '',
+                  'command': 'nft_template',
+                  'version': '0.0.1',
                   'title': '',
                   'issuer': '',
-                  'ipfs_cid': goodIpfsCidNoMaxSupply,
-                  'mint_previous': goodHead,
+                  'art_data_ipfs_cid': goodIpfsCidNoMaxSupply,
+                  'previous': goodHead,
                 };
               },
             });
@@ -271,7 +272,7 @@ describe(actionUtil.ACTION, () => {
           link: '',
         },
       ]},
-    ]);
+    ], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
@@ -296,7 +297,7 @@ describe(actionUtil.ACTION, () => {
           link: goodLink,
         },
       ]}, {account: goodOwner3},
-    ]);
+    ], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
@@ -323,7 +324,7 @@ describe(actionUtil.ACTION, () => {
   it('get status 200 goodIpfsCid no head history', async () => {
     const context = getContext([
       {head: goodHead, history: []},
-    ]);
+    ], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
@@ -356,7 +357,7 @@ describe(actionUtil.ACTION, () => {
         head: nextHead,
         account: goodOwner3,
       },
-    ]);
+    ], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
@@ -407,7 +408,7 @@ describe(actionUtil.ACTION, () => {
           },
         ],
       },
-    ]);
+    ], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
@@ -453,7 +454,7 @@ describe(actionUtil.ACTION, () => {
       {
         account: goodOwner4,
       },
-    ]);
+    ], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
@@ -523,7 +524,7 @@ describe(actionUtil.ACTION, () => {
       {
         account: goodOwnerB,
       },
-    ]);
+    ], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
@@ -610,7 +611,7 @@ describe(actionUtil.ACTION, () => {
           },
         ],
       },
-    ]);
+    ], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
@@ -665,7 +666,7 @@ describe(actionUtil.ACTION, () => {
     expect(actualErrorResponse2).to.deep.equal(expectedErrorResponse2);
   });
   it('get status 200 badContentTypeIpfsCid', async () => {
-    const context = getContext();
+    const context = getContext([], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badContentTypeIpfsCid});
@@ -687,7 +688,7 @@ describe(actionUtil.ACTION, () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
   it('get status 200 badTimeoutIpfsCid', async () => {
-    const context = getContext();
+    const context = getContext([], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badTimeoutIpfsCid});
@@ -707,7 +708,7 @@ describe(actionUtil.ACTION, () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
   it('get status 200 badUnknownIpfsCid', async () => {
-    const context = getContext();
+    const context = getContext([], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badUnknownIpfsCid});
@@ -729,7 +730,7 @@ describe(actionUtil.ACTION, () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
   it('get status 200 badJsonIpfsCid', async () => {
-    const context = getContext();
+    const context = getContext( [], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badJsonIpfsCid});
@@ -739,18 +740,19 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       content_type: 'application/json',
       errors: [
+        'unsupported version:\'\' supported versions:["0.0.1"]',
         'max_supply:\'\' not an integer',
         'transferable:\'\' not a boolean',
-        'ipfs_cid:\'\' not Qm+base58',
-        'mint_previous:\'\' not 64 hex characters',
+        'art_data_ipfs_cid:\'\' not Qm+base58',
+        'previous:\'\' not 64 hex characters',
       ],
       ipfs_cid: badJsonIpfsCid,
       json: {
-        command: 'mint_nft',
-        ipfs_cid: '',
+        command: 'nft_template',
+        art_data_ipfs_cid: '',
         issuer: '',
         max_supply: '',
-        mint_previous: '',
+        previous: '',
         transferable: '',
         title: '',
         version: '',
@@ -763,7 +765,7 @@ describe(actionUtil.ACTION, () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
   it('get status 200 badMissingJsonIpfsCid', async () => {
-    const context = getContext();
+    const context = getContext([], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badMissingJsonIpfsCid});
@@ -773,12 +775,12 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       'content_type': 'application/json',
       'errors': [
-        'command:\'undefined\' !== \'mint_nft\'',
+        'command:\'undefined\' !== \'nft_template\'',
         'version undefined',
         'title undefined',
         'issuer undefined',
-        'ipfs_cid undefined',
-        'mint_previous undefined',
+        'art_data_ipfs_cid undefined',
+        'previous undefined',
       ],
       'ipfs_cid': badMissingJsonIpfsCid,
       'json': {},
@@ -790,7 +792,7 @@ describe(actionUtil.ACTION, () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
   it('get status 200 badJsonBase58Cid', async () => {
-    const context = getContext();
+    const context = getContext([], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badJsonBase58Cid});
@@ -800,18 +802,18 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       'content_type': 'application/json',
       'errors': [
-        'ipfs_cid:\'Qm#\' not Qm+base58',
-        'mint_previous:\'AB\' not 64 hex characters',
+        'art_data_ipfs_cid:\'Qm#\' not Qm+base58',
+        'previous:\'AB\' not 64 hex characters',
       ],
       'ipfs_cid': badJsonBase58Cid,
       'json': {
-        'command': 'mint_nft',
-        'ipfs_cid': 'Qm#',
+        'command': 'nft_template',
+        'art_data_ipfs_cid': 'Qm#',
         'issuer': '',
         'max_supply': '1',
-        'mint_previous': 'AB',
+        'previous': 'AB',
         'title': '',
-        'version': '',
+        'version': '0.0.1',
       },
       'status': 200,
       'success': false,
@@ -821,7 +823,7 @@ describe(actionUtil.ACTION, () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
   it('get status 200 badJsonBase58ShortCid', async () => {
-    const context = getContext();
+    const context = getContext([], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badJsonBase58ShortCid});
@@ -831,20 +833,20 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       'content_type': 'application/json',
       'errors': [
-        'ipfs_cid_hex:\'500080c4b27277b22c373e4f0dbbc86091707c6cc1745a1b3efcf66664bbde9ceb\' not 64 hex characters after prefix 1220, 66',
-        'mint_previous:\'AB\' not 64 hex characters',
+        'art_ipfs_cid_hex:\'500080c4b27277b22c373e4f0dbbc86091707c6cc1745a1b3efcf66664bbde9ceb\' not 64 hex characters after prefix 1220, 66',
+        'previous:\'AB\' not 64 hex characters',
       ],
       'ipfs_cid': badJsonBase58ShortCid,
       'json': {
-        'command': 'mint_nft',
-        'ipfs_cid': 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz',
-        'ipfs_cid_hex': '500080c4b27277b22c373e4f0dbbc86091707c6cc1745a1b3efcf66664bbde9ceb',
-        'ipfs_cid_hex_base58': 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz',
+        'command': 'nft_template',
+        'art_data_ipfs_cid': 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz',
+        'art_ipfs_cid_hex': '500080c4b27277b22c373e4f0dbbc86091707c6cc1745a1b3efcf66664bbde9ceb',
+        'art_ipfs_cid_hex_base58': 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz',
         'issuer': '',
         'max_supply': '1',
-        'mint_previous': 'AB',
+        'previous': 'AB',
         'title': '',
-        'version': '',
+        'version': '0.0.1',
       },
       'status': 200,
       'success': false,
@@ -863,7 +865,7 @@ describe(actionUtil.ACTION, () => {
           link: '',
         },
       ]},
-    ]);
+    ], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badAbortIpfsCid});
@@ -892,7 +894,7 @@ describe(actionUtil.ACTION, () => {
           link: '',
         },
       ]},
-    ]);
+    ], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badAbortOtherIpfsCid});
@@ -938,7 +940,7 @@ describe(actionUtil.ACTION, () => {
           },
         ],
       },
-    ]);
+    ], {});
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCidNoMaxSupply});
