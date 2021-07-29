@@ -157,6 +157,7 @@ describe(actionUtil.ACTION, () => {
 
     // console.log(mockFs);
     mockFs.fileDataMap.delete(config.assetTemplateCounterDataDir + '/' + goodSendHash4);
+    mockFs.fileDataMap.delete(config.assetTemplateDataDir + '/' + goodSendHash4);
 
     let actualResponse;
     try {

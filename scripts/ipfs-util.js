@@ -190,10 +190,7 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
         resp.success = false;
         resp.errors.push(`art_data_ipfs_cid undefined`);
       } else {
-        const success = await addRep(bananojs, resp.json, 'art_data_', 'art_', resp.errors);
-        if (!success) {
-          resp.success = false;
-        }
+        resp.success = await addRep(bananojs, resp.json, 'art_data_', 'art_', resp.errors, resp.success);
       }
 
       if (resp.json.previous === undefined) {
@@ -210,10 +207,7 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
       if (resp.success) {
         // only add ipfs_cid representative_account if everything is correct.
         // so malformed json can't be used to mint assets.
-        const success = await addRep(bananojs, resp, '', '', resp.errors);
-        if (!success) {
-          resp.success = false;
-        }
+        resp.success = await addRep(bananojs, resp, '', '', resp.errors, resp.success);
       }
 
       if (resp.success) {
@@ -601,19 +595,16 @@ const setTemplateCounterForAsset = (fs, action, asset, counter) => {
 };
 
 
-const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors) => {
-  // console.log('addRep', json, inFieldNmPrefix, outFieldNmPrefix);
+const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors, success) => {
   const regExp = new RegExp('^Qm[0-9A-Za-z]{0,64}$');
   const key = `${inFieldNmPrefix}ipfs_cid`;
   const value = json[key];
   if (value == undefined) {
     errors.push(`'${key}' not a key in ${Object.keys(json)}`);
-    // console.log('addRep', 'errors', errors);
     return false;
   }
   if (!regExp.test(value)) {
     errors.push(`${key}:'${value}' not Qm+base58`);
-    // console.log('addRep', 'errors', errors);
     return false;
   } else {
     const bytes = bs58.decode(value);
@@ -629,15 +620,13 @@ const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors)
     if (!regExp.test(hexValue)) {
       // check https://github.com/multiformats/js-cid
       errors.push(`${hexFieldNm}:'${hexValue}' not 64 hex characters after prefix 1220, ${hexValue.length}`);
-      // console.log('addRep', 'errors', errors);
       return false;
     } else {
       const representativeFieldNm = `${outFieldNmPrefix}representative`;
       const representativeAccountFieldNm = `${outFieldNmPrefix}representative_account`;
       json[representativeFieldNm] = hexValue.substring(4);
       json[representativeAccountFieldNm] = await bananojs.getBananoAccount(json[representativeFieldNm]);
-      // console.log('addRep', 'success', errors);
-      return true;
+      return success;
     }
   }
 };
