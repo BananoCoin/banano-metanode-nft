@@ -105,9 +105,15 @@ window.checkOwnerAssets = async () => {
     }
     ownerAssetsInfo.innerHTML = html;
 
+    let timer = 0;
     Object.keys(templatesToLoad).forEach((jsonIpfsCid) => {
       const assets = templatesToLoad[jsonIpfsCid];
-      loadOwnerAssetWorkerInst.postMessage([ipfsApiUrl, jsonIpfsCid, assets]);
+      const fn = () => {
+        loadOwnerAssetWorkerInst.postMessage([ipfsApiUrl, jsonIpfsCid, assets]);
+      };
+      setTimeout(fn, timer);
+
+      timer+= 1000;
     });
   };
   setTimeout(callback, 0);
