@@ -54,13 +54,13 @@ const addCidPinInfo = () => {
   });
 
   addText(addChildElement(formElt, 'h2'), 'CID Pinning');
-  addField('command', 'Command', 'mint_nft');
-  addField('version', 'Version', '1.0.0');
+  addField('command', 'Command', 'nft_template');
+  addField('version', 'Version', '0.0.1');
   addField('title', 'Title', '');
   addField('issuer', 'Issuer (Banano Account)', '');
   addField('max_supply', 'Maximum Mint Count (Max Supply), (Leave Blank for Unlimited)', '1');
-  addField('ipfs_cid', 'Artwork IPFS CID', '');
-  addField('mint_previous', 'Head block of Issuer account', '');
+  addField('art_data_ipfs_cid', 'Artwork IPFS CID', '');
+  addField('previous', 'Head block of Issuer account', '');
   addChildElement(formElt, 'br');
 
   const checkCidElt = addChildElement(formElt, 'button', {
@@ -88,8 +88,8 @@ window.pinCid = async () => {
       title: document.getElementById('title').value.trim(),
       issuer: document.getElementById('issuer').value.trim(),
       max_supply: document.getElementById('max_supply').value.trim(),
-      ipfs_cid: document.getElementById('ipfs_cid').value.trim(),
-      mint_previous: document.getElementById('mint_previous').value.trim(),
+      art_data_ipfs_cid: document.getElementById('art_data_ipfs_cid').value.trim(),
+      previous: document.getElementById('previous').value.trim(),
     },
   };
   if (body.pinataContent.max_supply.length == 0) {

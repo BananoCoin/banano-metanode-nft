@@ -14,10 +14,10 @@ const ipfsUtil = require('../../scripts/ipfs-util.js');
 const dataUtil = require('../../scripts/data-util.js');
 const actualResponseUtil = require('../util/actual-response-util.js');
 const {loggingUtil, getResponse} = require('../util/get-response.js');
-const testData = require('./001-get-template-owner-test-QmWN-ohgR.json');
+const testData = require('./001-get-template-owner-test-QmTR-DQFv.json');
 
 // constants
-const ipfsCid = 'QmWNckc4jmTFsSSrhsSNJMhkmDbH19owXB6UL8jVEaohgR';
+const ipfsCid = 'QmTRg9xhnMJCnHYdAX14gTXan8JsLYMrxjpVzL6hLLDQFv';
 
 const config = require('../../scripts/config.json');
 
