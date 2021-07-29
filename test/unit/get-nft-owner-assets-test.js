@@ -96,6 +96,84 @@ describe(actionUtil.ACTION, () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
 
+  it('get status 200 one owner with no receive', async () => {
+    const context = getContext([
+      {
+        head: goodHead,
+        history: [
+          {
+            hash: goodSendHash4,
+            representative: goodAssetRep,
+            link: goodOwner4link,
+            type: 'state',
+            subtype: 'send',
+          },
+          {
+            hash: goodSendHash4,
+            representative: goodAssetRep,
+            link: goodOwner4link,
+            type: 'state',
+            subtype: 'send',
+          },
+        ],
+      },
+      {
+        account: goodOwner4,
+        head: goodReceiveHash3,
+      },
+    ], {});
+
+    let actualTemplateResponse;
+    try {
+      actualTemplateResponse = await getResponse(templateActionUtil, context, {ipfs_cid: goodIpfsCid});
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedTemplateResponse = {
+      success: true,
+      asset_owners: [
+        {
+          asset: goodSendHash4,
+          history: [
+          ],
+          owner: goodOwner4,
+          template: goodIpfsCid,
+          max_supply: '1',
+          mint_number: '0',
+        },
+        {
+          asset: goodSendHash4,
+          history: [
+          ],
+          owner: goodOwner4,
+          template: goodIpfsCid,
+          max_supply: '1',
+          mint_number: '1',
+        },
+
+      ],
+    };
+    expect(actualTemplateResponse).to.deep.equal(expectedTemplateResponse);
+
+    // console.log(mockFs);
+    mockFs.fileDataMap.delete(config.assetTemplateCounterDataDir + '/' + goodSendHash4);
+
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(actionUtil, context, {owner: goodOwner4});
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      success: true,
+      assetInfos: [
+      ],
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+
   it('get status 200 one owner with receive', async () => {
     const context = getContext([
       {
@@ -180,7 +258,6 @@ describe(actionUtil.ACTION, () => {
       ],
     };
     expect(actualTemplateResponse).to.deep.equal(expectedTemplateResponse);
-
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {owner: goodOwner4});

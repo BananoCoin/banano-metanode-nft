@@ -54,6 +54,8 @@ const unlinkSync = (file) => {
   dirDataMap.get(dir).delete(path.basename(file));
 };
 
+exports.fileDataMap = fileDataMap;
+exports.dirDataMap = dirDataMap;
 exports.existsSync = existsSync;
 exports.openSync = openSync;
 exports.writeSync = writeSync;
