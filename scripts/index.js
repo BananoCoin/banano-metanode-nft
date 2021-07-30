@@ -79,6 +79,8 @@ const addModules = () => {
   modules.push(require('./actions/get-nft-owner-assets.js'));
   modules.push(require('./actions/get-nft-template-owner.js'));
   modules.push(require('./actions/get-nft-info.js'));
+  modules.push(require('./actions/get-current-version.js'));
+  modules.push(require('./actions/get-supported-versions.js'));
 };
 
 const initModules = async () => {

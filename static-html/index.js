@@ -26,6 +26,8 @@ window.onLoad = async () => {
   await loadBananoApiUrl();
   await loadPinataApiUrl();
   await loadIpfsApiUrl();
+  loadCurrentVersion();
+  loadSupportedVersions();
   loadSeed();
   addNavigation();
   addSeedHideShow();
@@ -77,4 +79,32 @@ const loadIpfsApiUrl = async () => {
   const responseJson = await response.json();
   window.ipfsApiUrl = responseJson.ipfs_api_url;
   console.log('loadIpfsApiUrl', 'ipfsApiUrl', window.ipfsApiUrl);
+};
+
+const loadCurrentVersion = async () => {
+  const response = await fetch('/', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: `{"action": "get_current_version"}`,
+  });
+  const responseJson = await response.json();
+  const currentVersion = responseJson.current_version;
+  const wrapperElt = document.getElementById('currentVersionWrapper');
+  wrapperElt.innerText = currentVersion;
+};
+
+const loadSupportedVersions = async () => {
+  const response = await fetch('/', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: `{"action": "get_supported_versions"}`,
+  });
+  const responseJson = await response.json();
+  const supportedVersions = responseJson.ssupported_versions;
+  const wrapperElt = document.getElementById('supportedVersionsWrapper');
+  wrapperElt.innerText = supportedVersions;
 };
