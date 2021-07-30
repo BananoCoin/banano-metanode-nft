@@ -23,6 +23,7 @@ const config = {
   assetTemplateDataDir: 'assetTemplateDataDir',
   assetTemplateCounterDataDir: 'assetTemplateCounterDataDir',
   supportedVersions: ['0.0.1'],
+  currentVersion: '0.0.1',
 };
 
 const loggingUtil = {};

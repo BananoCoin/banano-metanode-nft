@@ -35,7 +35,7 @@ const deactivate = () => {
 };
 
 /**
- * gets the owners of a NFT's assets
+ * gets the owners of a NFT template's assets
  * @memberof NFT
  * @param {Object} context the context, used to get cached data.
  * - from filesystem in nodejs,

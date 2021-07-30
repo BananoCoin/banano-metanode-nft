@@ -8,6 +8,7 @@
   "ownedAssetsDir": "data/ownedAssets",
   "assetTemplateDataDir": "data/assetTemplates",
   "assetTemplateCounterDataDir": "data/assetTemplateCounter",
+  "currentVersion": "0.0.1",
   "supportedVersions": ["0.0.1"],
   "fetchTimeout": 5000,
   "webPort": ""
