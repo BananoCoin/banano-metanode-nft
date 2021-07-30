@@ -91,12 +91,12 @@ const fetch = (histories, blockInfos, accountInfos) => {
       if (body.action == 'account_info') {
         return new Promise(async (resolve) => {
           resolve({
-            text: () => {
+            json: () => {
               const accountInfo = accountInfos[body.account];
               if (accountInfo == undefined) {
                 console.trace('accountInfos', body.account, accountInfo == undefined);
               }
-              return accountInfo;
+              return JSON.parse(accountInfo);
             },
           });
         });
