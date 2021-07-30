@@ -594,22 +594,31 @@ const setTemplateCounterForAsset = (fs, action, asset, counter) => {
   dataUtil.setTemplateCounterForAsset(fs, asset, parseInt(counter).toFixed(0));
 };
 
-const addTemplate = (fs, template) => {
+const addTemplate = (fs, action, template) => {
   /* istanbul ignore if */
   if (fs === undefined) {
     throw Error('fs is required');
+  }
+  /* istanbul ignore if */
+  if (action === undefined) {
+    throw Error('action is required');
   }
   /* istanbul ignore if */
   if (template === undefined) {
     throw Error('template is required');
   }
+  console.log();
   dataUtil.addTemplate(fs, template);
 };
 
-const listTemplates = (fs) => {
+const listTemplates = (fs, action) => {
   /* istanbul ignore if */
   if (fs === undefined) {
     throw Error('fs is required');
+  }
+  /* istanbul ignore if */
+  if (action === undefined) {
+    throw Error('action is required');
   }
   return dataUtil.listTemplates(fs);
 };

@@ -58,7 +58,7 @@ const getNftTemplateList = async (context, req, res) => {
 
   const resp = {};
   resp.success = true;
-  resp.history = ipfsUtil.listTemplates(context.fs);
+  resp.templates = ipfsUtil.listTemplates(context.fs, ACTION);
 
   res.send(resp);
 };

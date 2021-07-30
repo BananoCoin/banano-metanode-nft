@@ -24,7 +24,7 @@ describe(actionUtil.ACTION, () => {
       fs: mockFs,
       fetch: {},
     };
-    ipfsUtil.addTemplate(mockFs, goodIpfsCid);
+    ipfsUtil.addTemplate(mockFs, actionUtil.ACTION, goodIpfsCid);
 
     let actualResponse;
     try {
@@ -34,7 +34,7 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
-      history: [
+      templates: [
         'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS',
       ],
     };

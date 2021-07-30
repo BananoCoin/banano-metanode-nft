@@ -12,6 +12,7 @@ const addTemplateOwnerCheck = () => {
   }), 'Main Menu');
   addText(addChildElement(formElt, 'h2'), 'Check Template Ownership');
   addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
+
   addChildElement(formElt, 'input', {
     'id': 'templateOwnerCid',
     'class': '',
@@ -19,6 +20,7 @@ const addTemplateOwnerCheck = () => {
     'size': '66',
     'max_length': '64',
     'value': defaultCid,
+    'list': 'knownTemplateList',
   });
   addChildElement(formElt, 'br');
   const checkCidElt = addChildElement(formElt, 'button', {
@@ -32,6 +34,27 @@ const addTemplateOwnerCheck = () => {
     'id': 'templateOwnershipInfo',
     'class': 'selectable container column',
   });
+
+  const knownTemplateListCallback = async () => {
+    const response = await fetch(nftApiUrl, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: `{"action": "get_nft_template_list"}`,
+    });
+    const responseJson = await response.json();
+    const dataListElt = addChildElement(formElt, 'dataList', {
+      'id': 'knownTemplateList',
+    });
+    responseJson.templates.forEach((template) => {
+      addChildElement(dataListElt, 'option', {
+        'value': template,
+      });
+    });
+  };
+
+  setTimeout(knownTemplateListCallback, 0);
 };
 
 

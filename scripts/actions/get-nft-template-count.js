@@ -58,7 +58,7 @@ const getNftTemplateCount = async (context, req, res) => {
 
   const resp = {};
   resp.success = true;
-  resp.count = ipfsUtil.listTemplates(context.fs).length;
+  resp.count = ipfsUtil.listTemplates(context.fs, ACTION).length;
 
   res.send(resp);
 };
