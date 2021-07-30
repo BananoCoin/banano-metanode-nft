@@ -418,6 +418,7 @@ const getAccountInfo = async (fetch, action, owner) => {
   const accountInfoBody = {
     action: 'account_info',
     account: owner,
+    include_confirmed: true,
   };
   const accountInfoRequest = {
     method: 'POST',

@@ -158,6 +158,13 @@ const initServer = () => {
         const mutexRelease = await mutex.acquire();
         try {
           return await actionFn(context, req, res);
+        } catch (error) {
+          const resp = {};
+          resp.success = false;
+          resp.errors = [];
+          resp.errors.push(`error '${error.message}'`);
+          res.send(resp);
+          return;
         } finally {
           mutexRelease();
         }
