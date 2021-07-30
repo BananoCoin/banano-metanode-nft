@@ -123,7 +123,6 @@ window.checkOwnerAssets = async () => {
 getIpfsHtmlWorkerInst.onmessage = function(e) {
   const html = e.data[0];
   const assets = e.data[1];
-  const jsonIpfsCid = e.data[2];
   for (let assetIx = 0; assetIx < assets.length; assetIx++) {
     const asset = assets[assetIx];
     const span = document.getElementById(asset);
