@@ -104,7 +104,7 @@ const loadSupportedVersions = async () => {
     body: `{"action": "get_supported_versions"}`,
   });
   const responseJson = await response.json();
-  const supportedVersions = responseJson.ssupported_versions;
+  const supportedVersions = responseJson.supported_versions;
   const wrapperElt = document.getElementById('supportedVersionsWrapper');
-  wrapperElt.innerText = supportedVersions;
+  wrapperElt.innerText = JSON.stringify(supportedVersions);
 };
