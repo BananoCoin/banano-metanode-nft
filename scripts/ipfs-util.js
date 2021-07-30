@@ -430,9 +430,16 @@ const getAccountInfo = async (fetch, action, owner) => {
   };
   loggingUtil.debug(action, 'accountInfoRequest', accountInfoRequest);
   const accountInfoResponse = await fetch(config.bananodeApiUrl, accountInfoRequest);
-  const accountInfoResponseJson = await accountInfoResponse.text();
+  const accountInfoResponseJson = await accountInfoResponse.json();
+  // delete accountInfoResponseJson.frontier;
+  delete accountInfoResponseJson.open_block;
+  delete accountInfoResponseJson.representative_block;
+  delete accountInfoResponseJson.balance;
+  delete accountInfoResponseJson.modified_timestamp;
+  delete accountInfoResponseJson.block_count;
+  delete accountInfoResponseJson.account_version;
   loggingUtil.debug(action, 'accountInfoResponseJson', accountInfoResponseJson);
-  return accountInfoResponseJson;
+  return JSON.stringify(accountInfoResponseJson);
 };
 
 const getNextAssetOwner = async (fetch, fs, bananojs, action, assetRepresentativeAccount, owner, receiveHash, getChainAccountInfo) => {
