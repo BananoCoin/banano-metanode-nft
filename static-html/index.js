@@ -7,6 +7,7 @@ import {addTemplateOwnerCheck} from './actions/check-template-ownership.js';
 import {addMintNft} from './actions/mint-nft.js';
 import {addOwnerAssetCheck} from './actions/check-owner-assets.js';
 import {processHashAndSearchParms} from './lib/hash-and-search-parms.js';
+import {addChildElement, clear} from '../lib/dom.js';
 
 window.bananoApiUrl = '';
 
@@ -28,6 +29,7 @@ window.onLoad = async () => {
   await loadIpfsApiUrl();
   loadCurrentVersion();
   loadSupportedVersions();
+  loadKnownTemplateList();
   loadSeed();
   addNavigation();
   addSeedHideShow();
@@ -107,4 +109,30 @@ const loadSupportedVersions = async () => {
   const supportedVersions = responseJson.supported_versions;
   const wrapperElt = document.getElementById('supportedVersionsWrapper');
   wrapperElt.innerText = JSON.stringify(supportedVersions);
+};
+
+const loadKnownTemplateList = async () => {
+  const wrapperElt = document.getElementById('knownTemplateListWrapper');
+  addChildElement(wrapperElt, 'dataList', {
+    'id': 'knownTemplateList',
+  });
+  setTimeout(getKnownTemplateList, 0);
+};
+
+window.getKnownTemplateList = async () => {
+  const response = await fetch(nftApiUrl, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: `{"action": "get_nft_template_list"}`,
+  });
+  const responseJson = await response.json();
+  const dataListElt = document.getElementById('knownTemplateList');
+  clear(dataListElt);
+  responseJson.templates.forEach((template) => {
+    addChildElement(dataListElt, 'option', {
+      'value': template,
+    });
+  });
 };

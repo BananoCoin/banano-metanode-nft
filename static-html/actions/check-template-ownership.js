@@ -19,8 +19,9 @@ const addTemplateOwnerCheck = () => {
     'type': 'text',
     'size': '66',
     'max_length': '64',
-    'value': defaultCid,
+    'placeholder': 'select from drop down',
     'list': 'knownTemplateList',
+    'autocomplete': 'off',
   });
   addChildElement(formElt, 'br');
   const checkCidElt = addChildElement(formElt, 'button', {
@@ -34,27 +35,12 @@ const addTemplateOwnerCheck = () => {
     'id': 'templateOwnershipInfo',
     'class': 'selectable container column',
   });
-
-  const knownTemplateListCallback = async () => {
-    const response = await fetch(nftApiUrl, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: `{"action": "get_nft_template_list"}`,
-    });
-    const responseJson = await response.json();
-    const dataListElt = addChildElement(formElt, 'dataList', {
-      'id': 'knownTemplateList',
-    });
-    responseJson.templates.forEach((template) => {
-      addChildElement(dataListElt, 'option', {
-        'value': template,
-      });
-    });
-  };
-
-  setTimeout(knownTemplateListCallback, 0);
+  addText(addChildElement(formElt, 'button', {
+    'id': 'refreshCidList',
+    'type': 'button',
+    'class': '',
+    'onclick': 'getKnownTemplateList();return false;',
+  }), 'Refresh Template List');
 };
 
 

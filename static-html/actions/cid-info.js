@@ -21,7 +21,9 @@ const addCidInfo = () => {
     'type': 'text',
     'size': '66',
     'max_length': '64',
-    'value': defaultCid,
+    'placeholder': 'select from drop down',
+    'list': 'knownTemplateList',
+    'autocomplete': 'off',
   });
   addChildElement(formElt, 'br');
   const checkCidElt = addChildElement(formElt, 'button', {
@@ -30,6 +32,12 @@ const addCidInfo = () => {
     'class': '',
     'onclick': 'checkCid();return false;',
   });
+  addText(addChildElement(formElt, 'button', {
+    'id': 'refreshCidList',
+    'type': 'button',
+    'class': '',
+    'onclick': 'getKnownTemplateList();return false;',
+  }), 'Refresh Template List');
   addText(checkCidElt, 'Get CID Info');
   addChildElement(wrapperElt, 'div', {
     'id': 'cidInfo',

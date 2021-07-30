@@ -19,7 +19,9 @@ const addMintNft = () => {
     'type': 'text',
     'size': '66',
     'max_length': '64',
-    'value': defaultCid,
+    'placeholder': 'select from drop down',
+    'list': 'knownTemplateList',
+    'autocomplete': 'off',
   });
   addChildElement(formElt, 'br');
   addText(addChildElement(formElt, 'button', {
@@ -28,6 +30,12 @@ const addMintNft = () => {
     'class': '',
     'onclick': 'checkMintNftCID();return false;',
   }), 'Check CID');
+  addText(addChildElement(formElt, 'button', {
+    'id': 'refreshCidList',
+    'type': 'button',
+    'class': '',
+    'onclick': 'getKnownTemplateList();return false;',
+  }), 'Refresh Template List');
   addText(addChildElement(formElt, 'h3'), 'Representative');
   addChildElement(formElt, 'div', {
     'id': 'mintRepresentativePublicKey',
