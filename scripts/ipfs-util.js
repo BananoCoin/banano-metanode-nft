@@ -594,6 +594,25 @@ const setTemplateCounterForAsset = (fs, action, asset, counter) => {
   dataUtil.setTemplateCounterForAsset(fs, asset, parseInt(counter).toFixed(0));
 };
 
+const addTemplate = (fs, template) => {
+  /* istanbul ignore if */
+  if (fs === undefined) {
+    throw Error('fs is required');
+  }
+  /* istanbul ignore if */
+  if (template === undefined) {
+    throw Error('template is required');
+  }
+  dataUtil.addTemplate(fs, template);
+};
+
+const listTemplates = (fs) => {
+  /* istanbul ignore if */
+  if (fs === undefined) {
+    throw Error('fs is required');
+  }
+  return dataUtil.listTemplates(fs);
+};
 
 const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors, success) => {
   const regExp = new RegExp('^Qm[0-9A-Za-z]{0,64}$');
@@ -643,3 +662,5 @@ exports.getTemplateForAsset = getTemplateForAsset;
 exports.setTemplateForAsset = setTemplateForAsset;
 exports.getTemplateCounterForAsset = getTemplateCounterForAsset;
 exports.setTemplateCounterForAsset = setTemplateCounterForAsset;
+exports.addTemplate = addTemplate;
+exports.listTemplates = listTemplates;

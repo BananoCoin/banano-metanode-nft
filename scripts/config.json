@@ -6,6 +6,7 @@
   "accountInfosDir": "data/accountInfos",
   "nextAssetOwnerDir": "data/nextAssetOwners",
   "ownedAssetsDir": "data/ownedAssets",
+  "templateDataDir": "data/templates",
   "assetTemplateDataDir": "data/assetTemplates",
   "assetTemplateCounterDataDir": "data/assetTemplateCounter",
   "currentVersion": "0.0.1",

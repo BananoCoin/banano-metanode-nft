@@ -228,6 +228,34 @@ const setTemplateCounterForAsset = (fs, asset, template) => {
   fs.closeSync(filePtr);
 };
 
+const makeTemplatetDir = (fs) => {
+  if (!fs.existsSync(config.templateDataDir)) {
+    fs.mkdirSync(config.templateDataDir, {recursive: true});
+  }
+};
+
+const getTemplateFile = (fs, template) => {
+  return path.join(config.templateDataDir, template);
+};
+
+const listTemplates = (fs) => {
+  const dir = config.templateDataDir;
+  const templates = [];
+  if (fs.existsSync(dir)) {
+    fs.readdirSync(dir).forEach((fileNm) => {
+      templates.push(fileNm);
+    });
+  }
+  return templates;
+};
+
+const addTemplate = (fs, template) => {
+  checkValidFileStr(template);
+  makeTemplatetDir(fs);
+  const filePtr = fs.openSync(getTemplateFile(fs, template), 'w');
+  fs.closeSync(filePtr);
+};
+
 exports.init = init;
 exports.deactivate = deactivate;
 exports.checkValidFileStr = checkValidFileStr;
@@ -249,3 +277,5 @@ exports.setTemplateForAsset = setTemplateForAsset;
 exports.hasTemplateCounterForAsset = hasTemplateCounterForAsset;
 exports.getTemplateCounterForAsset = getTemplateCounterForAsset;
 exports.setTemplateCounterForAsset = setTemplateCounterForAsset;
+exports.listTemplates = listTemplates;
+exports.addTemplate = addTemplate;

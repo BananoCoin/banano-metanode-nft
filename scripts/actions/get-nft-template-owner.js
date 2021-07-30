@@ -155,6 +155,7 @@ const getNftAssetsOwners = async (context, req, res) => {
         loggingUtil.debug(ACTION, 'historyElt', ix, historyElt.hash, historyElt.account, '=>', linkAccount);
         const asset = historyElt.hash;
         const template = ipfsCid;
+        ipfsUtil.addTemplate(fs, ACTION, template);
         ipfsUtil.setTemplateForAsset(fs, ACTION, asset, template);
         ipfsUtil.setTemplateCounterForAsset(fs, ACTION, asset, templateAssetCounter);
         const assetOwner = {
