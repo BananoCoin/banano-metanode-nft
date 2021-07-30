@@ -1,7 +1,6 @@
 import {addText, addChildElement, clear} from '../lib/dom.js';
 
-const loadOwnerAssetWorkerInst = new Worker('./actions/load-owner-asset-worker.js');
-
+const getIpfsHtmlWorkerInst = new Worker('./workers/get-ipfs-html.js', {type: 'module'});
 
 const addCidInfo = () => {
   const wrapperElt = document.getElementById('cidInfoWrapper');
@@ -99,11 +98,11 @@ window.checkCid = async () => {
   if (assets.length > 0) {
     const data = [ipfsApiUrl, jsonIpfsCid, assets];
     console.log('postMessage', data);
-    loadOwnerAssetWorkerInst.postMessage(data);
+    getIpfsHtmlWorkerInst.postMessage(data);
   }
 };
 
-loadOwnerAssetWorkerInst.onmessage = function(e) {
+getIpfsHtmlWorkerInst.onmessage = function(e) {
   const html = e.data[0];
   const assets = e.data[1];
   for (let assetIx = 0; assetIx < assets.length; assetIx++) {

@@ -1,14 +1,21 @@
-onmessage = (e) => {
+self.onmessage = (e) => {
   const ipfsApiUrl = e.data[0];
   const jsonIpfsCid = e.data[1];
   const assets = e.data[2];
   console.log('onmessage', e.data);
-
-
-  loadOwnerAssetWorker(ipfsApiUrl, jsonIpfsCid, assets);
+  getIpfsHtml(ipfsApiUrl, jsonIpfsCid, assets);
 };
 
-const loadOwnerAssetWorker = async (ipfsApiUrl, jsonIpfsCid, assets) => {
+const parseSvgViewBox = (svgText) => {
+  console.log('parseSvgViewBox', svgText);
+  try {
+    console.log('jsonObj', jsonObj);
+  } catch (error) {
+    console.log('error', error.message);
+  }
+};
+
+const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets) => {
   let html = '';
   try {
     const templateUrl = ipfsApiUrl + '/' + jsonIpfsCid;
@@ -35,12 +42,19 @@ const loadOwnerAssetWorker = async (ipfsApiUrl, jsonIpfsCid, assets) => {
       const imageBlob = await imageResponse.blob();
       html += `<h4>${title}</h4>`;
       if (imageContentType == 'image/svg+xml') {
-        html += `<object title="${imageIpfsCid}" width="30vmin" type="image/svg+xml" data="${imageBlob}"></object>`;
-      } else {
-        console.log(`defaulting to image for content type ${imageContentType}`);
-        // console.log('imageBlob', imageBlob);
+        const text = await imageBlob.text();
+        const viewBox = parseSvgViewBox(text);
+        html += '<svg style="width:30vmin;height30vmin;" viewBox="0 0 3000 3000" width="30vmin" xmlns="http://www.w3.org/2000/svg">';
+        html += text;
+        html += '</svg>';
+        // html += `<object title="${imageIpfsCid}" style="width:30vmin;height30vmin;" type="image/svg+xml" data="${text}"></object>`;
+      } else if ((imageContentType == 'image/png') ||
+          (imageContentType == 'image/gif') ||
+          (imageContentType == 'image/png')) {
         const imageObjectUrl = URL.createObjectURL(imageBlob);
         html += `<img title="${imageIpfsCid}" style="width:30vmin;height30vmin;" src="${imageObjectUrl}"></img>`;
+      } else {
+        html += `Unsupported Content Type: ${imageContentType}`;
       }
     } else {
       html = 'error:' + imageResponse.status + ' ' + imageResponse.statusText;
