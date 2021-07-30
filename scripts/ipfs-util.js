@@ -615,7 +615,6 @@ const addTemplate = (fs, action, template) => {
   if (template === undefined) {
     throw Error('template is required');
   }
-  console.log();
   dataUtil.addTemplate(fs, template);
 };
 
