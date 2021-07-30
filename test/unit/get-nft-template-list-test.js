@@ -5,7 +5,7 @@ const chai = require('chai');
 
 // modules
 const expect = chai.expect;
-const actionUtil = require('../../scripts/actions/get-nft-template-history.js');
+const actionUtil = require('../../scripts/actions/get-nft-template-list.js');
 const ipfsUtil = require('../../scripts/ipfs-util.js');
 const dataUtil = require('../../scripts/data-util.js');
 const mockFs = require('../util/mock-fs.js');

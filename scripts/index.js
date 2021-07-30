@@ -81,7 +81,7 @@ const addModules = () => {
   modules.push(require('./actions/get-nft-info.js'));
   modules.push(require('./actions/get-current-version.js'));
   modules.push(require('./actions/get-supported-versions.js'));
-  modules.push(require('./actions/get-nft-template-history.js'));
+  modules.push(require('./actions/get-nft-template-list.js'));
   modules.push(require('./actions/get-nft-template-count.js'));
 };
 

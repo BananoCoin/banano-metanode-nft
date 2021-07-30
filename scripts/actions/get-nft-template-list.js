@@ -5,7 +5,7 @@
 const ipfsUtil = require('../ipfs-util.js');
 
 // constants
-const ACTION = 'get_nft_template_history';
+const ACTION = 'get_nft_template_list';
 
 // variables
 /* eslint-disable no-unused-vars */
@@ -45,7 +45,7 @@ const deactivate = () => {
  * @param {Object} res the http response.
  * @return {undefined}
  */
-const getNftTemplateHistory = async (context, req, res) => {
+const getNftTemplateList = async (context, req, res) => {
   /* istanbul ignore if */
   if (req === undefined) {
     throw Error('req is required');
@@ -64,7 +64,7 @@ const getNftTemplateHistory = async (context, req, res) => {
 };
 
 const addAction = (actions) => {
-  actions[ACTION] = getNftTemplateHistory;
+  actions[ACTION] = getNftTemplateList;
 };
 
 exports.init = init;
