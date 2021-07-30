@@ -6,17 +6,9 @@ self.onmessage = (e) => {
   getIpfsHtml(ipfsApiUrl, jsonIpfsCid, assets);
 };
 
-const parseSvgViewBox = (svgText) => {
-  console.log('parseSvgViewBox', svgText);
-  try {
-    console.log('jsonObj', jsonObj);
-  } catch (error) {
-    console.log('error', error.message);
-  }
-};
-
 const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets) => {
   let html = '';
+  let imageIpfsCid = '';
   try {
     const templateUrl = ipfsApiUrl + '/' + jsonIpfsCid;
     console.log('templateUrl', templateUrl);
@@ -28,7 +20,7 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets) => {
     });
     const templateRsponseJson = await templateResponse.json();
     const title = templateRsponseJson.title;
-    const imageIpfsCid = templateRsponseJson.art_data_ipfs_cid;
+    imageIpfsCid = templateRsponseJson.art_data_ipfs_cid;
     const imageUrl = ipfsApiUrl + '/' + imageIpfsCid;
     const imageResponse = await fetch(imageUrl, {
       method: 'GET',
@@ -43,10 +35,9 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets) => {
       html += `<h4>${title}</h4>`;
       if (imageContentType == 'image/svg+xml') {
         const text = await imageBlob.text();
-        const viewBox = parseSvgViewBox(text);
-        html += '<svg style="width:30vmin;height30vmin;" viewBox="0 0 3000 3000" width="30vmin" xmlns="http://www.w3.org/2000/svg">';
+        // html += `<svg title="${imageIpfsCid}" style="width:30vmin;height30vmin;" viewBox="0 0 3000 3000" width="30vmin" xmlns="http://www.w3.org/2000/svg">`;
         html += text;
-        html += '</svg>';
+        // html += '</svg>';
         // html += `<object title="${imageIpfsCid}" style="width:30vmin;height30vmin;" type="image/svg+xml" data="${text}"></object>`;
       } else if ((imageContentType == 'image/png') ||
           (imageContentType == 'image/gif') ||
@@ -66,6 +57,7 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets) => {
   const result = [
     html,
     assets,
+    imageIpfsCid,
   ];
   postMessage(result);
 };

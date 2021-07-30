@@ -1,5 +1,6 @@
 import {addText, addChildElement} from '../lib/dom.js';
 import {shorten} from '../lib/asset-name.js';
+import {normalizeSvgs} from '../lib/svg.js';
 
 const getIpfsHtmlWorkerInst = new Worker('./workers/get-ipfs-html.js', {type: 'module'});
 
@@ -122,11 +123,13 @@ window.checkOwnerAssets = async () => {
 getIpfsHtmlWorkerInst.onmessage = function(e) {
   const html = e.data[0];
   const assets = e.data[1];
+  const jsonIpfsCid = e.data[2];
   for (let assetIx = 0; assetIx < assets.length; assetIx++) {
     const asset = assets[assetIx];
     const span = document.getElementById(asset);
 
     span.innerHTML = html;
+    normalizeSvgs(span);
   }
 };
 

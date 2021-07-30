@@ -1,4 +1,5 @@
 import {addText, addChildElement, clear} from '../lib/dom.js';
+import {normalizeSvgs} from '../lib/svg.js';
 
 const getIpfsHtmlWorkerInst = new Worker('./workers/get-ipfs-html.js', {type: 'module'});
 
@@ -109,6 +110,7 @@ getIpfsHtmlWorkerInst.onmessage = function(e) {
     const asset = assets[assetIx];
     const span = document.getElementById(asset);
     span.innerHTML = html;
+    normalizeSvgs(span);
   }
 };
 
