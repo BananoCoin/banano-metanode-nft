@@ -109,16 +109,40 @@ const initServer = () => {
 
   // this enables cors for all pages. we only want it enabled for the POST requests.
   // app.use(cors());
+
+  const allowlist = [config.ipfsApiUrl];
+
+
+  // app.use(function(req, res, next) {
+  //   console.log('req.originalUrl', req.originalUrl);
+  //   console.log('req.method', req.method);
+  //   next();
+  // });
+
+  const corsOptionsDelegate = (req, callback) => {
+    let corsOptions;
+
+    if (req.method == 'GET') {
+      if (allowlist.indexOf(req.header('Origin')) !== -1) {
+        // reflect (enable) the requested origin in the CORS response
+        corsOptions = {origin: true};
+      } else {
+        // disable CORS for this request
+        corsOptions = {origin: false};
+      }
+    } else {
+      corsOptions = {origin: true};
+    }
+    console.log('cors', req.method, req.originalUrl, 'corsOptions', corsOptions);
+    // callback expects two parameters: error and options
+    callback(null, corsOptions);
+  };
+  app.use(cors(corsOptionsDelegate));
+
   // enable pre-flight
   app.options('*', cors());
 
-  app.use(express.static('static-html', {
-    setHeaders: function(res, path) {
-      res.setHeader('Access-Control-Allow-Origin', config.ipfsApiUrl);
-      res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'content-type');
-    },
-  }));
+  app.use(express.static('static-html'));
 
   app.use(express.urlencoded({
     limit: '50mb',
@@ -137,17 +161,6 @@ const initServer = () => {
     } else {
       next();
     }
-  });
-
-  app.use(function(req, res, next) {
-    // console.log('req.originalUrl', req.originalUrl);
-    // console.log('req.method', req.method);
-    if (req.method == 'GET') {
-      res.setHeader('Access-Control-Allow-Origin', config.ipfsApiUrl);
-      res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'content-type');
-    }
-    next();
   });
 
   const actions = {};
