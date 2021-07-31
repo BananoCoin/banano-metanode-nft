@@ -3,6 +3,7 @@
 const bananojs = require('@bananocoin/bananojs');
 const express = require('express');
 const http = require('http');
+const cors = require('cors');
 const fetch = require('node-fetch');
 const path = require('path');
 const fs = require('fs');
@@ -75,6 +76,7 @@ const addModules = () => {
   modules.push(require('./actions/get-bananode-api-url.js'));
   modules.push(require('./actions/get-pinata-api-url.js'));
   modules.push(require('./actions/get-ipfs-api-url.js'));
+  modules.push(require('./actions/get-nft-api-url.js'));
   modules.push(require('./actions/get-nft-asset-owner.js'));
   modules.push(require('./actions/get-nft-owner-assets.js'));
   modules.push(require('./actions/get-nft-template-owner.js'));
@@ -104,6 +106,9 @@ const deactivateModules = async () => {
 
 const initServer = () => {
   const app = express();
+
+  app.use(cors());
+  app.options('*', cors());  // enable pre-flight
 
   app.use(express.static('static-html', {
     setHeaders: function(res, path) {

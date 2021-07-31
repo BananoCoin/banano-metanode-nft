@@ -15,11 +15,11 @@ window.pinataApiUrl = '';
 
 window.ipfsApiUrl = '';
 
+window.nftApiUrl = '';
+
 window.seedIx = 0;
 
 window.maxPending = 10;
-
-window.nftApiUrl = '/';
 
 window.defaultCid = 'QmXkn3YjkKptcjnrPLK6KeHMfGd9xzur33EHfDCDXCkw4b';
 
@@ -27,6 +27,7 @@ window.onLoad = async () => {
   await loadBananoApiUrl();
   await loadPinataApiUrl();
   await loadIpfsApiUrl();
+  await loadNftApiUrl();
   loadCurrentVersion();
   loadSupportedVersions();
   loadKnownTemplateList();
@@ -81,6 +82,19 @@ const loadIpfsApiUrl = async () => {
   const responseJson = await response.json();
   window.ipfsApiUrl = responseJson.ipfs_api_url;
   console.log('loadIpfsApiUrl', 'ipfsApiUrl', window.ipfsApiUrl);
+};
+
+const loadNftApiUrl = async () => {
+  const response = await fetch('/', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: `{"action": "get_nft_api_url"}`,
+  });
+  const responseJson = await response.json();
+  window.nftApiUrl = responseJson.nft_api_url;
+  console.log('loadNftApiUrl', 'nftApiUrl', window.nftApiUrl);
 };
 
 const loadCurrentVersion = async () => {
