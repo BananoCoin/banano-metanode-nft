@@ -133,7 +133,7 @@ const initServer = () => {
     } else {
       corsOptions = {origin: true};
     }
-    console.log('cors', req.method, req.originalUrl, 'corsOptions', corsOptions);
+    loggingUtil.debug('cors', req.method, req.originalUrl, 'corsOptions', corsOptions);
     // callback expects two parameters: error and options
     callback(null, corsOptions);
   };
