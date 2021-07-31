@@ -25,7 +25,7 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
-      nfts_api_url: config.nftApiUrl,
+      nft_api_url: config.nftApiUrl,
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);

@@ -1,7 +1,5 @@
 import {addText, addChildElement, clear} from '../lib/dom.js';
-import {normalizeSvgs} from '../lib/svg.js';
-
-const getIpfsHtmlWorkerInst = new Worker('./workers/get-ipfs-html.js', {type: 'module'});
+import {postIpfsHtmlMessage} from '../lib/ipfs-html.js';
 
 const addCidInfo = () => {
   const wrapperElt = document.getElementById('cidInfoWrapper');
@@ -105,20 +103,7 @@ window.checkCid = async () => {
   cidInfoElt.innerHTML = html;
 
   if (assets.length > 0) {
-    const data = [ipfsApiUrl, jsonIpfsCid, assets];
-    console.log('postMessage', data);
-    getIpfsHtmlWorkerInst.postMessage(data);
-  }
-};
-
-getIpfsHtmlWorkerInst.onmessage = function(e) {
-  const html = e.data[0];
-  const assets = e.data[1];
-  for (let assetIx = 0; assetIx < assets.length; assetIx++) {
-    const asset = assets[assetIx];
-    const span = document.getElementById(asset);
-    span.innerHTML = html;
-    normalizeSvgs(span);
+    postIpfsHtmlMessage(ipfsApiUrl, jsonIpfsCid, assets);
   }
 };
 

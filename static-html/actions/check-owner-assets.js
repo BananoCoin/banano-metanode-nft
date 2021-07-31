@@ -1,8 +1,6 @@
 import {addText, addChildElement} from '../lib/dom.js';
 import {shorten} from '../lib/asset-name.js';
-import {normalizeSvgs} from '../lib/svg.js';
-
-const getIpfsHtmlWorkerInst = new Worker('./workers/get-ipfs-html.js', {type: 'module'});
+import {postIpfsHtmlMessage} from '../lib/ipfs-html.js';
 
 const addOwnerAssetCheck = () => {
   const wrapperElt = document.getElementById('ownerAssetCheckWrapper');
@@ -110,7 +108,7 @@ window.checkOwnerAssets = async () => {
     Object.keys(templatesToLoad).forEach((jsonIpfsCid) => {
       const assets = templatesToLoad[jsonIpfsCid];
       const fn = () => {
-        getIpfsHtmlWorkerInst.postMessage([ipfsApiUrl, jsonIpfsCid, assets]);
+        postIpfsHtmlMessage(ipfsApiUrl, jsonIpfsCid, assets);
       };
       setTimeout(fn, timer);
 
@@ -119,18 +117,5 @@ window.checkOwnerAssets = async () => {
   };
   setTimeout(callback, 0);
 };
-
-getIpfsHtmlWorkerInst.onmessage = function(e) {
-  const html = e.data[0];
-  const assets = e.data[1];
-  for (let assetIx = 0; assetIx < assets.length; assetIx++) {
-    const asset = assets[assetIx];
-    const span = document.getElementById(asset);
-
-    span.innerHTML = html;
-    normalizeSvgs(span);
-  }
-};
-
 
 export {addOwnerAssetCheck};

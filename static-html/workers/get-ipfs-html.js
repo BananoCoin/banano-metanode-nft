@@ -9,6 +9,7 @@ self.onmessage = (e) => {
 const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets) => {
   let html = '';
   let imageIpfsCid = '';
+  let allowReload = 'true';
   try {
     const templateUrl = ipfsApiUrl + '/' + jsonIpfsCid;
     console.log('templateUrl', templateUrl);
@@ -49,15 +50,19 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets) => {
       }
     } else {
       html = 'error:' + imageResponse.status + ' ' + imageResponse.statusText;
+      allowReload = 'true';
     }
   } catch (error) {
     html = 'error:' + error.message;
+    allowReload = 'true';
   }
 
   const result = [
     html,
     assets,
+    jsonIpfsCid,
     imageIpfsCid,
+    allowReload,
   ];
   postMessage(result);
 };
