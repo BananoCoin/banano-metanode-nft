@@ -53,9 +53,15 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       asset_owner: {
-        asset: '0000000000000000000000000000000000000000000000000000000000000004',
-        history: [],
-        owner: 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c',
+        asset: goodSendHash4,
+        history: [
+          {
+            'owner': goodOwner2,
+            'receive': '',
+            'send': goodSendHash4,
+          },
+        ],
+        owner: goodOwner2,
       },
       success: true,
     };

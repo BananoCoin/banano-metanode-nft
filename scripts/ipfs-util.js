@@ -318,45 +318,58 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
       'asset', assetRepresentativeAccount,
       'sendHash', '=>', 'receiveHash',
       sendHash, '=>', receiveHash);
-  while (receiveHash !== undefined) {
-    // looking in the history of asset_owner.owner,
-    // starting at the receiveHash (the point the owner received the nft)
-    // find the next send block with the representative set to the same nft hash (the asset_owner.asset)
-    // and return the hash of the send block, and the new owner.
+  if (receiveHash === undefined) {
+    // show an entry in history if it is sent but never recieved
     assetOwner.history.push(
         {
           owner: assetOwner.owner,
           send: sendHash,
-          receive: receiveHash,
+          receive: '',
         },
     );
+  } else {
+    while (receiveHash !== undefined) {
+      // looking in the history of asset_owner.owner,
+      // starting at the receiveHash (the point the owner received the nft)
+      // find the next send block with the representative set to the same nft hash (the asset_owner.asset)
+      // and return the hash of the send block, and the new owner.
+      assetOwner.history.push(
+          {
+            owner: assetOwner.owner,
+            send: sendHash,
+            receive: receiveHash,
+          },
+      );
 
-    const nextAssetOwner = await getNextAssetOwner(fetch, fs, bananojs, action, assetRepresentativeAccount, assetOwner.owner, receiveHash, getChainAccountInfo);
-    if (nextAssetOwner !== undefined) {
-      loggingUtil.log(action, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner.owner, '=>', nextAssetOwner.owner);
-      assetOwner.owner = nextAssetOwner.owner;
-      sendHash = nextAssetOwner.send;
-      receiveHash = await getReceiveBlock(fetch, fs, action, nextAssetOwner.owner, nextAssetOwner.send);
-      loggingUtil.log(action, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner, '=>', nextAssetOwner, 'receiveHash', receiveHash);
+      const nextAssetOwner = await getNextAssetOwner(fetch, fs, bananojs,
+          action, assetRepresentativeAccount, assetOwner.owner, receiveHash,
+          getChainAccountInfo);
+      if (nextAssetOwner !== undefined) {
+        loggingUtil.log(action, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner.owner, '=>', nextAssetOwner.owner);
+        assetOwner.owner = nextAssetOwner.owner;
+        sendHash = nextAssetOwner.send;
+        receiveHash = await getReceiveBlock(fetch, fs, action, nextAssetOwner.owner, nextAssetOwner.send);
+        loggingUtil.log(action, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner, '=>', nextAssetOwner, 'receiveHash', receiveHash);
 
-      const isReceiveHashUndefined = () => {
-        const retval = receiveHash === undefined;
-        loggingUtil.log(action, 'isReceiveHashUndefined', retval, 'nextAssetOwner', nextAssetOwner);
-        return retval;
-      };
+        const isReceiveHashUndefined = () => {
+          const retval = receiveHash === undefined;
+          loggingUtil.log(action, 'isReceiveHashUndefined', retval, 'nextAssetOwner', nextAssetOwner);
+          return retval;
+        };
 
-      if (isReceiveHashUndefined()) {
-        // show an entry in history if it is sent but not recieved
-        assetOwner.history.push(
-            {
-              owner: assetOwner.owner,
-              send: sendHash,
-              receive: '',
-            },
-        );
+        if (isReceiveHashUndefined()) {
+          // show an entry in history if it is sent but not recieved
+          assetOwner.history.push(
+              {
+                owner: assetOwner.owner,
+                send: sendHash,
+                receive: '',
+              },
+          );
+        }
+      } else {
+        receiveHash = undefined;
       }
-    } else {
-      receiveHash = undefined;
     }
   }
 
@@ -673,6 +686,7 @@ exports.getNftInfoForIpfsCid = getNftInfoForIpfsCid;
 exports.updateAssetOwnerHistory = updateAssetOwnerHistory;
 exports.getAccountInfo = getAccountInfo;
 exports.getOwnedAssets = getOwnedAssets;
+exports.getReceiveBlock = getReceiveBlock;
 exports.getChainAccountInfoCache = getChainAccountInfoCache;
 exports.getTemplateForAsset = getTemplateForAsset;
 exports.setTemplateForAsset = setTemplateForAsset;

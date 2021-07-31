@@ -135,6 +135,11 @@ describe(actionUtil.ACTION, () => {
         {
           asset: goodSendHash4,
           history: [
+            {
+              owner: goodOwner4,
+              receive: '',
+              send: goodSendHash4,
+            },
           ],
           owner: goodOwner4,
           template: goodIpfsCid,
@@ -144,6 +149,11 @@ describe(actionUtil.ACTION, () => {
         {
           asset: goodSendHash4,
           history: [
+            {
+              owner: goodOwner4,
+              receive: '',
+              send: goodSendHash4,
+            },
           ],
           owner: goodOwner4,
           template: goodIpfsCid,

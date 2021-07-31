@@ -309,7 +309,13 @@ describe(actionUtil.ACTION, () => {
       asset_owners: [
         {
           asset: goodSendHash4,
-          history: [],
+          history: [
+            {
+              owner: goodOwner3,
+              receive: '',
+              send: goodSendHash4,
+            },
+          ],
           owner: goodOwner3,
           template: goodIpfsCid,
           max_supply: '1',
@@ -389,7 +395,13 @@ describe(actionUtil.ACTION, () => {
       asset_owners: [
         {
           asset: goodSendHash4,
-          history: [],
+          history: [
+            {
+              owner: goodOwner3,
+              receive: '',
+              send: goodSendHash4,
+            },
+          ],
           owner: goodOwner3,
           template: goodIpfsCid,
           max_supply: '1',
@@ -486,7 +498,13 @@ describe(actionUtil.ACTION, () => {
       asset_owners: [
         {
           asset: goodSendHash4,
-          history: [],
+          history: [
+            {
+              owner: goodOwner4,
+              receive: '',
+              send: goodSendHash4,
+            },
+          ],
           owner: goodOwner4,
           template: goodIpfsCid,
           max_supply: '1',
