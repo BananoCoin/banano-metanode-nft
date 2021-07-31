@@ -18,6 +18,10 @@ An RPC node for issuing NFTs on the banano blockchain.
 
   [installation instructions](docs/installation.md)
 
+# issue tracker visualization 
+
+  [issue tracker visualization](https://9-volt.github.io/bug-life/?repo=BananoCoin/banano-metanode-nft)
+
 #todo
 - only allow svg, png, gif, jpg embedded.
 if it's something else, provide IPFS CID and content type.
