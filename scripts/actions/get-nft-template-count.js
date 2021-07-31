@@ -5,6 +5,12 @@
 const ipfsUtil = require('../ipfs-util.js');
 
 // constants
+/**
+ * gets the count of all known templates.
+ * @name get_nft_template_count
+ * @memberof RPC
+ * @example {"action": "get_nft_template_count"}
+ */
 const ACTION = 'get_nft_template_count';
 
 // variables

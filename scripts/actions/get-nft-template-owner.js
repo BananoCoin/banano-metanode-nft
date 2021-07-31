@@ -160,9 +160,9 @@ const getNftAssetsOwners = async (context, req, res) => {
         ipfsUtil.setTemplateCounterForAsset(fs, ACTION, asset, templateAssetCounter);
         const assetOwner = {
           asset: asset,
+          template: template,
           mint_number: templateAssetCounter.toFixed(0),
           owner: linkAccount,
-          template: template,
           history: [],
         };
         if (ipfsResp.json.max_supply !== undefined) {

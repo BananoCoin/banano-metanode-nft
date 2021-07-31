@@ -76,11 +76,11 @@ window.checkOwnerAssets = async () => {
     let html = '';
     if (responseJson.success) {
       html = `<span><strong>Success!</strong>`;
-      if (responseJson.assetInfos !== undefined) {
+      if (responseJson.asset_owners !== undefined) {
         html += `<span><h2>Owned Assets</h2></span>`;
         html += '<span class="bordered container row">';
-        for (let assetInfoIx = 0; assetInfoIx < responseJson.assetInfos.length; assetInfoIx++) {
-          const assetInfo = responseJson.assetInfos[assetInfoIx];
+        for (let assetInfoIx = 0; assetInfoIx < responseJson.asset_owners.length; assetInfoIx++) {
+          const assetInfo = responseJson.asset_owners[assetInfoIx];
 
           html += '<span class="bordered">';
           html += `<span title="${assetInfo.asset}"><h3>${shorten(assetInfo.asset)}</h3></span>`;

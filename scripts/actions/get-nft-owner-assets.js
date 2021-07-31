@@ -5,6 +5,14 @@
 const ipfsUtil = require('../ipfs-util.js');
 
 // constants
+/**
+ * gets the NFT assets of a single owner.
+ * @name get_nft_owner_assets
+ * @memberof RPC
+ * @param {String} owner the owner of the assets.
+ * @param {String} action:get_nft_owner_assets the action: get the assets of the owner.
+ * @example {"action": "get_nft_owner_assets", "owner":"ban_1nft...nejq"}
+ */
 const ACTION = 'get_nft_owner_assets';
 
 // variables
@@ -92,7 +100,7 @@ const getNftOwnerAssets = async (context, req, res) => {
 
   const resp = {};
   resp.success = true;
-  resp.assetInfos = [];
+  resp.asset_owners = [];
 
   const chainAccountInfoCache =
         ipfsUtil.getChainAccountInfoCache(fetch, ACTION);
@@ -104,14 +112,23 @@ const getNftOwnerAssets = async (context, req, res) => {
     const template = ipfsUtil.getTemplateForAsset(fs, ACTION, ownedAsset);
     const templateCounter = ipfsUtil.getTemplateCounterForAsset(fs, ACTION, ownedAsset);
     if ((template.length > 0) && (templateCounter.length > 0)) {
-      resp.assetInfos.push({
+      resp.asset_owners.push({
         asset: ownedAsset,
         template: template,
         mint_number: templateCounter,
+        owner: owner,
+        history: [],
       });
     }
   }
 
+  for (let ix = 0; ix < resp.asset_owners.length; ix++) {
+    // asset is the hash of the send block that created the asset.
+    // owner is who it was sent to.
+    const assetOwner = resp.asset_owners[ix];
+    await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, assetOwner,
+        chainAccountInfoCache);
+  }
   chainAccountInfoCache.putChainAccountInfo(fs);
 
   loggingUtil.log(ACTION, 'getNftOwnerAssets', 'resp', resp);

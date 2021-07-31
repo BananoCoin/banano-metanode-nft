@@ -30,6 +30,16 @@
     *   [get_nft_asset_owner][26]
         *   [Parameters][27]
         *   [Examples][28]
+    *   [get_nft_owner_assets][29]
+        *   [Parameters][30]
+        *   [Examples][31]
+    *   [get_nft_info][32]
+        *   [Parameters][33]
+        *   [Examples][34]
+    *   [get_nft_template_list][35]
+        *   [Examples][36]
+    *   [get_nft_template_count][37]
+        *   [Examples][38]
 
 ## Main
 
@@ -39,13 +49,13 @@ gets the bananode url
 
 #### Parameters
 
-*   `context` **[Object][29]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][39]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][29]** the http request.
-*   `res` **[Object][29]** the http response.
+*   `req` **[Object][39]** the http request.
+*   `res` **[Object][39]** the http response.
 
-Returns **[undefined][30]** 
+Returns **[undefined][40]** 
 
 ### getPinataApiUrl
 
@@ -53,13 +63,13 @@ gets the pinata url
 
 #### Parameters
 
-*   `context` **[Object][29]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][39]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][29]** the http request.
-*   `res` **[Object][29]** the http response.
+*   `req` **[Object][39]** the http request.
+*   `res` **[Object][39]** the http response.
 
-Returns **[undefined][30]** 
+Returns **[undefined][40]** 
 
 ### getIpfsApiUrl
 
@@ -67,13 +77,13 @@ gets the ipfs url
 
 #### Parameters
 
-*   `context` **[Object][29]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][39]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][29]** the http request.
-*   `res` **[Object][29]** the http response.
+*   `req` **[Object][39]** the http request.
+*   `res` **[Object][39]** the http response.
 
-Returns **[undefined][30]** 
+Returns **[undefined][40]** 
 
 ### getCurrentVersion
 
@@ -81,13 +91,13 @@ gets the current version
 
 #### Parameters
 
-*   `context` **[Object][29]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][39]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][29]** the http request.
-*   `res` **[Object][29]** the http response.
+*   `req` **[Object][39]** the http request.
+*   `res` **[Object][39]** the http response.
 
-Returns **[undefined][30]** 
+Returns **[undefined][40]** 
 
 ### getSupportedVersions
 
@@ -95,13 +105,13 @@ gets the supported versions
 
 #### Parameters
 
-*   `context` **[Object][29]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][39]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][29]** the http request.
-*   `res` **[Object][29]** the http response.
+*   `req` **[Object][39]** the http request.
+*   `res` **[Object][39]** the http response.
 
-Returns **[undefined][30]** 
+Returns **[undefined][40]** 
 
 ## NFT
 
@@ -121,13 +131,13 @@ and the representative as the owner.
 
 #### Parameters
 
-*   `context` **[Object][29]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][39]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][29]** the http request.
-*   `res` **[Object][29]** the http response.
+*   `req` **[Object][39]** the http request.
+*   `res` **[Object][39]** the http response.
 
-Returns **[undefined][30]** 
+Returns **[undefined][40]** 
 
 ### getNftOwnerAssets
 
@@ -135,13 +145,13 @@ gets the NFT assets of a single owner.
 
 #### Parameters
 
-*   `context` **[Object][29]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][39]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][29]** the http request.
-*   `res` **[Object][29]** the http response.
+*   `req` **[Object][39]** the http request.
+*   `res` **[Object][39]** the http response.
 
-Returns **[undefined][30]** 
+Returns **[undefined][40]** 
 
 ### getNftAssetsOwners
 
@@ -149,13 +159,13 @@ gets the owners of a NFT template's assets
 
 #### Parameters
 
-*   `context` **[Object][29]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][39]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][29]** the http request.
-*   `res` **[Object][29]** the http response.
+*   `req` **[Object][39]** the http request.
+*   `res` **[Object][39]** the http response.
 
-Returns **[undefined][30]** 
+Returns **[undefined][40]** 
 
 ### getNftInfo
 
@@ -163,13 +173,13 @@ gets the information about an NFT
 
 #### Parameters
 
-*   `context` **[Object][29]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][39]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][29]** the http request.
-*   `res` **[Object][29]** the http response.
+*   `req` **[Object][39]** the http request.
+*   `res` **[Object][39]** the http response.
 
-Returns **[undefined][30]** 
+Returns **[undefined][40]** 
 
 ### getNftTemplateList
 
@@ -177,13 +187,13 @@ gets all known templates
 
 #### Parameters
 
-*   `context` **[Object][29]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][39]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][29]** the http request.
-*   `res` **[Object][29]** the http response.
+*   `req` **[Object][39]** the http request.
+*   `res` **[Object][39]** the http response.
 
-Returns **[undefined][30]** 
+Returns **[undefined][40]** 
 
 ### getNftTemplateCount
 
@@ -191,13 +201,13 @@ gets the count of all known templates
 
 #### Parameters
 
-*   `context` **[Object][29]** the context, used to get cached data.*   from filesystem in nodejs,
+*   `context` **[Object][39]** the context, used to get cached data.*   from filesystem in nodejs,
     *   from localstorage in a browser,
     *   from a test harness in the unit tests.
-*   `req` **[Object][29]** the http request.
-*   `res` **[Object][29]** the http response.
+*   `req` **[Object][39]** the http request.
+*   `res` **[Object][39]** the http response.
 
-Returns **[undefined][30]** 
+Returns **[undefined][40]** 
 
 ## RPC
 
@@ -207,13 +217,63 @@ gets the owner of a single NFT asset.
 
 #### Parameters
 
-*   `asset_hash` **[String][31]** the hash of the asset.
-*   `action` **[String][31]** :get_nft_asset_owner the action: get the owner of the asset.
+*   `asset_hash` **[String][41]** the hash of the asset.
+*   `action` **[String][41]** :get_nft_asset_owner the action: get the owner of the asset.
 
 #### Examples
 
 ```javascript
 {"action": "get_nft_asset_owner", "asset_hash":"0000...0000"}
+```
+
+### get_nft_owner_assets
+
+gets the NFT assets of a single owner.
+
+#### Parameters
+
+*   `owner` **[String][41]** the owner of the assets.
+*   `action` **[String][41]** :get_nft_owner_assets the action: get the assets of the owner.
+
+#### Examples
+
+```javascript
+{"action": "get_nft_owner_assets", "owner":"ban_1nft...nejq"}
+```
+
+### get_nft_info
+
+gets the information about an NFT
+
+#### Parameters
+
+*   `ipfs_cid` **[String][41]** the ipfs cid of the template.
+*   `action` **[String][41]** :get_nft_info the action: gets info about an nft.
+
+#### Examples
+
+```javascript
+{"action": "get_nft_info", "ipfs_cid":"QmXk...kw4b"}
+```
+
+### get_nft_template_list
+
+gets the list of all known templates.
+
+#### Examples
+
+```javascript
+{"action": "get_nft_template_list"}
+```
+
+### get_nft_template_count
+
+gets the count of all known templates.
+
+#### Examples
+
+```javascript
+{"action": "get_nft_template_count"}
 ```
 
 [1]: #main
@@ -272,8 +332,28 @@ gets the owner of a single NFT asset.
 
 [28]: #examples
 
-[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[29]: #get_nft_owner_assets
 
-[30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
+[30]: #parameters-12
 
-[31]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[31]: #examples-1
+
+[32]: #get_nft_info
+
+[33]: #parameters-13
+
+[34]: #examples-2
+
+[35]: #get_nft_template_list
+
+[36]: #examples-3
+
+[37]: #get_nft_template_count
+
+[38]: #examples-4
+
+[39]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[40]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
+
+[41]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String

@@ -89,7 +89,7 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
-      assetInfos: [],
+      asset_owners: [],
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);
@@ -177,7 +177,7 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
-      assetInfos: [
+      asset_owners: [
       ],
     };
     loggingUtil.debug('actualResponse', actualResponse);
@@ -277,11 +277,19 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
-      assetInfos: [
+      asset_owners: [
         {
           asset: goodSendHash4,
           template: goodIpfsCid,
           mint_number: '1',
+          owner: goodOwner4,
+          history: [
+            {
+              owner: goodOwner4,
+              receive: goodReceiveHash3,
+              send: goodSendHash4,
+            },
+          ],
         },
       ],
     };
@@ -394,7 +402,7 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
-      assetInfos: [],
+      asset_owners: [],
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);

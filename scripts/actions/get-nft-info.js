@@ -5,6 +5,14 @@
 const ipfsUtil = require('../ipfs-util.js');
 
 // constants
+/**
+ * gets the information about an NFT
+ * @name get_nft_info
+ * @memberof RPC
+ * @param {String} ipfs_cid the ipfs cid of the template.
+ * @param {String} action:get_nft_info the action: gets info about an nft.
+ * @example {"action": "get_nft_info", "ipfs_cid":"QmXk...kw4b"}
+ */
 const ACTION = 'get_nft_info';
 
 // variables
