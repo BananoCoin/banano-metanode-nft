@@ -108,7 +108,7 @@ const initServer = () => {
   const app = express();
 
   app.use(cors());
-  app.options('*', cors());  // enable pre-flight
+  app.options('*', cors()); // enable pre-flight
 
   app.use(express.static('static-html', {
     setHeaders: function(res, path) {

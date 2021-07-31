@@ -16,6 +16,7 @@ const config = {
   pinataApiUrl: 'pinataApiUrlValue',
   ipfsApiUrl: 'ipfsApiUrlValue',
   bananodeApiUrl: 'bananodeApiUrlValue',
+  nftApiUrl: 'nftApiUrlValue',
   receiveBlockHashDataDir: 'receiveBlockHashDataDir',
   accountInfosDir: 'accountInfosDir',
   nextAssetOwnerDir: 'nextAssetOwnerDir',
