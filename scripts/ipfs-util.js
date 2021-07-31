@@ -312,14 +312,14 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
 
   let sendHash = assetOwner.asset;
 
-  // find the receive block that recieved the send.
+  // find the receive block that received the send.
   let receiveHash = await getReceiveBlock(fetch, fs, action, assetOwner.owner, sendHash);
   loggingUtil.log(action, 'getNftAssetsOwners',
       'asset', assetRepresentativeAccount,
       'sendHash', '=>', 'receiveHash',
       sendHash, '=>', receiveHash);
   if (receiveHash === undefined) {
-    // show an entry in history if it is sent but never recieved
+    // show an entry in history if it is sent but never received
     assetOwner.history.push(
         {
           owner: assetOwner.owner,
@@ -358,7 +358,7 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
         };
 
         if (isReceiveHashUndefined()) {
-          // show an entry in history if it is sent but not recieved
+          // show an entry in history if it is sent but not received
           assetOwner.history.push(
               {
                 owner: assetOwner.owner,
@@ -373,6 +373,13 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
     }
   }
 
+  // TODO: refactor so we can test all conditionals.
+  assetOwner.received = 'false';
+  if (assetOwner.history.length > 0) {
+    if (assetOwner.history[0].receive.length > 0) {
+      assetOwner.received = 'true';
+    }
+  }
   dataUtil.addOwnerAsset(fs, assetOwner.owner, assetOwner.asset);
   loggingUtil.log(action, 'addOwnerAsset', assetOwner.owner, assetOwner.asset);
 };

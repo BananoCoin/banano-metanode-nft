@@ -133,6 +133,7 @@ describe(actionUtil.ACTION, () => {
       success: true,
       asset_owners: [
         {
+          received: 'false',
           asset: goodSendHash4,
           history: [
             {
@@ -147,6 +148,7 @@ describe(actionUtil.ACTION, () => {
           mint_number: '0',
         },
         {
+          received: 'false',
           asset: goodSendHash4,
           history: [
             {
@@ -238,6 +240,7 @@ describe(actionUtil.ACTION, () => {
       success: true,
       asset_owners: [
         {
+          received: 'true',
           asset: goodSendHash4,
           history: [
             {
@@ -252,6 +255,7 @@ describe(actionUtil.ACTION, () => {
           mint_number: '0',
         },
         {
+          received: 'true',
           asset: goodSendHash4,
           history: [
             {
@@ -279,6 +283,7 @@ describe(actionUtil.ACTION, () => {
       success: true,
       asset_owners: [
         {
+          received: 'true',
           asset: goodSendHash4,
           template: goodIpfsCid,
           mint_number: '1',
@@ -363,6 +368,7 @@ describe(actionUtil.ACTION, () => {
       success: true,
       asset_owners: [
         {
+          received: 'true',
           asset: goodSendHash4,
           history: [
             {

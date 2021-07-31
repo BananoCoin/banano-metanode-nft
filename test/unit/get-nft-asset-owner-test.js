@@ -62,6 +62,7 @@ describe(actionUtil.ACTION, () => {
           },
         ],
         owner: goodOwner2,
+        received: 'false',
       },
       success: true,
     };
