@@ -107,18 +107,11 @@ const deactivateModules = async () => {
 const initServer = () => {
   const app = express();
 
-  // this enables cors for all pages. we only want it enabled for the POST requests.
-  // app.use(cors());
-
+  // based on 'Configuring CORS Asynchronously'
+  // https://expressjs.com/en/resources/middleware/cors.html
+  // only block cross-origin GET requests, which are for the website.
+  // allow cross-origin POST requests, which are for the JSON API.
   const allowlist = [config.ipfsApiUrl];
-
-
-  // app.use(function(req, res, next) {
-  //   console.log('req.originalUrl', req.originalUrl);
-  //   console.log('req.method', req.method);
-  //   next();
-  // });
-
   const corsOptionsDelegate = (req, callback) => {
     let corsOptions;
 
