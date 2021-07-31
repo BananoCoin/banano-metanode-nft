@@ -107,8 +107,10 @@ const deactivateModules = async () => {
 const initServer = () => {
   const app = express();
 
-  app.use(cors());
-  app.options('*', cors()); // enable pre-flight
+  // this enables cors for all pages. we only want it enabled for the POST requests.
+  // app.use(cors());
+  // enable pre-flight
+  app.options('*', cors());
 
   app.use(express.static('static-html', {
     setHeaders: function(res, path) {
