@@ -5,8 +5,14 @@
 const ipfsUtil = require('../ipfs-util.js');
 
 // constants
-// TODO: rename to get_nft_asset_owner
-
+/**
+ * gets the owner of a single NFT asset.
+ * @name get_nft_asset_owner
+ * @memberof RPC
+ * @param {String} asset_hash the hash of the asset.
+ * @param {String} action:get_nft_asset_owner the action: get the owner of the asset.
+ * @example {"action": "get_nft_asset_owner", "asset_hash":"0000...0000"}
+ */
 const ACTION = 'get_nft_asset_owner';
 
 // variables
