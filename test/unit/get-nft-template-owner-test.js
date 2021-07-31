@@ -577,7 +577,7 @@ describe(actionUtil.ACTION, () => {
       success: true,
       asset_owners: [
         {
-          received: 'true',
+          received: 'false',
           asset: goodSendHash4,
           owner: goodOwnerB,
           template: goodIpfsCid,
