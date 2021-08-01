@@ -684,6 +684,18 @@ const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors,
   }
 };
 
+const getTemplateMaxSupply = (fs, action, template) => {
+  if ((template.length > 0) && dataUtil.hasTemplateMaxSupply(fs, template)) {
+    return dataUtil.getTemplateMaxSupply(fs, template);
+  } else {
+    return '';
+  }
+};
+
+const setTemplateMaxSupply = (fs, action, template, maxSupply) => {
+  dataUtil.setTemplateMaxSupply(fs, template, parseInt(maxSupply).toFixed(0));
+};
+
 exports.init = init;
 exports.deactivate = deactivate;
 exports.getNftInfoForIpfsCid = getNftInfoForIpfsCid;
@@ -698,3 +710,5 @@ exports.getTemplateCounterForAsset = getTemplateCounterForAsset;
 exports.setTemplateCounterForAsset = setTemplateCounterForAsset;
 exports.addTemplate = addTemplate;
 exports.listTemplates = listTemplates;
+exports.getTemplateMaxSupply = getTemplateMaxSupply;
+exports.setTemplateMaxSupply = setTemplateMaxSupply;

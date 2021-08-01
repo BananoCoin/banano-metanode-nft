@@ -155,9 +155,11 @@ const getNftAssetsOwners = async (context, req, res) => {
         loggingUtil.debug(ACTION, 'historyElt', ix, historyElt.hash, historyElt.account, '=>', linkAccount);
         const asset = historyElt.hash;
         const template = ipfsCid;
+        const maxSupply = parseInt(ipfsResp.json.max_supply).toFixed(0);
         ipfsUtil.addTemplate(fs, ACTION, template);
         ipfsUtil.setTemplateForAsset(fs, ACTION, asset, template);
         ipfsUtil.setTemplateCounterForAsset(fs, ACTION, asset, templateAssetCounter);
+        ipfsUtil.setTemplateMaxSupply(fs, ACTION, template, maxSupply);
         const assetOwner = {
           asset: asset,
           template: template,
@@ -166,7 +168,7 @@ const getNftAssetsOwners = async (context, req, res) => {
           history: [],
         };
         if (ipfsResp.json.max_supply !== undefined) {
-          assetOwner.max_supply = parseInt(ipfsResp.json.max_supply).toFixed(0);
+          assetOwner.max_supply = maxSupply;
         }
         resp.asset_owners.push(assetOwner);
         templateAssetCounter++;

@@ -111,14 +111,17 @@ const getNftOwnerAssets = async (context, req, res) => {
     const ownedAsset = ownedAssets[ownedAssetIx];
     const template = ipfsUtil.getTemplateForAsset(fs, ACTION, ownedAsset);
     const templateCounter = ipfsUtil.getTemplateCounterForAsset(fs, ACTION, ownedAsset);
+    const maxSupply = ipfsUtil.getTemplateMaxSupply(fs, ACTION, template);
     if ((template.length > 0) && (templateCounter.length > 0)) {
-      resp.asset_owners.push({
+      const assetOwner = {
         asset: ownedAsset,
         template: template,
         mint_number: templateCounter,
         owner: owner,
         history: [],
-      });
+      };
+      assetOwner.max_supply = maxSupply;
+      resp.asset_owners.push(assetOwner);
     }
   }
 

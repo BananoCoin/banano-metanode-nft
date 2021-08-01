@@ -23,6 +23,7 @@ const config = {
   ownedAssetsDir: 'ownedAssetsDir',
   assetTemplateDataDir: 'assetTemplateDataDir',
   assetTemplateCounterDataDir: 'assetTemplateCounterDataDir',
+  templateMaxSupplyDataDir: 'templateMaxSupplyDataDir',
   templateDataDir: 'templateDataDir',
   supportedVersions: ['0.0.1'],
   currentVersion: '0.0.1',

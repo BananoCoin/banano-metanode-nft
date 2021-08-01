@@ -255,6 +255,36 @@ const addTemplate = (fs, template) => {
   fs.closeSync(filePtr);
 };
 
+
+const getTemplateMaxSupplyFile = (fs, template) => {
+  return path.join(config.templateMaxSupplyDataDir, template);
+};
+
+const hasTemplateMaxSupply = (fs, template) => {
+  checkValidFileStr(template);
+  return fs.existsSync(getTemplateMaxSupplyFile(fs, template));
+};
+
+const getTemplateMaxSupply = (fs, template) => {
+  checkValidFileStr(template);
+  return fs.readFileSync(getTemplateMaxSupplyFile(fs, template), 'UTF-8');
+};
+
+const makeTemplateMaxSupplyDir = (fs) => {
+  if (!fs.existsSync(config.templateMaxSupplyDataDir)) {
+    fs.mkdirSync(config.templateMaxSupplyDataDir, {recursive: true});
+  }
+};
+
+const setTemplateMaxSupply = (fs, template, maxSupply) => {
+  checkValidFileStr(template);
+  checkValidFileStr(maxSupply);
+  makeTemplateMaxSupplyDir(fs);
+  const filePtr = fs.openSync(getTemplateMaxSupplyFile(fs, template), 'w');
+  fs.writeSync(filePtr, maxSupply);
+  fs.closeSync(filePtr);
+};
+
 exports.init = init;
 exports.deactivate = deactivate;
 exports.checkValidFileStr = checkValidFileStr;
@@ -278,3 +308,6 @@ exports.getTemplateCounterForAsset = getTemplateCounterForAsset;
 exports.setTemplateCounterForAsset = setTemplateCounterForAsset;
 exports.listTemplates = listTemplates;
 exports.addTemplate = addTemplate;
+exports.hasTemplateMaxSupply = hasTemplateMaxSupply;
+exports.getTemplateMaxSupply = getTemplateMaxSupply;
+exports.setTemplateMaxSupply = setTemplateMaxSupply;

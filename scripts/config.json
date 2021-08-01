@@ -10,6 +10,7 @@
   "templateDataDir": "data/templates",
   "assetTemplateDataDir": "data/assetTemplates",
   "assetTemplateCounterDataDir": "data/assetTemplateCounter",
+  "templateMaxSupplyDataDir": "data/templateMaxSupply",
   "currentVersion": "0.0.1",
   "supportedVersions": ["0.0.1"],
   "fetchTimeout": 5000,

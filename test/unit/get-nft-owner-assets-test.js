@@ -283,6 +283,7 @@ describe(actionUtil.ACTION, () => {
       success: true,
       asset_owners: [
         {
+          max_supply: '1',
           received: 'true',
           asset: goodSendHash4,
           template: goodIpfsCid,
