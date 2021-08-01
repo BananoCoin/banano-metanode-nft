@@ -373,7 +373,6 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
     }
   }
 
-  // TODO: refactor so we can test all conditionals.
   assetOwner.received = 'false';
   if (assetOwner.history[assetOwner.history.length-1].receive.length > 0) {
     assetOwner.received = 'true';
