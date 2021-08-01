@@ -12,7 +12,7 @@ getIpfsHtmlWorkerInst.onmessage = function(e) {
   const html = e.data[0];
   const assets = e.data[1];
   const jsonIpfsCid = e.data[2];
-  // const imageIpfsCid = e.data[3];
+  const imageIpfsCid = e.data[3];
   const allowReload = e.data[4];
   // console.log('e.data', e.data);
   for (let assetIx = 0; assetIx < assets.length; assetIx++) {
@@ -28,6 +28,11 @@ getIpfsHtmlWorkerInst.onmessage = function(e) {
         'class': '',
         'onclick': `reloadTemplateAssets('${jsonIpfsCid}', '${JSON.stringify(assets)}');return false;`,
       }), 'Reload Template ' + shorten(jsonIpfsCid));
+      addChildElement(span, 'br');
+      addText(addChildElement(span, 'a', {
+        href: `${ipfsApiUrl}/${imageIpfsCid}`,
+        target: '_blank',
+      }), imageIpfsCid);
     }
   }
 };
