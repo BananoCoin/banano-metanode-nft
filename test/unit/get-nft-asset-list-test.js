@@ -40,6 +40,7 @@ describe(actionUtil.ACTION, () => {
       success: true,
       assets: [
         goodSendHash4,
+        goodSendHash6,
       ],
     };
     loggingUtil.debug('actualResponse', actualResponse);

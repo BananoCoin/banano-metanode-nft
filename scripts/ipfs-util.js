@@ -664,7 +664,7 @@ const listTemplateAssets = (fs, action, template) => {
   if (template === undefined) {
     throw Error('template is required');
   }
-  return dataUtil.listTemplates(fs, template);
+  return dataUtil.listTemplateAssets(fs, template);
 };
 
 
