@@ -1,5 +1,5 @@
 import {addText, addChildElement, clear} from '../lib/dom.js';
-import {postIpfsHtmlMessage} from '../lib/ipfs-html.js';
+import {postIpfsHtmlMessage, addJsonImageLink} from '../lib/ipfs-html.js';
 
 const addCidInfo = () => {
   const wrapperElt = document.getElementById('cidInfoWrapper');
@@ -102,6 +102,7 @@ window.checkCid = async () => {
 
   cidInfoElt.innerHTML = html;
 
+  addJsonImageLink(ipfsApiUrl, jsonIpfsCid, assets);
   if (assets.length > 0) {
     postIpfsHtmlMessage(ipfsApiUrl, jsonIpfsCid, assets);
   }

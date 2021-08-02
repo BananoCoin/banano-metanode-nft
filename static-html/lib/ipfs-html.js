@@ -46,9 +46,21 @@ getIpfsHtmlWorkerInst.onmessage = function(e) {
 };
 
 const postIpfsHtmlMessage = (ipfsApiUrl, jsonIpfsCid, assets) => {
-  if (assets.length > 0) {
-    getIpfsHtmlWorkerInst.postMessage([ipfsApiUrl, jsonIpfsCid, assets]);
+  getIpfsHtmlWorkerInst.postMessage([ipfsApiUrl, jsonIpfsCid, assets]);
+};
+
+const addJsonImageLink = (ipfsApiUrl, jsonIpfsCid, assets) => {
+  for (let assetIx = 0; assetIx < assets.length; assetIx++) {
+    const asset = assets[assetIx];
+    const span = document.getElementById(asset);
+
+    span.innerHTML = 'loading image ....';
+    addChildElement(span, 'br');
+    addText(addChildElement(span, 'a', {
+      href: `${ipfsApiUrl}/${jsonIpfsCid}`,
+      target: '_blank',
+    }), 'JSON CID ' + jsonIpfsCid);
   }
 };
 
-export {postIpfsHtmlMessage};
+export {postIpfsHtmlMessage, addJsonImageLink};

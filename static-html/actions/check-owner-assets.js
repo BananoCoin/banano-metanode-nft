@@ -1,6 +1,6 @@
 import {addText, addChildElement} from '../lib/dom.js';
 import {shorten} from '../lib/asset-name.js';
-import {postIpfsHtmlMessage} from '../lib/ipfs-html.js';
+import {postIpfsHtmlMessage, addJsonImageLink} from '../lib/ipfs-html.js';
 
 const addOwnerAssetCheck = () => {
   const wrapperElt = document.getElementById('ownerAssetCheckWrapper');
@@ -82,7 +82,7 @@ window.checkOwnerAssets = async () => {
 
           html += '<span class="bordered">';
           html += `<span title="${assetInfo.asset}"><h3>${shorten(assetInfo.asset)}</h3></span>`;
-          html += `<span><span id="${assetInfo.asset}">loading image ....</span></span>`;
+          html += `<span><span id="${assetInfo.asset}"></span></span>`;
           html += '</span>';
           if (templatesToLoad[assetInfo.template] == undefined) {
             templatesToLoad[assetInfo.template] = [];
@@ -107,6 +107,7 @@ window.checkOwnerAssets = async () => {
     let timer = 0;
     Object.keys(templatesToLoad).forEach((jsonIpfsCid) => {
       const assets = templatesToLoad[jsonIpfsCid];
+      addJsonImageLink(ipfsApiUrl, jsonIpfsCid, assets);
       const fn = () => {
         postIpfsHtmlMessage(ipfsApiUrl, jsonIpfsCid, assets);
       };
