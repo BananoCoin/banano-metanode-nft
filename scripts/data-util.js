@@ -227,14 +227,15 @@ const setTemplateCounterForAsset = (fs, asset, template) => {
   fs.closeSync(filePtr);
 };
 
-const makeTemplatetDir = (fs) => {
-  if (!fs.existsSync(config.templateDataDir)) {
-    fs.mkdirSync(config.templateDataDir, {recursive: true});
+const makeTemplatetDir = (fs, template) => {
+  const dir = path.join(config.templateDataDir, template);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, {recursive: true});
   }
 };
 
-const getTemplateFile = (fs, template) => {
-  return path.join(config.templateDataDir, template);
+const getTemplateAssetFile = (fs, template, asset) => {
+  return path.join(config.templateDataDir, template, asset);
 };
 
 const listTemplates = (fs) => {
@@ -248,10 +249,23 @@ const listTemplates = (fs) => {
   return templates;
 };
 
-const addTemplate = (fs, template) => {
+const listTemplateAssets = (fs, template) => {
   checkValidFileStr(template);
-  makeTemplatetDir(fs);
-  const filePtr = fs.openSync(getTemplateFile(fs, template), 'w');
+  const dir = path.join(config.templateDataDir, template);
+  const assets = [];
+  if (fs.existsSync(dir)) {
+    fs.readdirSync(dir).forEach((fileNm) => {
+      assets.push(fileNm);
+    });
+  }
+  return assets;
+};
+
+const addTemplateAndAsset = (fs, template, asset) => {
+  checkValidFileStr(template);
+  checkValidFileStr(asset);
+  makeTemplatetDir(fs, template);
+  const filePtr = fs.openSync(getTemplateAssetFile(fs, template, asset), 'w');
   fs.closeSync(filePtr);
 };
 
@@ -306,8 +320,9 @@ exports.setTemplateForAsset = setTemplateForAsset;
 exports.hasTemplateCounterForAsset = hasTemplateCounterForAsset;
 exports.getTemplateCounterForAsset = getTemplateCounterForAsset;
 exports.setTemplateCounterForAsset = setTemplateCounterForAsset;
+exports.addTemplateAndAsset = addTemplateAndAsset;
 exports.listTemplates = listTemplates;
-exports.addTemplate = addTemplate;
+exports.listTemplateAssets = listTemplateAssets;
 exports.hasTemplateMaxSupply = hasTemplateMaxSupply;
 exports.getTemplateMaxSupply = getTemplateMaxSupply;
 exports.setTemplateMaxSupply = setTemplateMaxSupply;

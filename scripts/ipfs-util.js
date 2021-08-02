@@ -619,7 +619,7 @@ const setTemplateCounterForAsset = (fs, action, asset, counter) => {
   dataUtil.setTemplateCounterForAsset(fs, asset, parseInt(counter).toFixed(0));
 };
 
-const addTemplate = (fs, action, template) => {
+const addTemplateAndAsset = (fs, action, template, asset) => {
   /* istanbul ignore if */
   if (fs === undefined) {
     throw Error('fs is required');
@@ -632,7 +632,11 @@ const addTemplate = (fs, action, template) => {
   if (template === undefined) {
     throw Error('template is required');
   }
-  dataUtil.addTemplate(fs, template);
+  /* istanbul ignore if */
+  if (asset === undefined) {
+    throw Error('asset is required');
+  }
+  dataUtil.addTemplateAndAsset(fs, template, asset);
 };
 
 const listTemplates = (fs, action) => {
@@ -646,6 +650,23 @@ const listTemplates = (fs, action) => {
   }
   return dataUtil.listTemplates(fs);
 };
+
+const listTemplateAssets = (fs, action, template) => {
+  /* istanbul ignore if */
+  if (fs === undefined) {
+    throw Error('fs is required');
+  }
+  /* istanbul ignore if */
+  if (action === undefined) {
+    throw Error('action is required');
+  }
+  /* istanbul ignore if */
+  if (template === undefined) {
+    throw Error('template is required');
+  }
+  return dataUtil.listTemplates(fs, template);
+};
+
 
 const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors, success) => {
   const regExp = new RegExp('^Qm[0-9A-Za-z]{0,64}$');
@@ -708,7 +729,8 @@ exports.getTemplateForAsset = getTemplateForAsset;
 exports.setTemplateForAsset = setTemplateForAsset;
 exports.getTemplateCounterForAsset = getTemplateCounterForAsset;
 exports.setTemplateCounterForAsset = setTemplateCounterForAsset;
-exports.addTemplate = addTemplate;
+exports.addTemplateAndAsset = addTemplateAndAsset;
 exports.listTemplates = listTemplates;
+exports.listTemplateAssets = listTemplateAssets;
 exports.getTemplateMaxSupply = getTemplateMaxSupply;
 exports.setTemplateMaxSupply = setTemplateMaxSupply;

@@ -41,6 +41,9 @@ const clear = () => {
 };
 
 const mkdirSync = (file) => {
+  const dir = path.dirname(file);
+  dirDataMap.set(dir, new Set());
+  dirDataMap.get(dir).add(path.basename(file));
   dirDataMap.set(file, new Set());
 };
 

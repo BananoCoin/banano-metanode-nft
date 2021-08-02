@@ -164,7 +164,7 @@ const getNftAssetsOwners = async (context, req, res) => {
         const asset = historyElt.hash;
         const template = ipfsCid;
         const maxSupply = parseInt(ipfsResp.json.max_supply).toFixed(0);
-        ipfsUtil.addTemplate(fs, ACTION, template);
+        ipfsUtil.addTemplateAndAsset(fs, ACTION, template, asset);
         ipfsUtil.setTemplateForAsset(fs, ACTION, asset, template);
         ipfsUtil.setTemplateCounterForAsset(fs, ACTION, asset, templateAssetCounter);
         ipfsUtil.setTemplateMaxSupply(fs, ACTION, template, maxSupply);
