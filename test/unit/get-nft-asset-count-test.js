@@ -21,7 +21,7 @@ const goodSendHash6 = '000000000000000000000000000000000000000000000000000000000
 
 // functions
 describe(actionUtil.ACTION, () => {
-  it('get status 200', async () => {
+  it('get status 200 2 assets', async () => {
     const context = {
       bananojs: {},
       fs: mockFs,
@@ -39,6 +39,27 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       success: true,
       count: 2,
+    };
+    loggingUtil.debug('actualResponse', actualResponse);
+    loggingUtil.debug('expectedResponse', expectedResponse);
+    expect(actualResponse).to.deep.equal(expectedResponse);
+  });
+  it('get status 200 0 assets', async () => {
+    const context = {
+      bananojs: {},
+      fs: mockFs,
+      fetch: {},
+    };
+
+    let actualResponse;
+    try {
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
+    } catch (error) {
+      loggingUtil.trace(error);
+    }
+    const expectedResponse = {
+      success: true,
+      count: 0,
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);

@@ -68,7 +68,7 @@ const getNftTemplateList = async (context, req, res) => {
   }
 
   const template = req.body.ipfs_cid;
-  const assets = ipfsUtil.listTemplateAssets(context.fs, ACTION, template)
+  const assets = ipfsUtil.listTemplateAssets(context.fs, ACTION, template);
 
   const resp = {};
   resp.success = true;
