@@ -4,6 +4,13 @@
 // modules
 
 // constants
+/**
+ * gets the supported versions
+ * @name get_supported_versions
+ * @memberof RPC
+ * @param {String} action:get_supported_versions the action: gets the supported versions.
+ * @example {"action": "get_supported_versions"}
+ */
 const ACTION = 'get_supported_versions';
 
 // variables

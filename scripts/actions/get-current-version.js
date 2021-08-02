@@ -4,6 +4,13 @@
 // modules
 
 // constants
+/**
+ * gets the current version
+ * @name get_current_version
+ * @memberof RPC
+ * @param {String} action:get_current_version the action: gets the current version.
+ * @example {"action": "get_current_version"}
+ */
 const ACTION = 'get_current_version';
 
 // variables

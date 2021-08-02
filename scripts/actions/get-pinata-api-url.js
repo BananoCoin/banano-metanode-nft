@@ -4,6 +4,13 @@
 // modules
 
 // constants
+/**
+ * gets the pinata url
+ * @name get_pinata_api_url
+ * @memberof RPC
+ * @param {String} action:get_pinata_api_url the action: gets the pinata url.
+ * @example {"action": "get_pinata_api_url"}
+ */
 const ACTION = 'get_pinata_api_url';
 
 // variables

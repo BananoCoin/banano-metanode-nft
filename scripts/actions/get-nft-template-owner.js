@@ -5,6 +5,14 @@
 const ipfsUtil = require('../ipfs-util.js');
 
 // constants
+/**
+ * gets the owners of a NFT template's assets
+ * @name get_nft_template_owner
+ * @memberof RPC
+ * @param {String} ipfs_cid the ipfs cid of the template.
+ * @param {String} action:get_nft_template_owner the action: gets the owners of a NFT template's assets.
+ * @example {"action": "get_nft_template_owner", "ipfs_cid":"QmXk...kw4b"}
+ */
 const ACTION = 'get_nft_template_owner';
 
 // variables

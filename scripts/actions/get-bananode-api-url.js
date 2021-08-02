@@ -4,6 +4,13 @@
 // modules
 
 // constants
+/**
+ * gets the bananode url
+ * @name get_bananode_api_url
+ * @memberof RPC
+ * @param {String} action:get_bananode_api_url the action: gets the bananode url.
+ * @example {"action": "get_bananode_api_url"}
+ */
 const ACTION = 'get_bananode_api_url';
 
 // variables

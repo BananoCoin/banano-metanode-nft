@@ -4,6 +4,13 @@
 // modules
 
 // constants
+/**
+ * gets the nft url
+ * @name get_nft_api_url
+ * @memberof RPC
+ * @param {String} action:get_nft_api_url the action: gets the nft url.
+ * @example {"action": "get_nft_api_url"}
+ */
 const ACTION = 'get_nft_api_url';
 
 // variables

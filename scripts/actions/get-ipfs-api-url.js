@@ -4,6 +4,13 @@
 // modules
 
 // constants
+/**
+ * gets the ipfs url
+ * @name get_ipfs_api_url
+ * @memberof RPC
+ * @param {String} action:get_ipfs_api_url the action: gets the ipfs url.
+ * @example {"action": "get_ipfs_api_url"}
+ */
 const ACTION = 'get_ipfs_api_url';
 
 // variables
