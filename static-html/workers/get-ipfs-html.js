@@ -10,6 +10,7 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets) => {
   let html = '';
   let imageIpfsCid = '';
   let allowReload = 'true';
+  let title = '';
   try {
     const templateUrl = ipfsApiUrl + '/' + jsonIpfsCid;
     console.log('templateUrl', templateUrl);
@@ -20,7 +21,7 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets) => {
       },
     });
     const templateRsponseJson = await templateResponse.json();
-    const title = templateRsponseJson.title;
+    title = templateRsponseJson.title;
     imageIpfsCid = templateRsponseJson.art_data_ipfs_cid;
     const imageUrl = ipfsApiUrl + '/' + imageIpfsCid;
     const imageResponse = await fetch(imageUrl, {
@@ -63,6 +64,7 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets) => {
     jsonIpfsCid,
     imageIpfsCid,
     allowReload,
+    title,
   ];
   postMessage(result);
 };

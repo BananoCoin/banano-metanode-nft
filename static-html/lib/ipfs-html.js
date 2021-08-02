@@ -14,6 +14,7 @@ getIpfsHtmlWorkerInst.onmessage = function(e) {
   const jsonIpfsCid = e.data[2];
   const imageIpfsCid = e.data[3];
   const allowReload = e.data[4];
+  const title = e.data[5];
   // console.log('e.data', e.data);
   for (let assetIx = 0; assetIx < assets.length; assetIx++) {
     const asset = assets[assetIx];
@@ -22,18 +23,25 @@ getIpfsHtmlWorkerInst.onmessage = function(e) {
     span.innerHTML = html;
     normalizeSvgs(span);
     if (allowReload == 'true') {
-      addChildElement(span, 'br');
-      addText(addChildElement(span, 'button', {
-        'type': 'button',
-        'class': '',
-        'onclick': `reloadTemplateAssets('${jsonIpfsCid}', '${JSON.stringify(assets)}');return false;`,
-      }), 'Reload Template ' + shorten(jsonIpfsCid));
-      addChildElement(span, 'br');
-      addText(addChildElement(span, 'a', {
-        href: `${ipfsApiUrl}/${imageIpfsCid}`,
-        target: '_blank',
-      }), imageIpfsCid);
     }
+    addChildElement(span, 'br');
+    addText(span, title);
+    addChildElement(span, 'br');
+    addText(addChildElement(span, 'button', {
+      'type': 'button',
+      'class': '',
+      'onclick': `reloadTemplateAssets('${jsonIpfsCid}', '${JSON.stringify(assets)}');return false;`,
+    }), 'Reload Template ' + shorten(jsonIpfsCid));
+    addChildElement(span, 'br');
+    addText(addChildElement(span, 'a', {
+      href: `${ipfsApiUrl}/${jsonIpfsCid}`,
+      target: '_blank',
+    }), 'JSON CID ' + jsonIpfsCid);
+    addChildElement(span, 'br');
+    addText(addChildElement(span, 'a', {
+      href: `${ipfsApiUrl}/${imageIpfsCid}`,
+      target: '_blank',
+    }), 'Art CID ' + imageIpfsCid);
   }
 };
 
