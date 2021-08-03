@@ -6,6 +6,7 @@ import {addTransferNft} from './actions/transfer-nft.js';
 import {addTemplateOwnerCheck} from './actions/check-template-ownership.js';
 import {addMintNft} from './actions/mint-nft.js';
 import {addOwnerAssetCheck} from './actions/check-owner-assets.js';
+import {addGallery} from './actions/gallery.js';
 import {processHashAndSearchParms} from './lib/hash-and-search-parms.js';
 import {addChildElement, clear} from '../lib/dom.js';
 
@@ -21,7 +22,7 @@ window.seedIx = 0;
 
 window.maxPending = 10;
 
-window.defaultCid = 'QmXkn3YjkKptcjnrPLK6KeHMfGd9xzur33EHfDCDXCkw4b';
+window.defaultCid = '';
 
 window.onLoad = async () => {
   await loadBananoApiUrl();
@@ -41,6 +42,7 @@ window.onLoad = async () => {
   addMintNft();
   addTransferNft();
   addOwnerAssetCheck();
+  addGallery();
   updateSeedAndAccountInfo();
   processHashAndSearchParms();
 };
