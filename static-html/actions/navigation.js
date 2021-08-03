@@ -152,11 +152,11 @@ window.hideOwnerAssetCheckWrappers = () => {
 window.showGalleryWrappers = () => {
   hide('navigationWrapper');
   show('galleryWrapper');
-}
+};
 
 window.hideGalleryWrappers = () => {
   show('navigationWrapper');
   hide('galleryWrapper');
-}
+};
 
 export {addNavigation};

@@ -62,7 +62,6 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       content_type: 'application/json',
       ipfs_cid: goodIpfsCid,
-      representative: '1d2c906def1e5e04841de91c8b65e0f37c30a3d45c6a2c454fd332d2906f8d57',
       representative_account: 'ban_19bek3pyy9ky1k43utawjfky3wuw84jxaq5c7j4nznsktca8z5cqrfg8egjn',
       json: {
         command: 'nft_template',

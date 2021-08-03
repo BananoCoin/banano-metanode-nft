@@ -24,6 +24,7 @@
     "itest": "./node_modules/mocha/bin/mocha --recursive -t 100000 test/integration"
   },
   "dependencies": {
+    "@bananocoin/banano-ipfs": "^1.0.1",
     "@bananocoin/bananojs": "^2.4.15",
     "abort-controller": "^3.0.0",
     "await-semaphore": "^0.1.3",

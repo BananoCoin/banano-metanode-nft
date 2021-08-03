@@ -787,7 +787,7 @@ describe(actionUtil.ACTION, () => {
         'unsupported version:\'\' supported versions:["0.0.1"]',
         'max_supply:\'\' not an integer',
         'transferable:\'\' not a boolean',
-        'art_data_ipfs_cid:\'\' not Qm+base58',
+        'art_data_ipfs_cid:\'\' error \'ipfs_cid:\'\' not valid v0 CID (Qm+base58)\'',
         'previous:\'\' not 64 hex characters',
       ],
       ipfs_cid: badJsonIpfsCid,
@@ -846,7 +846,7 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       'content_type': 'application/json',
       'errors': [
-        'art_data_ipfs_cid:\'Qm#\' not Qm+base58',
+        'art_data_ipfs_cid:\'Qm#\' error \'ipfs_cid:\'Qm#\' not valid v0 CID (Qm+base58)\'',
         'previous:\'AB\' not 64 hex characters',
       ],
       'ipfs_cid': badJsonBase58Cid,
@@ -877,15 +877,13 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       'content_type': 'application/json',
       'errors': [
-        'art_ipfs_cid_hex:\'500080c4b27277b22c373e4f0dbbc86091707c6cc1745a1b3efcf66664bbde9ceb\' not 64 hex characters after prefix 1220, 66',
+        'art_data_ipfs_cid:\'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz\' error \'ipfsCidHex:\'500080c4b27277b22c373e4f0dbbc86091707c6cc1745a1b3efcf66664bbde9ceb\' not 64 hex chars after prefix 1220, 66\'',
         'previous:\'AB\' not 64 hex characters',
       ],
       'ipfs_cid': badJsonBase58ShortCid,
       'json': {
         'command': 'nft_template',
         'art_data_ipfs_cid': 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz',
-        'art_ipfs_cid_hex': '500080c4b27277b22c373e4f0dbbc86091707c6cc1745a1b3efcf66664bbde9ceb',
-        'art_ipfs_cid_hex_base58': 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz',
         'issuer': '',
         'max_supply': '1',
         'previous': 'AB',

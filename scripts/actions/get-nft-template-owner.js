@@ -114,8 +114,8 @@ const getNftAssetsOwners = async (context, req, res) => {
   }
 
   /* istanbul ignore if */
-  if (ipfsResp.representative === undefined) {
-    throw Error('ipfsResp.representative is required');
+  if (ipfsResp.representative_account === undefined) {
+    throw Error('ipfsResp.representative_account is required');
   }
 
   const histBody = {
@@ -152,7 +152,7 @@ const getNftAssetsOwners = async (context, req, res) => {
   } else {
     resp.success = true;
     resp.asset_owners = [];
-    const representativeAccount = await bananojs.getBananoAccount(representative);
+    const representativeAccount = ipfsResp.representative_account;
     loggingUtil.log(ACTION, 'representativeAccount', representativeAccount);
     let templateAssetCounter = 0;
     for (let ix = 0; ix < histResponseJson.history.length; ix++) {

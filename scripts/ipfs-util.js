@@ -1,5 +1,6 @@
 'use strict';
 // libraries
+const bananoIpfs = require('@bananocoin/banano-ipfs');
 const bs58 = require('bs58');
 const AbortController = require('abort-controller');
 
@@ -677,31 +678,14 @@ const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors,
   if (value === undefined) {
     throw Error(`'${key}' not a key in ${Object.keys(json)}`);
   }
-  if (!regExp.test(value)) {
-    errors.push(`${key}:'${value}' not Qm+base58`);
+  const representativeAccountFieldNm = `${outFieldNmPrefix}representative_account`;
+  try {
+    const representative = bananoIpfs.ifpsCidToAccount(value);
+    json[representativeAccountFieldNm] = representative;
+    return success;
+  } catch (error) {
+    errors.push(`${key}:'${value}' error '${error.message}'`);
     return false;
-  } else {
-    const bytes = bs58.decode(value);
-
-    const hexFieldNm = `${outFieldNmPrefix}ipfs_cid_hex`;
-    const hexBase58FieldNm = `${outFieldNmPrefix}ipfs_cid_hex_base58`;
-
-    const hexValue = bytes.toString('hex');
-    json[hexFieldNm] = hexValue;
-    json[hexBase58FieldNm] = bs58.encode(Buffer.from(bytes));
-
-    const regExp = new RegExp('^1220[0123456789abcdefABCDEF]{64}$');
-    if (!regExp.test(hexValue)) {
-      // check https://github.com/multiformats/js-cid
-      errors.push(`${hexFieldNm}:'${hexValue}' not 64 hex characters after prefix 1220, ${hexValue.length}`);
-      return false;
-    } else {
-      const representativeFieldNm = `${outFieldNmPrefix}representative`;
-      const representativeAccountFieldNm = `${outFieldNmPrefix}representative_account`;
-      json[representativeFieldNm] = hexValue.substring(4);
-      json[representativeAccountFieldNm] = await bananojs.getBananoAccount(json[representativeFieldNm]);
-      return success;
-    }
   }
 };
 
