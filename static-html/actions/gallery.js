@@ -13,6 +13,11 @@ const addGallery = () => {
     'type': 'button', 'onclick': 'return hideGalleryWrappers();',
   }), 'Main Menu');
   addText(addChildElement(formElt, 'h2'), 'Gallery');
+  const shareHrefElt = addChildElement(formElt, 'a', {
+    target: '_blank',
+    href: '#showGallery',
+  });
+  addText(shareHrefElt, 'Share');
 
   addChildElement(formElt, 'br');
   const checkCidElt = addChildElement(formElt, 'button', {
@@ -37,6 +42,8 @@ const addGallery = () => {
 
 window.loadGallery = async () => {
   console.log('loadGallery');
+  const galleryInfo = document.getElementById('galleryInfo');
+
   galleryInfo.innerHTML = 'pending...';
 
 
@@ -51,14 +58,18 @@ window.loadGallery = async () => {
       const value = dataListElt.options[ix].value;
       templatesToLoad.push(value);
     }
-
+    const elt = addChildElement(galleryInfo, 'span', {
+      class: 'bordered container row',
+    });
     let timer = 0;
     templatesToLoad.forEach((jsonIpfsCid) => {
       const id = `gallery-${jsonIpfsCid}`;
-      const elt = addChildElement(galleryInfo, 'span', {
-        id: id,
-        class: 'bordered',
+      const innerElt = addChildElement(elt, 'span', {
       });
+      addChildElement(innerElt, 'span', {
+        id: id,
+      });
+
       const assets = [id];
       addJsonImageLink(ipfsApiUrl, jsonIpfsCid, assets);
       const fn = () => {

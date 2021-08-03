@@ -18,7 +18,7 @@ const addOwnerAssetCheck = () => {
     return window.localStorage.assetOwnerAccount || '';
   };
   const getHref = () => {
-    return `?assetOwnerAccount=${getValue()}#showOwnerAssetCheckWrappers`;
+    return `?assetOwnerAccount=${getValue()}#showOwnerAssetCheck`;
   };
   const shareHrefElt = addChildElement(formElt, 'a', {
     target: '_blank',
