@@ -18,6 +18,7 @@ const {config, loggingUtil, getResponse} = require('../util/get-response.js');
 const artIpfsCid = 'QmbzTMo42KADUbLwc43KR9Se6aV3N6wfKqFbSr2qN1gJqR';
 const goodIpfsCidNoMaxSupply = 'QmWNckc4jmTFsSSrhsSNJMhkmDbH19owXB6UL8jVEaohgR';
 const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
+const badIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz';
 const badContentTypeIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWABADCT';
 const badTimeoutIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQBADT1ME';
 const badUnknownIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciqBADUNKNQWN';
@@ -215,7 +216,7 @@ describe(actionUtil.ACTION, () => {
                   'title': '',
                   'issuer': '',
                   'max_supply': '1',
-                  'art_data_ipfs_cid': 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz',
+                  'art_data_ipfs_cid': badIpfsCid,
                   'previous': 'AB',
                 };
               },
@@ -874,10 +875,13 @@ describe(actionUtil.ACTION, () => {
     } catch (error) {
       loggingUtil.trace(error);
     }
+    const ipfsCidHex = '500080c4b27277b22c373e4f0dbbc86091707c6cc1745a1b3efcf66664bbde9ceb';
     const expectedResponse = {
       'content_type': 'application/json',
       'errors': [
-        'art_data_ipfs_cid:\'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz\' error \'ipfsCidHex:\'500080c4b27277b22c373e4f0dbbc86091707c6cc1745a1b3efcf66664bbde9ceb\' not 64 hex chars after prefix 1220, 66\'',
+        'art_data_ipfs_cid:\''+badIpfsCid+
+        '\' error \'ipfsCidHex:\''+ipfsCidHex+
+        '\' not 64 hex chars after prefix 1220, 66\'',
         'previous:\'AB\' not 64 hex characters',
       ],
       'ipfs_cid': badJsonBase58ShortCid,

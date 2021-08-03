@@ -1,5 +1,4 @@
 import {addText, addChildElement} from '../lib/dom.js';
-import {shorten} from '../lib/asset-name.js';
 import {postIpfsHtmlMessage, addJsonImageLink} from '../lib/ipfs-html.js';
 
 const addGallery = () => {

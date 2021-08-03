@@ -670,7 +670,6 @@ const listTemplateAssets = (fs, action, template) => {
 
 
 const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors, success) => {
-  const regExp = new RegExp('^Qm[0-9A-Za-z]{0,64}$');
   const key = `${inFieldNmPrefix}ipfs_cid`;
   const value = json[key];
 

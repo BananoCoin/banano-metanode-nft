@@ -106,7 +106,6 @@ const getNftAssetsOwners = async (context, req, res) => {
   }
 
   const startBlock = ipfsResp.json.previous;
-  const representative = ipfsResp.representative;
 
   /* istanbul ignore if */
   if (ipfsResp.json.previous === undefined) {
