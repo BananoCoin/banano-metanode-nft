@@ -1,4 +1,5 @@
 import {addText, addChildElement, hide, show} from '../lib/dom.js';
+import {getPreviousHash} from '../lib/previous-hash.js';
 
 const addCidPinInfo = () => {
   const wrapperElt = document.getElementById('cidPinWrapper');
@@ -53,16 +54,22 @@ const addCidPinInfo = () => {
     'oninput': 'updatePinataApiTokenJWT(); return false;',
   });
 
+
+  const getValue = () => {
+    return window.localStorage.assetOwnerAccount || '';
+  };
+
+  const loading = 'loading...';
+
   addText(addChildElement(formElt, 'h2'), 'CID Pinning');
   addField('command', 'Command', 'nft_template');
   addField('version', 'Version', '0.0.1');
   addField('title', 'Title', '');
-  addField('issuer', 'Issuer (Banano Account)', '');
+  addField('issuer', 'Issuer (Banano Account)', getValue());
   addField('max_supply', 'Maximum Mint Count (Max Supply), (Leave Blank for Unlimited)', '1');
   addField('art_data_ipfs_cid', 'Artwork IPFS CID', '');
-  addField('previous', 'Head block of Issuer account', '');
+  addField('previous', 'Head block of Issuer account', loading);
   addChildElement(formElt, 'br');
-
   const checkCidElt = addChildElement(formElt, 'button', {
     'id': 'pin-cid',
     'type': 'button',
@@ -74,6 +81,16 @@ const addCidPinInfo = () => {
     'id': 'pinCidInfo',
     'class': 'selectable container column',
   });
+
+  getHeadBlock(loading);
+};
+
+const getHeadBlock = async (loading) => {
+  const previousHash = await getPreviousHash();
+  const previousElt = document.getElementById('previous');
+  if (previousElt.value == loading) {
+    previousElt.value = previousHash;
+  }
 };
 
 window.pinCid = async () => {
