@@ -34,7 +34,7 @@ const addMintNft = () => {
     'id': 'refreshCidList',
     'type': 'button',
     'class': '',
-    'onclick': 'getKnownTemplateList();return false;',
+    'onclick': 'clearMintNftTemplateCid();getKnownTemplateList();return false;',
   }), 'Refresh Template List');
   addText(addChildElement(formElt, 'h3'), 'Representative');
   addChildElement(formElt, 'div', {
@@ -52,6 +52,10 @@ const addMintNft = () => {
     'id': 'mintNftInfo',
     'class': 'selectable container column',
   });
+};
+
+window.clearMintNftTemplateCid = () => {
+  document.getElementById('mintNftTemplateCid').value = '';
 };
 
 window.checkMintNftCID = async () => {

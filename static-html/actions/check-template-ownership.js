@@ -36,11 +36,14 @@ const addTemplateOwnerCheck = () => {
     'class': 'selectable container column',
   });
   addText(addChildElement(formElt, 'button', {
-    'id': 'refreshCidList',
     'type': 'button',
     'class': '',
-    'onclick': 'getKnownTemplateList();return false;',
+    'onclick': 'clearTemplateOwnerCidCid();getKnownTemplateList();return false;',
   }), 'Refresh Template List');
+};
+
+window.clearTemplateOwnerCidCid = () => {
+  document.getElementById('templateOwnerCid').value = '';
 };
 
 

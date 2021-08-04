@@ -34,7 +34,7 @@ const addTransferNft = () => {
     'id': 'refreshCidList',
     'type': 'button',
     'class': '',
-    'onclick': 'getKnownTemplateList();return false;',
+    'onclick': 'clearTransferNftTemplateCid();getKnownTemplateList();return false;',
   }), 'Refresh Template List');
   addChildElement(formElt, 'div', {
     'id': 'transferAssets',
@@ -73,6 +73,11 @@ const addTransferNft = () => {
   });
 };
 
+
+window.clearTransferNftTemplateCid = () => {
+  document.getElementById('transferNftTemplateCid').value = '';
+};
+
 window.checkTransferNftCID = async () => {
   document.getElementById('transferAssets').innerHTML = 'pending...';
   const cid = document.getElementById('transferNftTemplateCid').value.trim();
@@ -100,6 +105,10 @@ window.checkTransferNftCID = async () => {
         }
 
         document.getElementById('transferAssets').innerHTML = assetHtml;
+      }
+    } else {
+      let assetHtml = 'failure<br>';
+      if (responseJson.errors !== undefined) {
       }
     }
     return;

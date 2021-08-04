@@ -31,16 +31,20 @@ const addCidInfo = () => {
     'onclick': 'checkCid();return false;',
   });
   addText(addChildElement(formElt, 'button', {
-    'id': 'refreshCidList',
     'type': 'button',
     'class': '',
-    'onclick': 'getKnownTemplateList();return false;',
+    'onclick': 'clearCid();getKnownTemplateList();return false;',
   }), 'Refresh Template List');
   addText(checkCidElt, 'Get CID Info');
   addChildElement(wrapperElt, 'div', {
     'id': 'cidInfo',
     'class': 'selectable container column',
   });
+};
+
+
+window.clearCid = () => {
+  document.getElementById('cid').value = '';
 };
 
 window.checkCid = async () => {
