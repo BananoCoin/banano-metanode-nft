@@ -109,7 +109,13 @@ window.checkTransferNftCID = async () => {
     } else {
       let assetHtml = 'failure<br>';
       if (responseJson.errors !== undefined) {
+        responseJson.errors.forEach((error) => {
+          assetHtml += error;
+          assetHtml += '<br>';
+        });
       }
+
+      document.getElementById('transferAssets').innerHTML = assetHtml;
     }
     return;
   }

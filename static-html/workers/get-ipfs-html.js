@@ -38,7 +38,7 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets) => {
       if (imageContentType == 'image/svg+xml') {
         const text = await imageBlob.text();
         // html += text;
-        const svg = `data:image/svg+xml;base64,${btoa(text)}`
+        const svg = `data:image/svg+xml;base64,${btoa(text)}`;
         html += `<object title="${imageIpfsCid}" style="width:30vmin;height30vmin;" type="image/svg+xml" data="${svg}"></object>`;
       } else if ((imageContentType == 'image/png') ||
           (imageContentType == 'image/gif') ||
