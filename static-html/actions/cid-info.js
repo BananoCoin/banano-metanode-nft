@@ -9,7 +9,7 @@ const addCidInfo = () => {
     'onsubmit': 'return false;',
   });
   addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideViewNftTemplateWrappers();',
+    'type': 'button', 'onclick': 'return hideViewNftTemplateWrapper();',
   }), 'Main Menu');
   addText(addChildElement(formElt, 'h2'), 'CID Info');
   addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');

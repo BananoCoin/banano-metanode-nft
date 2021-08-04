@@ -9,7 +9,7 @@ const addCidPinInfo = () => {
     'onsubmit': 'return false;',
   });
   addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideCreateNftTemplateWrappers();',
+    'type': 'button', 'onclick': 'return hideCreateNftTemplateWrapper();',
   }), 'Main Menu');
   addText(addChildElement(formElt, 'h2'), 'Create (and pin) an NFT template');
 

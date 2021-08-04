@@ -1,7 +1,8 @@
 const processHashAndSearchParms = () => {
   if (window.location.hash) {
     // console.log('window.location.hash', window.location.hash);
-    const fnNm = window.location.hash.substring(1) + 'Wrappers';
+    const fnNm = window.location.hash.substring(1) + 'Wrapper';
+    console.log('fnNm', fnNm);
     const fn = window[fnNm];
     console.log('fn', fn);
     fn();

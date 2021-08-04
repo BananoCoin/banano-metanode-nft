@@ -20,7 +20,7 @@ const addSeedHideShow = () => {
     'onsubmit': 'return false;',
   });
   addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideSeedAndAccountWrappers();',
+    'type': 'button', 'onclick': 'return hideSeedAndAccountWrapper();',
   }), 'Main Menu');
 
   addText(addChildElement(formElt, 'h2'), 'Seed');

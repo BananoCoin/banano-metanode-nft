@@ -9,7 +9,7 @@ const addGallery = () => {
     'onsubmit': 'return false;',
   });
   addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideGalleryWrappers();',
+    'type': 'button', 'onclick': 'return hideGalleryWrapper();',
   }), 'Main Menu');
   addText(addChildElement(formElt, 'h2'), 'Gallery');
   const shareHrefElt = addChildElement(formElt, 'a', {

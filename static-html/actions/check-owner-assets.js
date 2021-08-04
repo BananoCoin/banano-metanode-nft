@@ -10,7 +10,7 @@ const addOwnerAssetCheck = () => {
     'onsubmit': 'return false;',
   });
   addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideOwnerAssetCheckWrappers();',
+    'type': 'button', 'onclick': 'return hideOwnerAssetCheckWrapper();',
   }), 'Main Menu');
   addText(addChildElement(formElt, 'h2'), 'Check Owner Assets');
   addText(addChildElement(formElt, 'h3'), 'Banano Account that owns Assets');
