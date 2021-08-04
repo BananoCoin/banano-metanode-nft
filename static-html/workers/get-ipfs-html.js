@@ -37,10 +37,9 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets) => {
       html += `<h4>${title}</h4>`;
       if (imageContentType == 'image/svg+xml') {
         const text = await imageBlob.text();
-        // html += `<svg title="${imageIpfsCid}" style="width:30vmin;height30vmin;" viewBox="0 0 3000 3000" width="30vmin" xmlns="http://www.w3.org/2000/svg">`;
-        html += text;
-        // html += '</svg>';
-        // html += `<object title="${imageIpfsCid}" style="width:30vmin;height30vmin;" type="image/svg+xml" data="${text}"></object>`;
+        // html += text;
+        const svg = `data:image/svg+xml;base64,${btoa(text)}`
+        html += `<object title="${imageIpfsCid}" style="width:30vmin;height30vmin;" type="image/svg+xml" data="${svg}"></object>`;
       } else if ((imageContentType == 'image/png') ||
           (imageContentType == 'image/gif') ||
           (imageContentType == 'image/png')) {
