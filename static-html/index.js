@@ -18,6 +18,10 @@ window.ipfsApiUrl = '';
 
 window.nftApiUrl = '';
 
+window.blacklist = [];
+
+window.whitelist = [];
+
 window.seedIx = 0;
 
 window.maxPending = 10;
@@ -29,6 +33,8 @@ window.onLoad = async () => {
   await loadPinataApiUrl();
   await loadIpfsApiUrl();
   await loadNftApiUrl();
+  await loadBlacklist();
+  await loadWhitelist();
   loadCurrentVersion();
   loadSupportedVersions();
   loadKnownTemplateList();
@@ -128,6 +134,30 @@ const loadSupportedVersions = async () => {
   wrapperElt.innerText = JSON.stringify(supportedVersions);
 };
 
+const loadBlacklist = async () => {
+  const response = await fetch('/', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: `{"action": "get_blacklist"}`,
+  });
+  const responseJson = await response.json();
+  window.blacklist = responseJson.blacklist;
+};
+
+const loadWhitelist = async () => {
+  const response = await fetch('/', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: `{"action": "get_whitelist"}`,
+  });
+  const responseJson = await response.json();
+  window.whitelist = responseJson.whitelist;
+};
+
 const loadKnownTemplateList = async () => {
   const wrapperElt = document.getElementById('knownTemplateListWrapper');
   addChildElement(wrapperElt, 'dataList', {
@@ -151,7 +181,7 @@ window.setKnownAssetList = (assets) => {
       'value': asset,
     });
   });
-}
+};
 
 window.getKnownTemplateList = async () => {
   const response = await fetch(nftApiUrl, {

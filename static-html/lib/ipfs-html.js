@@ -5,6 +5,7 @@ import {shorten} from '../lib/asset-name.js';
 const getIpfsHtmlWorkerInst = new Worker('./workers/get-ipfs-html.js', {type: 'module'});
 
 window.reloadTemplateAssets = (jsonIpfsCid, assets) => {
+  // no blacklist or whitelist means load everything.
   getIpfsHtmlWorkerInst.postMessage([ipfsApiUrl, jsonIpfsCid, JSON.parse(assets)]);
 };
 
@@ -46,7 +47,7 @@ getIpfsHtmlWorkerInst.onmessage = function(e) {
 };
 
 const postIpfsHtmlMessage = (ipfsApiUrl, jsonIpfsCid, assets) => {
-  getIpfsHtmlWorkerInst.postMessage([ipfsApiUrl, jsonIpfsCid, assets]);
+  getIpfsHtmlWorkerInst.postMessage([ipfsApiUrl, jsonIpfsCid, assets, window.blacklist, window.whitelist]);
 };
 
 const addJsonImageLink = (ipfsApiUrl, jsonIpfsCid, assets) => {
