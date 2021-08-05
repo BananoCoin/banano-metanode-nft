@@ -85,6 +85,8 @@ const addModules = () => {
   modules.push(require('./actions/get-supported-versions.js'));
   modules.push(require('./actions/get-nft-template-list.js'));
   modules.push(require('./actions/get-nft-template-count.js'));
+  modules.push(require('./actions/get-blacklist.js'));
+  modules.push(require('./actions/get-whitelist.js'));
 };
 
 const initModules = async () => {

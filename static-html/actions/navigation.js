@@ -62,13 +62,22 @@ const addNavigation = () => {
 };
 
 const addAllWrapperLinks = () => {
-  const linkWrapperElt = document.getElementById('linkWrapper');
+  const wrapperElt = document.getElementById('linkWrapper');
+  const formElt = addChildElement(wrapperElt, 'form', {
+    'method': 'POST',
+    'class': '',
+    'onsubmit': 'return false;',
+  });
+  addText(addChildElement(formElt, 'button', {
+    'type': 'button', 'onclick': 'return hideLinkWrapper();',
+  }), 'Main Menu');
+
   const addLink = (name) => {
-    addText(addChildElement(linkWrapperElt, 'a', {
+    addText(addChildElement(wrapperElt, 'a', {
       target: '_blank',
       href: `#show${name}`,
     }), name);
-    addChildElement(linkWrapperElt, 'br');
+    addChildElement(wrapperElt, 'br');
   };
   addLink('SeedAndAccount');
   addLink('CreateNftTemplate');

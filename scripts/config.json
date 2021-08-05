@@ -14,5 +14,7 @@
   "currentVersion": "0.0.1",
   "supportedVersions": ["0.0.1"],
   "fetchTimeout": 5000,
-  "webPort": ""
+  "webPort": "",
+  "whitelist":[],
+  "blacklist":[]
 }

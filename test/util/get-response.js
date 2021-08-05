@@ -27,6 +27,8 @@ const config = {
   templateDataDir: 'templateDataDir',
   supportedVersions: ['0.0.1'],
   currentVersion: '0.0.1',
+  whitelist: ['a'],
+  blacklist: ['b'],
 };
 
 const loggingUtil = {};
