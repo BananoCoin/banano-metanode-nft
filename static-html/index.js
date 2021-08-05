@@ -32,6 +32,7 @@ window.onLoad = async () => {
   loadCurrentVersion();
   loadSupportedVersions();
   loadKnownTemplateList();
+  loadKnownAssetList();
   loadSeed();
   addNavigation();
   addSeedHideShow();
@@ -134,6 +135,23 @@ const loadKnownTemplateList = async () => {
   });
   setTimeout(getKnownTemplateList, 0);
 };
+
+const loadKnownAssetList = async () => {
+  const wrapperElt = document.getElementById('knownAssetListWrapper');
+  addChildElement(wrapperElt, 'dataList', {
+    'id': 'knownAssetList',
+  });
+};
+
+window.setKnownAssetList = (assets) => {
+  const dataListElt = document.getElementById('knownAssetList');
+  clear(dataListElt);
+  assets.forEach((asset) => {
+    addChildElement(dataListElt, 'option', {
+      'value': asset,
+    });
+  });
+}
 
 window.getKnownTemplateList = async () => {
   const response = await fetch(nftApiUrl, {

@@ -12,6 +12,9 @@ const addTransferNft = () => {
     'type': 'button', 'onclick': 'return hideTransferNftWrapper();',
   }), 'Main Menu');
   addText(addChildElement(formElt, 'h2'), 'Transfer NFT');
+
+  addText(formElt, window.localStorage.assetOwnerAccount || '');
+
   addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
   addChildElement(formElt, 'input', {
     'id': 'transferNftTemplateCid',
@@ -49,6 +52,8 @@ const addTransferNft = () => {
     'size': '66',
     'max_length': '64',
     'value': '',
+    'list': 'knownAssetList',
+    'autocomplete': 'off',
   });
   addText(addChildElement(formElt, 'h3'), 'New Owner Account');
   addChildElement(formElt, 'input', {
@@ -88,23 +93,29 @@ window.checkTransferNftCID = async () => {
     },
     body: `{"action": "get_nft_template_owner" ,"ipfs_cid":"${cid}"}`,
   });
+
   if (response.status == 200) {
     const responseJson = await response.json();
     if (responseJson.success) {
       if (responseJson.asset_owners !== undefined) {
         let assetHtml = '';
-
+        const assets = [];
         for (let assetOwnerIx = 0; assetOwnerIx < responseJson.asset_owners.length; assetOwnerIx++) {
           const assetOwner = responseJson.asset_owners[assetOwnerIx];
           assetHtml += assetOwner.asset;
           assetHtml += ` (owned by ${assetOwner.owner})`;
-          if (assetOwner.owner === document.querySelector('#account').innerText) {
-            assetHtml += '(you)';
+          if(window.localStorage.assetOwnerAccount !== '') {
+            if (assetOwner.owner === window.localStorage.assetOwnerAccount) {
+              assetHtml += '(you)';
+              assets.push(assetOwner.asset);
+            }
           }
           assetHtml += '<br>';
         }
 
         document.getElementById('transferAssets').innerHTML = assetHtml;
+        document.getElementById('hashOfAssetToTransfer').value = '';
+        setKnownAssetList(assets);
       }
     } else {
       let assetHtml = 'failure<br>';

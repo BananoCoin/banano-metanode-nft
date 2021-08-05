@@ -38,7 +38,7 @@ const addMintNft = () => {
   }), 'Refresh Template List');
   addText(addChildElement(formElt, 'h3'), 'Representative');
   addChildElement(formElt, 'div', {
-    'id': 'mintRepresentativePublicKey',
+    'id': 'mintRepresentativeAccount',
     'class': 'selectable',
   });
   addChildElement(formElt, 'br');
@@ -71,14 +71,14 @@ window.checkMintNftCID = async () => {
     const responseJson = await response.json();
     if (responseJson.success) {
       if (responseJson.json !== undefined) {
-        document.getElementById('mintRepresentativePublicKey').innerText =
-          responseJson.representative;
+        document.getElementById('mintRepresentativeAccount').innerText =
+          responseJson.representative_account;
       }
     }
     return;
   }
 
-  document.getElementById('mintRepresentativePublicKey').innerText =
+  document.getElementById('mintRepresentativeAccount').innerText =
     'Error, please check CID Info for errors.';
 };
 
@@ -89,9 +89,7 @@ window.mintNft = async () => {
   console.log('mintNft', 'withdrawAccount', withdrawAccount);
   const previousHash = await getPreviousHash();
   console.log('mintNft', 'previousHash', previousHash);
-  const representativePublicKey = document.getElementById('mintRepresentativePublicKey').innerText;
-  console.log('mintNft', 'representativePublicKey', representativePublicKey);
-  const representative = await window.bananocoinBananojs.getBananoAccount(representativePublicKey);
+  const representative = document.getElementById('mintRepresentativeAccount').innerText;
   console.log('mintNft', 'representative', representative);
   const fn = window.bananocoinBananojs.sendAmountToBananoAccountWithRepresentativeAndPrevious;
   const response = await fn(seed, seedIx, withdrawAccount, '1', representative, previousHash);
