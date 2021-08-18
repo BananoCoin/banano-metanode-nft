@@ -104,7 +104,7 @@ window.checkTransferNftCID = async () => {
           const assetOwner = responseJson.asset_owners[assetOwnerIx];
           assetHtml += assetOwner.asset;
           assetHtml += ` (owned by ${assetOwner.owner})`;
-          if(window.localStorage.assetOwnerAccount !== '') {
+          if (window.localStorage.assetOwnerAccount !== '') {
             if (assetOwner.owner === window.localStorage.assetOwnerAccount) {
               assetHtml += '(you)';
               assets.push(assetOwner.asset);
