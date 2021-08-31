@@ -1,15 +1,18 @@
 ## to check for outdated deps
 
-  npm outdated;
-  npm install package@latest;
+    npm update;
+    npm outdated;
+    npm install package@latest;
 
 ## to publish a new version
 
-  (change version)
+    npm --no-git-tag-version version patch;
 
 ### update version in package-lock.json and run unit tests.
 
-  npm run publish-preflight;
+    npm run publish-preflight;
 
-## docs on how to make documentation here:
-  <https://github.com/documentationjs/documentation#readme>
+## to publish documentation
+
+    docs on how to make docs here:
+    <https://github.com/documentationjs/documentation#readme>
