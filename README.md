@@ -18,13 +18,15 @@ An RPC node for issuing NFTs on the banano blockchain.
 
   [installation instructions](docs/installation.md)
 
-# issue tracker visualization 
+# issue tracker visualization
 
   [issue tracker visualization](https://9-volt.github.io/bug-life/?repo=BananoCoin/banano-metanode-nft)
 
 #todo
 - only allow svg, png, gif, jpg embedded.
 if it's something else, provide IPFS CID and content type.
+
+- update getReceiveBlock to use account_filter on account_history by send and receive account, to make the process faster.
 
 - do more input validation on the site. such as for bad banano addresses or bad hashes.
 - change 'transfer nft' to a dropdown.
