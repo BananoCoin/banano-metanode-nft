@@ -6,8 +6,6 @@
 
 ## to publish a new version
 
-    npm update;
-    npm outdated;
-    npm audit fix;
+    npm run preflight;
+
     npm --no-git-tag-version version patch;
-    npm run publish-preflight;

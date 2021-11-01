@@ -1,6 +1,6 @@
 {
   "name": "banano-metanode-nft",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "banano metanode nft",
   "author": "Coranos",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "docs": "./node_modules/documentation/bin/documentation.js build --config documentation.yaml documentation.js -f md -o docs/api-documentation.md",
     "eslint": "eslint --fix 'scripts/**/*.js';eslint --fix 'static-html/**/*.js';eslint --fix 'test/**/*.js'",
     "jsonlint": "jsonlint -q package.json;jsonlint -q scripts;jsonlint -q config.json;",
-    "publish-preflight": "npm outdated;npm i;npm audit fix;npm run eslint;npm run jsonlint;npm run coverage;npm run docs;",
+    "preflight": "npm outdated;npm i;npm audit fix;npm run eslint;npm run jsonlint;npm run coverage;npm run docs;",
     "screenjoin": "screen -x banano_metanode_nft;exit 0;",
     "screenstart": "screen -dmSL banano_metanode_nft npm start;npm run screenjoin",
     "screenrestart": "npm stop;npm run screenjoin;npm run screenstart",
