@@ -44,7 +44,7 @@ describe(actionUtil.ACTION, () => {
                   issuer: '',
                   max_supply: '1',
                   transferable: 'true',
-                  art_data_ipfs_cid: artIpfsCid,
+                  metadata_ipfs_cid: artIpfsCid,
                   previous: goodHead,
                 };
               },
@@ -69,7 +69,7 @@ describe(actionUtil.ACTION, () => {
         max_supply: '1',
         transferable: 'true',
         previous: goodHead,
-        art_data_ipfs_cid: artIpfsCid,
+        metadata_ipfs_cid: artIpfsCid,
         title: '',
         version: '0.0.1',
       },

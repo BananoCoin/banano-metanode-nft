@@ -63,7 +63,7 @@ describe(actionUtil.ACTION, () => {
                   title: '',
                   issuer: '',
                   max_supply: '1',
-                  art_data_ipfs_cid: artIpfsCid,
+                  metadata_ipfs_cid: artIpfsCid,
                   previous: goodHead,
                 };
               },

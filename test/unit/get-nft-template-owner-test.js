@@ -78,7 +78,7 @@ describe(actionUtil.ACTION, () => {
                   'title': '',
                   'issuer': '',
                   'max_supply': '1',
-                  'art_data_ipfs_cid': artIpfsCid,
+                  'metadata_ipfs_cid': artIpfsCid,
                   'previous': goodHead,
                 };
               },
@@ -147,7 +147,7 @@ describe(actionUtil.ACTION, () => {
                   'title': '',
                   'issuer': '',
                   'max_supply': '',
-                  'art_data_ipfs_cid': '',
+                  'metadata_ipfs_cid': '',
                   'previous': '',
                   'transferable': '',
                 };
@@ -191,7 +191,7 @@ describe(actionUtil.ACTION, () => {
                   'title': '',
                   'issuer': '',
                   'max_supply': '1',
-                  'art_data_ipfs_cid': 'Qm#',
+                  'metadata_ipfs_cid': 'Qm#',
                   'previous': 'AB',
                 };
               },
@@ -216,7 +216,7 @@ describe(actionUtil.ACTION, () => {
                   'title': '',
                   'issuer': '',
                   'max_supply': '1',
-                  'art_data_ipfs_cid': badIpfsCid,
+                  'metadata_ipfs_cid': badIpfsCid,
                   'previous': 'AB',
                 };
               },
@@ -251,7 +251,7 @@ describe(actionUtil.ACTION, () => {
                   'version': '0.0.1',
                   'title': '',
                   'issuer': '',
-                  'art_data_ipfs_cid': goodIpfsCidNoMaxSupply,
+                  'metadata_ipfs_cid': goodIpfsCidNoMaxSupply,
                   'previous': goodHead,
                 };
               },
@@ -788,13 +788,13 @@ describe(actionUtil.ACTION, () => {
         'unsupported version:\'\' supported versions:["0.0.1"]',
         'max_supply:\'\' not an integer',
         'transferable:\'\' not a boolean',
-        'art_data_ipfs_cid:\'\' error \'ipfs_cid:\'\' not valid v0 CID (Qm+base58)\'',
+        'metadata_ipfs_cid:\'\' error \'ipfs_cid:\'\' not valid v0 CID (Qm+base58)\'',
         'previous:\'\' not 64 hex characters',
       ],
       ipfs_cid: badJsonIpfsCid,
       json: {
         command: 'nft_template',
-        art_data_ipfs_cid: '',
+        metadata_ipfs_cid: '',
         issuer: '',
         max_supply: '',
         previous: '',
@@ -824,7 +824,7 @@ describe(actionUtil.ACTION, () => {
         'version undefined',
         'title undefined',
         'issuer undefined',
-        'art_data_ipfs_cid undefined',
+        'metadata_ipfs_cid undefined',
         'previous undefined',
       ],
       'ipfs_cid': badMissingJsonIpfsCid,
@@ -847,13 +847,13 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       'content_type': 'application/json',
       'errors': [
-        'art_data_ipfs_cid:\'Qm#\' error \'ipfs_cid:\'Qm#\' not valid v0 CID (Qm+base58)\'',
+        'metadata_ipfs_cid:\'Qm#\' error \'ipfs_cid:\'Qm#\' not valid v0 CID (Qm+base58)\'',
         'previous:\'AB\' not 64 hex characters',
       ],
       'ipfs_cid': badJsonBase58Cid,
       'json': {
         'command': 'nft_template',
-        'art_data_ipfs_cid': 'Qm#',
+        'metadata_ipfs_cid': 'Qm#',
         'issuer': '',
         'max_supply': '1',
         'previous': 'AB',
@@ -879,7 +879,7 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       'content_type': 'application/json',
       'errors': [
-        'art_data_ipfs_cid:\''+badIpfsCid+
+        'metadata_ipfs_cid:\''+badIpfsCid+
         '\' error \'ipfsCidHex:\''+ipfsCidHex+
         '\' not 64 hex chars after prefix 1220, 66\'',
         'previous:\'AB\' not 64 hex characters',
@@ -887,7 +887,7 @@ describe(actionUtil.ACTION, () => {
       'ipfs_cid': badJsonBase58ShortCid,
       'json': {
         'command': 'nft_template',
-        'art_data_ipfs_cid': 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz',
+        'metadata_ipfs_cid': 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzz',
         'issuer': '',
         'max_supply': '1',
         'previous': 'AB',

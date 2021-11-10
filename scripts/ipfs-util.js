@@ -187,11 +187,11 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
         }
       }
 
-      if (resp.json.art_data_ipfs_cid === undefined) {
+      if (resp.json.metadata_ipfs_cid === undefined) {
         resp.success = false;
-        resp.errors.push(`art_data_ipfs_cid undefined`);
+        resp.errors.push(`metadata_ipfs_cid undefined`);
       } else {
-        resp.success = await addRep(bananojs, resp.json, 'art_data_', 'art_', resp.errors, resp.success);
+        resp.success = await addRep(bananojs, resp.json, 'metadata_', 'art_', resp.errors, resp.success);
       }
 
       if (resp.json.previous === undefined) {
@@ -675,6 +675,7 @@ const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors,
 
   /* istanbul ignore if */
   if (value === undefined) {
+    console.trace('error');
     throw Error(`'${key}' not a key in ${Object.keys(json)}`);
   }
   const representativeAccountFieldNm = `${outFieldNmPrefix}representative_account`;
