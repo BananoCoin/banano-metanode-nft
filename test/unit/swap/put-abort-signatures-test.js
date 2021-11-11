@@ -5,11 +5,9 @@ const chai = require('chai');
 
 // modules
 const expect = chai.expect;
-const actionUtil = require('../../scripts/actions/get-nft-template-count.js');
-const ipfsUtil = require('../../scripts/ipfs-util.js');
-const dataUtil = require('../../scripts/data-util.js');
-const mockFs = require('../util/mock-fs.js');
-const {config, loggingUtil, getResponse} = require('../util/get-response.js');
+const actionUtil = require('../../../scripts/actions/swap/put-abort-signatures.js');
+const swapUtil = require('../../../scripts/swap-util.js');
+const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
 
 // constants
 
@@ -19,9 +17,6 @@ const {config, loggingUtil, getResponse} = require('../util/get-response.js');
 describe(actionUtil.ACTION, () => {
   it('get status 200', async () => {
     const context = {
-      bananojs: {},
-      fs: mockFs,
-      fetch: {},
     };
     let actualResponse;
     try {
@@ -31,7 +26,6 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
-      count: 0,
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);
@@ -39,15 +33,12 @@ describe(actionUtil.ACTION, () => {
   });
 
   beforeEach(async () => {
-    dataUtil.init(config, loggingUtil);
-    ipfsUtil.init(config, loggingUtil);
+    swapUtil.init(config, loggingUtil);
     actionUtil.init(config, loggingUtil);
   });
 
   afterEach(async () => {
+    swapUtil.deactivate();
     actionUtil.deactivate();
-    ipfsUtil.deactivate();
-    dataUtil.deactivate();
-    mockFs.clear();
   });
 });

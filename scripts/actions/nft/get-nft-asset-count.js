@@ -2,16 +2,16 @@
 // libraries
 
 // modules
-const ipfsUtil = require('../ipfs-util.js');
+const ipfsUtil = require('../../ipfs-util.js');
 
 // constants
 /**
- * gets the list of all assets for the given template.
- * @name get_nft_asset_list
+ * gets the count of all assets for the given template.
+ * @name get_nft_asset_count
  * @memberof RPC
- * @example {"action": "get_nft_template_list", "ipfs_cid":"QmXk...kw4b"}
+ * @example {"action": "get_nft_asset_count", "ipfs_cid":"QmXk...kw4b"}
  */
-const ACTION = 'get_nft_asset_list';
+const ACTION = 'get_nft_asset_count';
 
 // variables
 /* eslint-disable no-unused-vars */
@@ -41,7 +41,7 @@ const deactivate = () => {
 };
 
 /**
- * gets the list of all assets for the given template.
+ * gets the count of all assets for the given template.
  * @memberof NFT
  * @param {Object} context the context, used to get cached data.
  * - from filesystem in nodejs,
@@ -72,7 +72,8 @@ const getNftTemplateList = async (context, req, res) => {
 
   const resp = {};
   resp.success = true;
-  resp.assets = assets;
+  resp.count = assets.length;
+
   res.send(resp);
 };
 

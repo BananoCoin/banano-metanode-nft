@@ -2,16 +2,16 @@
 // libraries
 
 // modules
-const ipfsUtil = require('../ipfs-util.js');
 
 // constants
 /**
- * gets the count of all assets for the given template.
- * @name get_nft_asset_count
+ * gets the swap url
+ * @name get_swap_api_url
  * @memberof RPC
- * @example {"action": "get_nft_asset_count", "ipfs_cid":"QmXk...kw4b"}
+ * @param {String} action:get_swap_api_url the action: gets the swap url.
+ * @example {"action": "get_swap_api_url"}
  */
-const ACTION = 'get_nft_asset_count';
+const ACTION = 'get_swap_api_url';
 
 // variables
 /* eslint-disable no-unused-vars */
@@ -41,8 +41,8 @@ const deactivate = () => {
 };
 
 /**
- * gets the count of all assets for the given template.
- * @memberof NFT
+ * gets the swap url
+ * @memberof Main
  * @param {Object} context the context, used to get cached data.
  * - from filesystem in nodejs,
  * - from localstorage in a browser,
@@ -51,7 +51,7 @@ const deactivate = () => {
  * @param {Object} res the http response.
  * @return {undefined}
  */
-const getNftTemplateList = async (context, req, res) => {
+const getSwapApiUrl = async (context, req, res) => {
   /* istanbul ignore if */
   if (req === undefined) {
     throw Error('req is required');
@@ -62,23 +62,15 @@ const getNftTemplateList = async (context, req, res) => {
     throw Error('req.body is required');
   }
 
-  /* istanbul ignore if */
-  if (req.body.ipfs_cid === undefined) {
-    throw Error('req.body.ipfs_cid is required');
-  }
-
-  const template = req.body.ipfs_cid;
-  const assets = ipfsUtil.listTemplateAssets(context.fs, ACTION, template);
-
   const resp = {};
   resp.success = true;
-  resp.count = assets.length;
+  resp.swap_api_url = config.swapApiUrl;
 
   res.send(resp);
 };
 
 const addAction = (actions) => {
-  actions[ACTION] = getNftTemplateList;
+  actions[ACTION] = getSwapApiUrl;
 };
 
 exports.init = init;

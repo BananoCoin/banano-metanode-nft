@@ -3,6 +3,7 @@
   "pinataApiUrl": "https://api.pinata.cloud",
   "bananodeApiUrl": "https://kaliumapi.appditto.com/api",
   "nftApiUrl": "/",
+  "swapApiUrl": "/",
   "receiveBlockHashDataDir": "data/receiveBlockHashs",
   "accountInfosDir": "data/accountInfos",
   "nextAssetOwnerDir": "data/nextAssetOwners",

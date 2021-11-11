@@ -7,12 +7,12 @@ const chai = require('chai');
 
 // modules
 const expect = chai.expect;
-const actionUtil = require('../../scripts/actions/get-nft-asset-owner.js');
-const ipfsUtil = require('../../scripts/ipfs-util.js');
-const dataUtil = require('../../scripts/data-util.js');
-const mockFs = require('../util/mock-fs.js');
-const mockFetch = require('../util/mock-fetch.js');
-const {config, loggingUtil, getResponse} = require('../util/get-response.js');
+const actionUtil = require('../../../scripts/actions/nft/get-nft-asset-owner.js');
+const ipfsUtil = require('../../../scripts/ipfs-util.js');
+const dataUtil = require('../../../scripts/data-util.js');
+const mockFs = require('../../util/mock-fs.js');
+const mockFetch = require('../../util/mock-fetch.js');
+const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
 
 // constants
 const goodOwner2 = 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c';

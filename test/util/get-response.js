@@ -17,6 +17,7 @@ const config = {
   ipfsApiUrl: 'ipfsApiUrlValue',
   bananodeApiUrl: 'bananodeApiUrlValue',
   nftApiUrl: 'nftApiUrlValue',
+  swapApiUrl: 'swapApiUrlValue',
   receiveBlockHashDataDir: 'receiveBlockHashDataDir',
   accountInfosDir: 'accountInfosDir',
   nextAssetOwnerDir: 'nextAssetOwnerDir',

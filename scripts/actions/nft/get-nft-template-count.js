@@ -2,7 +2,7 @@
 // libraries
 
 // modules
-const ipfsUtil = require('../ipfs-util.js');
+const ipfsUtil = require('../../ipfs-util.js');
 
 // constants
 /**

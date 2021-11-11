@@ -71,22 +71,28 @@ const init = async () => {
 };
 
 const addModules = () => {
-  modules.push(require('./ipfs-util.js'));
   modules.push(require('./data-util.js'));
+  modules.push(require('./ipfs-util.js'));
+  modules.push(require('./swap-util.js'));
   modules.push(require('./actions/get-bananode-api-url.js'));
   modules.push(require('./actions/get-pinata-api-url.js'));
   modules.push(require('./actions/get-ipfs-api-url.js'));
-  modules.push(require('./actions/get-nft-api-url.js'));
-  modules.push(require('./actions/get-nft-asset-owner.js'));
-  modules.push(require('./actions/get-nft-owner-assets.js'));
-  modules.push(require('./actions/get-nft-template-owner.js'));
-  modules.push(require('./actions/get-nft-info.js'));
   modules.push(require('./actions/get-current-version.js'));
   modules.push(require('./actions/get-supported-versions.js'));
-  modules.push(require('./actions/get-nft-template-list.js'));
-  modules.push(require('./actions/get-nft-template-count.js'));
   modules.push(require('./actions/get-blacklist.js'));
   modules.push(require('./actions/get-whitelist.js'));
+  modules.push(require('./actions/get-nft-api-url.js'));
+  modules.push(require('./actions/nft/get-nft-asset-owner.js'));
+  modules.push(require('./actions/nft/get-nft-owner-assets.js'));
+  modules.push(require('./actions/nft/get-nft-template-owner.js'));
+  modules.push(require('./actions/nft/get-nft-info.js'));
+  modules.push(require('./actions/nft/get-nft-template-list.js'));
+  modules.push(require('./actions/nft/get-nft-template-count.js'));
+  modules.push(require('./actions/get-swap-api-url.js'));
+  modules.push(require('./actions/swap/start.js'));
+  modules.push(require('./actions/swap/check.js'));
+  modules.push(require('./actions/swap/put-block.js'));
+  modules.push(require('./actions/swap/put-abort-signatures.js'));
 };
 
 const initModules = async () => {

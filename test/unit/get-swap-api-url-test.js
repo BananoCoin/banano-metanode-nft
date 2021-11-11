@@ -5,15 +5,10 @@ const chai = require('chai');
 
 // modules
 const expect = chai.expect;
-const actionUtil = require('../../scripts/actions/get-nft-template-list.js');
-const ipfsUtil = require('../../scripts/ipfs-util.js');
-const dataUtil = require('../../scripts/data-util.js');
-const mockFs = require('../util/mock-fs.js');
+const actionUtil = require('../../scripts/actions/get-swap-api-url.js');
 const {config, loggingUtil, getResponse} = require('../util/get-response.js');
 
 // constants
-const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
-const goodSendHash4 = '0000000000000000000000000000000000000000000000000000000000000004';
 
 // variables
 
@@ -21,12 +16,7 @@ const goodSendHash4 = '000000000000000000000000000000000000000000000000000000000
 describe(actionUtil.ACTION, () => {
   it('get status 200', async () => {
     const context = {
-      bananojs: {},
-      fs: mockFs,
-      fetch: {},
     };
-    ipfsUtil.addTemplateAndAsset(mockFs, actionUtil.ACTION, goodIpfsCid, goodSendHash4);
-
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {});
@@ -35,25 +25,17 @@ describe(actionUtil.ACTION, () => {
     }
     const expectedResponse = {
       success: true,
-      templates: [
-        goodIpfsCid,
-      ],
+      swap_api_url: config.swapApiUrl,
     };
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
-
   beforeEach(async () => {
-    dataUtil.init(config, loggingUtil);
-    ipfsUtil.init(config, loggingUtil);
     actionUtil.init(config, loggingUtil);
   });
 
   afterEach(async () => {
     actionUtil.deactivate();
-    ipfsUtil.deactivate();
-    dataUtil.deactivate();
-    mockFs.clear();
   });
 });
