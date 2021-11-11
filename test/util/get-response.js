@@ -64,14 +64,16 @@ const getResponse = (actionUtil, context, body) => {
       resolve(sent);
     };
     loggingUtil.debug('calling', fn);
-    fn(context, req, res)
-        .catch((error) => {
-          loggingUtil.debug('error', fn, error);
-          resolve({
-            success: false,
-            errors: [error.message],
-          });
-        });
+    try {
+      const response = await fn(context, req, res);
+      resolve(response);
+    } catch (error) {
+      loggingUtil.debug('error', fn, error);
+      resolve({
+        success: false,
+        errors: [error.message],
+      });
+    }
   });
 };
 

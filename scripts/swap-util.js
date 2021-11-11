@@ -1,11 +1,8 @@
 'use strict';
 // libraries
-const bananoIpfs = require('@bananocoin/banano-ipfs');
-const bs58 = require('bs58');
-const AbortController = require('abort-controller');
+const crypto = require('crypto');
 
 // modules
-const dataUtil = require('./data-util.js');
 
 // constants
 const BLOCK_TYPES = [
@@ -18,6 +15,7 @@ const BLOCK_TYPES = [
 ];
 
 // variables
+const swaps = new Map();
 /* eslint-disable no-unused-vars */
 let config;
 let loggingUtil;
@@ -44,5 +42,17 @@ const deactivate = () => {
   /* eslint-enable no-unused-vars */
 };
 
+const start = (sender, receiver) => {
+  const nonce = crypto.randomBytes(32).toString('hex').toUpperCase();
+  const swap = {
+    sender: sender,
+    receiver: receiver,
+    nonce: nonce,
+  };
+  swaps.set(nonce, swap);
+  return nonce;
+};
+
 exports.init = init;
 exports.deactivate = deactivate;
+exports.start = start;

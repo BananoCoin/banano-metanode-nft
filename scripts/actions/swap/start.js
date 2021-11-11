@@ -43,6 +43,7 @@ const deactivate = () => {
 
 const addAction = (actions) => {
   actions[ACTION] = (context, req, res) => {
+    console.log('swap start', req.body);
     /* istanbul ignore if */
     if (req === undefined) {
       throw Error('req is required');
@@ -52,13 +53,27 @@ const addAction = (actions) => {
     if (req.body === undefined) {
       throw Error('req.body is required');
     }
+
+    /* istanbul ignore if */
+    if (req.body.sender === undefined) {
+      throw Error('req.body.sender is required');
+    }
+
+    /* istanbul ignore if */
+    if (req.body.receiver === undefined) {
+      throw Error('req.body.receiver is required');
+    }
+
     // TODO: create and add action.
     const resp = {};
-    resp.success = false;
-    resp.errors = [
-      'not implemented yet',
-    ];
-    res.send(resp);
+    console.log('swap start', req.body);
+    try {
+      const nonce = swapUtil.start(req.body.sender, req.body.receiver);
+      resp.success = true;
+      resp.nonce = nonce;
+    } finally {
+      res.send(resp);
+    }
   };
 };
 

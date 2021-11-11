@@ -4,10 +4,10 @@ const bananojs = require('@bananocoin/bananojs');
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
-const fetch = require('node-fetch');
 const path = require('path');
 const fs = require('fs');
 const awaitSemaphore = require('await-semaphore');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 // modules
 

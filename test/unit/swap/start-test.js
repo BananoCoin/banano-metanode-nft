@@ -20,9 +20,12 @@ describe(actionUtil.ACTION, () => {
     };
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, {});
+      actualResponse = await getResponse(actionUtil, context, {'sender': 'a', 'receiver': 'b'});
     } catch (error) {
       loggingUtil.trace(error);
+    }
+    if (actualResponse.nonce !== undefined) {
+      delete actualResponse.nonce;
     }
     const expectedResponse = {
       success: true,
