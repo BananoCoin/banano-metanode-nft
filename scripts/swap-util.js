@@ -87,8 +87,29 @@ const signBlock = (nonce, blockType, signature) => {
   block.signature = signature;
 };
 
+
+const checkSwap = (nonce) => {
+  if (!swaps.has(nonce)) {
+    throw Error(`no swap found with nonce '${nonce}'`);
+  }
+  const swap = swaps.get(nonce);
+  loggingUtil.debug('checkSwap', 'nonce', nonce, 'swap', swap);
+
+  BLOCK_TYPES.forEach((blockType) => {
+    if (!swap.blocks.has(blockType)) {
+      throw Error(`no block type '${blockType}' found with nonce '${nonce}'`);
+    }
+    const block = swap.blocks.get(blockType);
+    if (block == null) {
+      throw Error(`no block of type '${blockType}' found with nonce '${nonce}', call setBlock first.`);
+    }
+  });
+  // TODO: add comprehensive checks.
+};
+
 exports.init = init;
 exports.deactivate = deactivate;
 exports.start = start;
 exports.setBlock = setBlock;
 exports.signBlock = signBlock;
+exports.checkSwap = checkSwap;

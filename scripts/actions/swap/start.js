@@ -64,7 +64,6 @@ const addAction = (actions) => {
       throw Error('req.body.receiver is required');
     }
 
-    // TODO: create and add action.
     const resp = {};
     try {
       const nonce = swapUtil.start(req.body.sender, req.body.receiver);

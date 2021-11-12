@@ -55,13 +55,25 @@ const addAction = (actions) => {
     if (req.body === undefined) {
       throw Error('req.body is required');
     }
-    // TODO: create and add action.
+
+    /* istanbul ignore if */
+    if (req.body.nonce === undefined) {
+      throw Error('req.body.nonce is required');
+    }
+
     const resp = {};
-    resp.success = false;
-    resp.errors = [
-      'not implemented yet',
-    ];
-    res.send(resp);
+    try {
+      swapUtil.checkSwap(req.body.nonce);
+      resp.success = true;
+    } catch (error) {
+      console.trace(error);
+      resp.success = false;
+      resp.errors = [
+        error.message,
+      ];
+    } finally {
+      res.send(resp);
+    }
   };
 };
 

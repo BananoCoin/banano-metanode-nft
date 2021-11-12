@@ -7,10 +7,10 @@ const swapUtil = require('../../swap-util.js');
 // constants
 /**
  * adds a block to the swap.
- * @name put_abort_signatures
+ * @name swap_put_abort_signatures
  * @memberof RPC
  * @example Request {
- *   "action": "put_abort_signatures",
+ *   "action": "swap_put_abort_signatures",
  *   "nonce":"....",
  *   "change_abort_receive_atomic_swap_signature":"...",
  *   "change_abort_payment_signature":"..."
@@ -18,7 +18,7 @@ const swapUtil = require('../../swap-util.js');
  * @example Response {"success":"true"}
  * @example Response {"success":"false","errors":["...","..."]}
  */
-const ACTION = 'put_abort_signatures';
+const ACTION = 'swap_put_abort_signatures';
 
 // variables
 /* eslint-disable no-unused-vars */
@@ -49,7 +49,7 @@ const deactivate = () => {
 
 const addAction = (actions) => {
   actions[ACTION] = (context, req, res) => {
-    loggingUtil.debug('put_abort_signatures start', req.body);
+    loggingUtil.debug('swap put_abort_signatures start', req.body);
     /* istanbul ignore if */
     if (req === undefined) {
       throw Error('req is required');
@@ -75,7 +75,6 @@ const addAction = (actions) => {
       throw Error('req.body.change_abort_payment_signature is required');
     }
 
-    // TODO: create and add action.
     const resp = {};
     try {
       const nonce = req.body.nonce;

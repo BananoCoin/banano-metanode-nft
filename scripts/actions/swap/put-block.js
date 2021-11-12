@@ -9,7 +9,7 @@ const swapUtil = require('../../swap-util.js');
  * adds a block to the swap.
  * @name swap_put_block
  * @memberof RPC
- * @example Request {"action": "swap_put_block", "nonce":"....", "type":"send#atomic_swap"}
+ * @example Request {"action": "swap_put_block", "nonce":"....", "type":"send_atomic_swap", "block":{}}
  * @example Response {"success":"true"}
  */
 const ACTION = 'swap_put_block';
@@ -52,13 +52,35 @@ const addAction = (actions) => {
     if (req.body === undefined) {
       throw Error('req.body is required');
     }
-    // TODO: create and add action.
+
+    /* istanbul ignore if */
+    if (req.body.nonce === undefined) {
+      throw Error('req.body.nonce is required');
+    }
+
+    /* istanbul ignore if */
+    if (req.body.type === undefined) {
+      throw Error('req.body.type is required');
+    }
+
+    /* istanbul ignore if */
+    if (req.body.block === undefined) {
+      throw Error('req.body.block is required');
+    }
+
     const resp = {};
-    resp.success = false;
-    resp.errors = [
-      'not implemented yet',
-    ];
-    res.send(resp);
+    try {
+      swapUtil.setBlock(req.body.nonce, req.body.type, req.body.block);
+      resp.success = true;
+    } catch (error) {
+      console.trace(error);
+      resp.success = false;
+      resp.errors = [
+        error.message,
+      ];
+    } finally {
+      res.send(resp);
+    }
   };
 };
 
