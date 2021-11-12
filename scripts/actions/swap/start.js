@@ -43,7 +43,7 @@ const deactivate = () => {
 
 const addAction = (actions) => {
   actions[ACTION] = (context, req, res) => {
-    console.log('swap start', req.body);
+    loggingUtil.debug('swap start', req.body);
     /* istanbul ignore if */
     if (req === undefined) {
       throw Error('req is required');
@@ -66,11 +66,15 @@ const addAction = (actions) => {
 
     // TODO: create and add action.
     const resp = {};
-    console.log('swap start', req.body);
     try {
       const nonce = swapUtil.start(req.body.sender, req.body.receiver);
       resp.success = true;
       resp.nonce = nonce;
+    } catch (error) {
+      resp.success = false;
+      resp.errors = [
+        error.message,
+      ];
     } finally {
       res.send(resp);
     }

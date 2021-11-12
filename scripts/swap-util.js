@@ -6,12 +6,12 @@ const crypto = require('crypto');
 
 // constants
 const BLOCK_TYPES = [
-  'send#atomic_swap',
-  'receive#atomic_swap',
-  'change#abort_receive_atomic_swap',
-  'send#payment',
-  'change#abort_payment',
-  'receive#payment',
+  'send_atomic_swap',
+  'receive_atomic_swap',
+  'change_abort_receive_atomic_swap',
+  'send_payment',
+  'change_abort_payment',
+  'receive_payment',
 ];
 
 // variables
@@ -40,6 +40,7 @@ const deactivate = () => {
   config = undefined;
   loggingUtil = undefined;
   /* eslint-enable no-unused-vars */
+  swaps.clear();
 };
 
 const start = (sender, receiver) => {
@@ -48,11 +49,46 @@ const start = (sender, receiver) => {
     sender: sender,
     receiver: receiver,
     nonce: nonce,
+    blocks: new Map(),
   };
+  BLOCK_TYPES.forEach((blockType) => {
+    swap.blocks.set(blockType, null);
+  });
+
   swaps.set(nonce, swap);
   return nonce;
+};
+
+const setBlock = (nonce, blockType, block) => {
+  if (!swaps.has(nonce)) {
+    throw Error(`no swap found with nonce '${nonce}'`);
+  }
+  const swap = swaps.get(nonce);
+  loggingUtil.debug('setBlock', 'nonce', nonce, 'swap', swap, 'block', block);
+  if (!swap.blocks.has(blockType)) {
+    throw Error(`no block type '${blockType}' found with nonce '${nonce}'`);
+  }
+  swap.blocks.set(blockType, block);
+};
+
+const signBlock = (nonce, blockType, signature) => {
+  if (!swaps.has(nonce)) {
+    throw Error(`no swap found with nonce '${nonce}'`);
+  }
+  const swap = swaps.get(nonce);
+  loggingUtil.debug('signBlock', 'nonce', nonce, 'swap', swap);
+  if (!swap.blocks.has(blockType)) {
+    throw Error(`no block type '${blockType}' found with nonce '${nonce}'`);
+  }
+  const block = swap.blocks.get(blockType);
+  if (block == null) {
+    throw Error(`no block of type '${blockType}' found with nonce '${nonce}', call setBlock first.`);
+  }
+  block.signature = signature;
 };
 
 exports.init = init;
 exports.deactivate = deactivate;
 exports.start = start;
+exports.setBlock = setBlock;
+exports.signBlock = signBlock;

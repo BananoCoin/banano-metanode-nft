@@ -16,11 +16,19 @@ const {config, loggingUtil, getResponse} = require('../../util/get-response.js')
 // functions
 describe(actionUtil.ACTION, () => {
   it('get status 200', async () => {
+    const nonce = swapUtil.start('s', 'r');
+    swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', {});
+    swapUtil.setBlock(nonce, 'change_abort_payment', {});
     const context = {
     };
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, {});
+      const request = {
+        nonce: nonce,
+        change_abort_receive_atomic_swap_signature: '',
+        change_abort_payment_signature: '',
+      };
+      actualResponse = await getResponse(actionUtil, context, request);
     } catch (error) {
       loggingUtil.trace(error);
     }
