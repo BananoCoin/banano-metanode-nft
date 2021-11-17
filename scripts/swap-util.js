@@ -5,13 +5,18 @@ const crypto = require('crypto');
 // modules
 
 // constants
-const BLOCK_TYPES = [
+const START_BLOCK_TYPES = [
   'send_atomic_swap',
   'receive_atomic_swap',
   'change_abort_receive_atomic_swap',
   'send_payment',
   'change_abort_payment',
   'receive_payment',
+];
+
+const ABORT_BLOCK_TYPES = [
+  'change_abort_receive_atomic_swap',
+  'change_abort_payment',
 ];
 
 // variables
@@ -51,7 +56,7 @@ const start = (sender, receiver) => {
     nonce: nonce,
     blocks: new Map(),
   };
-  BLOCK_TYPES.forEach((blockType) => {
+  START_BLOCK_TYPES.forEach((blockType) => {
     swap.blocks.set(blockType, null);
   });
 
@@ -88,14 +93,28 @@ const signBlock = (nonce, blockType, signature) => {
 };
 
 
-const checkSwap = (nonce) => {
+const checkSwapAndReturnBlocks = (nonce, stageEnum, blocksFlag, resp) => {
   if (!swaps.has(nonce)) {
     throw Error(`no swap found with nonce '${nonce}'`);
   }
   const swap = swaps.get(nonce);
   loggingUtil.debug('checkSwap', 'nonce', nonce, 'swap', swap);
 
-  BLOCK_TYPES.forEach((blockType) => {
+  const blocks = [];
+  let blockTypes;
+
+  switch (stageEnum) {
+    case 'abort':
+      blockTypes = ABORT_BLOCK_TYPES;
+      break;
+    case 'start':
+      blockTypes = START_BLOCK_TYPES;
+      break;
+    default:
+      throw Error(`req.body.stage is required to be 'start' or 'abort' and was '${stageEnum}'`);
+  }
+
+  blockTypes.forEach((blockType) => {
     if (!swap.blocks.has(blockType)) {
       throw Error(`no block type '${blockType}' found with nonce '${nonce}'`);
     }
@@ -103,8 +122,20 @@ const checkSwap = (nonce) => {
     if (block == null) {
       throw Error(`no block of type '${blockType}' found with nonce '${nonce}', call setBlock first.`);
     }
+    switch (blocksFlag) {
+      case 'true':
+        blocks.push({type: blockType, block: block});
+        break;
+      case 'false':
+        break;
+      default:
+        throw Error(`req.body.blocks is required to be 'true' or 'false' and was '${blocksFlag}'`);
+    }
   });
-  // TODO: add comprehensive checks.
+
+  if (blocksFlag === 'true') {
+    resp.blocks = blocks;
+  }
 };
 
 exports.init = init;
@@ -112,4 +143,4 @@ exports.deactivate = deactivate;
 exports.start = start;
 exports.setBlock = setBlock;
 exports.signBlock = signBlock;
-exports.checkSwap = checkSwap;
+exports.checkSwapAndReturnBlocks = checkSwapAndReturnBlocks;

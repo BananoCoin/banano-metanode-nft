@@ -61,9 +61,19 @@ const addAction = (actions) => {
       throw Error('req.body.nonce is required');
     }
 
+    /* istanbul ignore if */
+    if (req.body.stage === undefined) {
+      throw Error('req.body.stage is required');
+    }
+
+    /* istanbul ignore if */
+    if (req.body.blocks === undefined) {
+      throw Error('req.body.blocks is required');
+    }
+
     const resp = {};
     try {
-      swapUtil.checkSwap(req.body.nonce);
+      swapUtil.checkSwapAndReturnBlocks(req.body.nonce, req.body.stage, req.body.blocks, resp);
       resp.success = true;
     } catch (error) {
       console.trace(error);
