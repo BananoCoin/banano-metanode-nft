@@ -67,24 +67,25 @@ const start = (sender, receiver) => {
 const setBlock = (nonce, blockType, block) => {
   loggingUtil.debug('setBlock', 'nonce', nonce, 'blockType', blockType, 'block', block);
   if (!swaps.has(nonce)) {
-    throw Error(`no swap found with nonce '${nonce}'`);
+    throw Error(`no swap found with nonce '${nonce}'.`);
   }
   const swap = swaps.get(nonce);
   loggingUtil.debug('setBlock', 'nonce', nonce, 'swap', swap, 'block', block);
   if (!swap.blocks.has(blockType)) {
-    throw Error(`no block type '${blockType}' found with nonce '${nonce}'`);
+    throw Error(`no block type '${blockType}' found with nonce '${nonce}'.`);
   }
   swap.blocks.set(blockType, block);
 };
 
 const signBlock = (nonce, blockType, signature) => {
   if (!swaps.has(nonce)) {
-    throw Error(`no swap found with nonce '${nonce}'`);
+    throw Error(`no swap found with nonce '${nonce}'.`);
   }
   const swap = swaps.get(nonce);
   loggingUtil.debug('signBlock', 'nonce', nonce, 'swap', swap);
+  /* istanbul ignore if */
   if (!swap.blocks.has(blockType)) {
-    throw Error(`no block type '${blockType}' found with nonce '${nonce}'`);
+    throw Error(`no block type '${blockType}' found with nonce '${nonce}'.`);
   }
   const block = swap.blocks.get(blockType);
   if (block == null) {
@@ -96,7 +97,7 @@ const signBlock = (nonce, blockType, signature) => {
 
 const checkSwapAndReturnBlocks = (nonce, stageEnum, blocksFlag, resp) => {
   if (!swaps.has(nonce)) {
-    throw Error(`no swap found with nonce '${nonce}'`);
+    throw Error(`no swap found with nonce '${nonce}'.`);
   }
   const swap = swaps.get(nonce);
   loggingUtil.debug('checkSwap', 'nonce', nonce, 'swap', swap);
@@ -112,12 +113,14 @@ const checkSwapAndReturnBlocks = (nonce, stageEnum, blocksFlag, resp) => {
       blockTypes = START_BLOCK_TYPES;
       break;
     default:
-      throw Error(`req.body.stage is required to be 'start' or 'abort' and was '${stageEnum}'`);
+      throw Error(`req.body.stage is required to be 'start' or 'abort' and was '${stageEnum}'.`);
   }
 
-  blockTypes.forEach((blockType) => {
+  for (let blockTypeIx = 0; blockTypeIx < blockTypes.length; blockTypeIx++) {
+    const blockType = blockTypes[blockTypeIx];
+    /* istanbul ignore if */
     if (!swap.blocks.has(blockType)) {
-      throw Error(`no block type '${blockType}' found with nonce '${nonce}'`);
+      throw Error(`no block type '${blockType}' found with nonce '${nonce}'.`);
     }
     const block = swap.blocks.get(blockType);
     if (block == null) {
@@ -130,9 +133,9 @@ const checkSwapAndReturnBlocks = (nonce, stageEnum, blocksFlag, resp) => {
       case 'false':
         break;
       default:
-        throw Error(`req.body.blocks is required to be 'true' or 'false' and was '${blocksFlag}'`);
+        throw Error(`req.body.blocks is required to be 'true' or 'false' and was '${blocksFlag}'.`);
     }
-  });
+  }
 
   if (blocksFlag === 'true') {
     resp.blocks = blocks;

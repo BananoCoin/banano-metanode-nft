@@ -82,7 +82,7 @@ const addAction = (actions) => {
       swapUtil.signBlock(nonce, 'change_abort_payment', req.body.abort_payment_signature);
       resp.success = true;
     } catch (error) {
-      console.trace(error);
+      loggingUtil.trace(error);
       resp.success = false;
       resp.errors = [
         error.message,

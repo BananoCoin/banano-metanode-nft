@@ -69,33 +69,115 @@ describe(actionUtil.ACTION, async () => {
     loggingUtil.debug('expectedResponse', expectedResponse);
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
-  it(`error req.body.blocks is required to be 'true' or 'false'`, async () => {
-    const nonce = swapUtil.start(senderAccount, receiverAccount);
-    swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', {});
-    swapUtil.setBlock(nonce, 'change_abort_payment', {});
-    const context = {
-    };
-    let actualResponse;
-    try {
-      const request = {
-        nonce: nonce,
-        stage: 'abort',
-        blocks: 'error',
+  describe(actionUtil.ACTION + ' errors', async () => {
+    it('no nonce', async () => {
+      const nonce = '';
+      const context = {
       };
-      actualResponse = await getResponse(actionUtil, context, request);
-    } catch (error) {
-      loggingUtil.trace(error);
-    }
-    const expectedError = `req.body.blocks is required to be 'true' or 'false' and was 'error'`;
-    const expectedResponse = {
-      success: false,
-      errors: [
-        expectedError,
-      ],
-    };
-    loggingUtil.debug('actualResponse', actualResponse);
-    loggingUtil.debug('expectedResponse', expectedResponse);
-    expect(actualResponse).to.deep.equal(expectedResponse);
+      let actualResponse;
+      try {
+        const request = {
+          nonce: nonce,
+          stage: 'abort',
+          blocks: 'false',
+        };
+        actualResponse = await getResponse(actionUtil, context, request);
+      } catch (error) {
+        loggingUtil.trace(error);
+      }
+      const expectedError = `no swap found with nonce '${nonce}'.`;
+      const expectedResponse = {
+        success: false,
+        errors: [
+          expectedError,
+        ],
+      };
+      loggingUtil.debug('actualResponse', actualResponse);
+      loggingUtil.debug('expectedResponse', expectedResponse);
+      expect(actualResponse).to.deep.equal(expectedResponse);
+    });
+    it(`no block of type 'change_abort_receive_atomic_swap' found with nonce`, async () => {
+      const nonce = swapUtil.start(senderAccount, receiverAccount);
+      const context = {
+      };
+      let actualResponse;
+      try {
+        const request = {
+          nonce: nonce,
+          stage: 'abort',
+          blocks: 'false',
+        };
+        actualResponse = await getResponse(actionUtil, context, request);
+      } catch (error) {
+        loggingUtil.trace(error);
+      }
+      const expectedError = `no block of type 'change_abort_receive_atomic_swap' found with nonce '${nonce}', call setBlock first.`;
+      const expectedResponse = {
+        success: false,
+        errors: [
+          expectedError,
+        ],
+      };
+      loggingUtil.debug('actualResponse', actualResponse);
+      loggingUtil.debug('expectedResponse', expectedResponse);
+      expect(actualResponse).to.deep.equal(expectedResponse);
+    });
+    it(`req.body.blocks is required to be 'true' or 'false'`, async () => {
+      const nonce = swapUtil.start(senderAccount, receiverAccount);
+      swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', {});
+      swapUtil.setBlock(nonce, 'change_abort_payment', {});
+      const context = {
+      };
+      let actualResponse;
+      try {
+        const request = {
+          nonce: nonce,
+          stage: 'abort',
+          blocks: 'error',
+        };
+        actualResponse = await getResponse(actionUtil, context, request);
+      } catch (error) {
+        loggingUtil.trace(error);
+      }
+      const expectedError = `req.body.blocks is required to be 'true' or 'false' and was 'error'.`;
+      const expectedResponse = {
+        success: false,
+        errors: [
+          expectedError,
+        ],
+      };
+      loggingUtil.debug('actualResponse', actualResponse);
+      loggingUtil.debug('expectedResponse', expectedResponse);
+      expect(actualResponse).to.deep.equal(expectedResponse);
+    });
+    it(`req.body.stage is required to be 'start' or 'abort' and was 'error'`, async () => {
+      const nonce = swapUtil.start(senderAccount, receiverAccount);
+      swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', {});
+      swapUtil.setBlock(nonce, 'change_abort_payment', {});
+      const context = {
+      };
+      let actualResponse;
+      try {
+        const request = {
+          nonce: nonce,
+          stage: 'error',
+          blocks: 'error',
+        };
+        actualResponse = await getResponse(actionUtil, context, request);
+      } catch (error) {
+        loggingUtil.trace(error);
+      }
+      const expectedError = `req.body.stage is required to be 'start' or 'abort' and was 'error'.`;
+      const expectedResponse = {
+        success: false,
+        errors: [
+          expectedError,
+        ],
+      };
+      loggingUtil.debug('actualResponse', actualResponse);
+      loggingUtil.debug('expectedResponse', expectedResponse);
+      expect(actualResponse).to.deep.equal(expectedResponse);
+    });
   });
   it('abort blocks, check abort', async () => {
     const nonce = swapUtil.start(senderAccount, receiverAccount);

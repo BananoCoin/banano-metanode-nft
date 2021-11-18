@@ -37,6 +37,34 @@ describe(actionUtil.ACTION, () => {
     loggingUtil.debug('expectedResponse', expectedResponse);
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
+  describe('errors', async () => {
+    it(`no nonce`, async () => {
+      const nonce = '';
+      const context = {
+      };
+      let actualResponse;
+      try {
+        const request = {
+          nonce: nonce,
+          type: '',
+          block: {},
+        };
+        actualResponse = await getResponse(actionUtil, context, request);
+      } catch (error) {
+        loggingUtil.trace(error);
+      }
+      const expectedError = `no swap found with nonce '${nonce}'.`;
+      const expectedResponse = {
+        success: false,
+        errors: [
+          expectedError,
+        ],
+      };
+      loggingUtil.debug('actualResponse', actualResponse);
+      loggingUtil.debug('expectedResponse', expectedResponse);
+      expect(actualResponse).to.deep.equal(expectedResponse);
+    });
+  });
 
   beforeEach(async () => {
     swapUtil.init(config, loggingUtil);

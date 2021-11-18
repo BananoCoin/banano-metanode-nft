@@ -73,7 +73,7 @@ const addAction = (actions) => {
       swapUtil.setBlock(req.body.nonce, req.body.type, req.body.block);
       resp.success = true;
     } catch (error) {
-      console.trace(error);
+      loggingUtil.trace(error);
       resp.success = false;
       resp.errors = [
         error.message,

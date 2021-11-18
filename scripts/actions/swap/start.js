@@ -70,6 +70,7 @@ const addAction = (actions) => {
       resp.success = true;
       resp.nonce = nonce;
     } catch (error) {
+      loggingUtil.trace(error);
       resp.success = false;
       resp.errors = [
         error.message,
