@@ -1,6 +1,7 @@
 'use strict';
 // libraries
 const crypto = require('crypto');
+const bananojs = require('@bananocoin/bananojs');
 
 // modules
 
@@ -49,6 +50,15 @@ const deactivate = () => {
 };
 
 const start = (sender, receiver) => {
+  const senderAcccountValid = bananojs.getBananoAccountValidationInfo(sender);
+  if (!senderAcccountValid.valid) {
+    throw Error('sender account error:' + senderAcccountValid.message);
+  }
+  const receiverAcccountValid = bananojs.getBananoAccountValidationInfo(sender);
+  if (!receiverAcccountValid.valid) {
+    throw Error('receiver account error:' + receiverAcccountValid.message);
+  }
+
   const nonce = crypto.randomBytes(32).toString('hex').toUpperCase();
   const swap = {
     sender: sender,
@@ -71,6 +81,7 @@ const setBlock = (nonce, blockType, block) => {
   }
   const swap = swaps.get(nonce);
   loggingUtil.debug('setBlock', 'nonce', nonce, 'swap', swap, 'block', block);
+  /* istanbul ignore if */
   if (!swap.blocks.has(blockType)) {
     throw Error(`no block type '${blockType}' found with nonce '${nonce}'.`);
   }

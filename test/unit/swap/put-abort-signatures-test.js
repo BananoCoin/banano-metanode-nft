@@ -2,12 +2,14 @@
 
 // libraries
 const chai = require('chai');
+const bananojs = require('@bananocoin/bananojs');
 
 // modules
 const expect = chai.expect;
 const actionUtil = require('../../../scripts/actions/swap/put-abort-signatures.js');
 const swapUtil = require('../../../scripts/swap-util.js');
 const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
+const {SENDER_SEED, RECEIVER_SEED} = require('../../util/mock-block-factory.js');
 
 // constants
 
@@ -16,7 +18,9 @@ const {config, loggingUtil, getResponse} = require('../../util/get-response.js')
 // functions
 describe(actionUtil.ACTION, () => {
   it('get status 200', async () => {
-    const nonce = swapUtil.start('s', 'r');
+    const senderAccount = await bananojs.getBananoAccountFromSeed(SENDER_SEED, 0);
+    const receiverAccount = await bananojs.getBananoAccountFromSeed(RECEIVER_SEED, 0);
+    const nonce = swapUtil.start(senderAccount, receiverAccount);
     swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', {});
     swapUtil.setBlock(nonce, 'change_abort_payment', {});
     const context = {
@@ -42,7 +46,9 @@ describe(actionUtil.ACTION, () => {
 
   describe('errors', async () => {
     it('call setBlock first', async () => {
-      const nonce = swapUtil.start('s', 'r');
+      const senderAccount = await bananojs.getBananoAccountFromSeed(SENDER_SEED, 0);
+      const receiverAccount = await bananojs.getBananoAccountFromSeed(RECEIVER_SEED, 0);
+      const nonce = swapUtil.start(senderAccount, receiverAccount);
       const context = {
       };
       let actualResponse;

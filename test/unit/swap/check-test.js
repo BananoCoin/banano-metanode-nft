@@ -16,7 +16,7 @@ const {getSendBlock, getReceiveBlock, getChangeBlock, SENDER_SEED, RECEIVER_SEED
 // variables
 
 // functions
-describe(actionUtil.ACTION, async () => {
+const getTestData = async () => {
   const senderAccount = await bananojs.getBananoAccountFromSeed(SENDER_SEED, 0);
   // console.log('check-test', 'senderAccount', senderAccount);
 
@@ -40,8 +40,24 @@ describe(actionUtil.ACTION, async () => {
 
   const receivePaymentBlock = await getReceiveBlock(SENDER_SEED, 0, sendPaymentBlock);
   // console.log('check-test', 'receivePaymentBlock', receivePaymentBlock);
+  return {
+    senderAccount: senderAccount,
+    receiverAccount: receiverAccount,
+    sendAtomicSwapBlock: sendAtomicSwapBlock,
+    receiveAtomicSwapBlock: receiveAtomicSwapBlock,
+    changeAbortReceiveAtomicSwapBlock: changeAbortReceiveAtomicSwapBlock,
+    sendPaymentBlock: sendPaymentBlock,
+    changeAbortPaymentBlock: changeAbortPaymentBlock,
+    receivePaymentBlock: receivePaymentBlock,
+  };
+};
 
+
+describe(actionUtil.ACTION, async () => {
   it('get status 200', async () => {
+    const {senderAccount, receiverAccount, sendAtomicSwapBlock, receiveAtomicSwapBlock,
+      changeAbortReceiveAtomicSwapBlock, sendPaymentBlock, changeAbortPaymentBlock,
+      receivePaymentBlock} = await getTestData();
     const nonce = swapUtil.start(senderAccount, receiverAccount);
     swapUtil.setBlock(nonce, 'send_atomic_swap', sendAtomicSwapBlock);
     swapUtil.setBlock(nonce, 'receive_atomic_swap', receiveAtomicSwapBlock);
@@ -69,7 +85,7 @@ describe(actionUtil.ACTION, async () => {
     loggingUtil.debug('expectedResponse', expectedResponse);
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
-  describe(actionUtil.ACTION + ' errors', async () => {
+  describe('errors', async () => {
     it('no nonce', async () => {
       const nonce = '';
       const context = {
@@ -97,6 +113,7 @@ describe(actionUtil.ACTION, async () => {
       expect(actualResponse).to.deep.equal(expectedResponse);
     });
     it(`no block of type 'change_abort_receive_atomic_swap' found with nonce`, async () => {
+      const {senderAccount, receiverAccount} = await getTestData();
       const nonce = swapUtil.start(senderAccount, receiverAccount);
       const context = {
       };
@@ -123,6 +140,7 @@ describe(actionUtil.ACTION, async () => {
       expect(actualResponse).to.deep.equal(expectedResponse);
     });
     it(`req.body.blocks is required to be 'true' or 'false'`, async () => {
+      const {senderAccount, receiverAccount} = await getTestData();
       const nonce = swapUtil.start(senderAccount, receiverAccount);
       swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', {});
       swapUtil.setBlock(nonce, 'change_abort_payment', {});
@@ -151,6 +169,7 @@ describe(actionUtil.ACTION, async () => {
       expect(actualResponse).to.deep.equal(expectedResponse);
     });
     it(`req.body.stage is required to be 'start' or 'abort' and was 'error'`, async () => {
+      const {senderAccount, receiverAccount} = await getTestData();
       const nonce = swapUtil.start(senderAccount, receiverAccount);
       swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', {});
       swapUtil.setBlock(nonce, 'change_abort_payment', {});
@@ -180,6 +199,7 @@ describe(actionUtil.ACTION, async () => {
     });
   });
   it('abort blocks, check abort', async () => {
+    const {senderAccount, receiverAccount} = await getTestData();
     const nonce = swapUtil.start(senderAccount, receiverAccount);
     swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', {});
     swapUtil.setBlock(nonce, 'change_abort_payment', {});
@@ -204,6 +224,9 @@ describe(actionUtil.ACTION, async () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
   it('all blocks, check start', async () => {
+    const {senderAccount, receiverAccount, sendAtomicSwapBlock, receiveAtomicSwapBlock,
+      changeAbortReceiveAtomicSwapBlock, sendPaymentBlock, changeAbortPaymentBlock,
+      receivePaymentBlock} = await getTestData();
     const nonce = swapUtil.start(senderAccount, receiverAccount);
     swapUtil.setBlock(nonce, 'send_atomic_swap', sendAtomicSwapBlock);
     swapUtil.setBlock(nonce, 'receive_atomic_swap', receiveAtomicSwapBlock);
