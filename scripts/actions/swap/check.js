@@ -76,7 +76,7 @@ const addAction = (actions) => {
       swapUtil.checkSwapAndReturnBlocks(req.body.nonce, req.body.stage, req.body.blocks, resp);
       resp.success = true;
     } catch (error) {
-      console.trace(error);
+      loggingUtil.trace(error);
       resp.success = false;
       resp.errors = [
         error.message,

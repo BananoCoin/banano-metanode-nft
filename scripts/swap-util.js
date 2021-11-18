@@ -65,6 +65,7 @@ const start = (sender, receiver) => {
 };
 
 const setBlock = (nonce, blockType, block) => {
+  loggingUtil.debug('setBlock', 'nonce', nonce, 'blockType', blockType, 'block', block);
   if (!swaps.has(nonce)) {
     throw Error(`no swap found with nonce '${nonce}'`);
   }

@@ -4,6 +4,8 @@
 // modules
 
 // constants
+const TRACE = false;
+
 const DEBUG = false;
 
 const LOG = false;
@@ -33,7 +35,11 @@ const config = {
 };
 
 const loggingUtil = {};
-loggingUtil.trace = console.trace;
+if (TRACE) {
+  loggingUtil.trace = console.trace;
+} else {
+  loggingUtil.trace = () => {};
+}
 loggingUtil.isDebugEnabled = () => {
   return DEBUG;
 };
