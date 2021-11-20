@@ -92,7 +92,11 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
       const {timeout = config.fetchTimeout} = options;
 
       const controller = new AbortController();
-      const id = setTimeout(() => controller.abort(), timeout);
+      /* istanbul ignore next */
+      const controllerTimeoutFn = () => {
+        controller.abort();
+      };
+      const id = setTimeout(controllerTimeoutFn, timeout);
 
       loggingUtil.debug('getNftInfoForIpfsCid', 'fetch');
       fetch(resource, {
