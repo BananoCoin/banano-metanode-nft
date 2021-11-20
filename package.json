@@ -1,6 +1,6 @@
 {
   "name": "banano-metanode-nft",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "banano metanode nft",
   "author": "Coranos",
   "license": "MIT",
@@ -33,8 +33,8 @@
     "express": "^4.17.1",
     "node-fetch": "^2.6.6",
     "npm-check-updates": "^12.0.2",
-    "socket.io": "^4.3.2",
-    "socket.io-client": "^4.3.2"
+    "socket.io": "^4.4.0",
+    "socket.io-client": "^4.4.0"
   },
   "preferGlobal": true,
   "devDependencies": {

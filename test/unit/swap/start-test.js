@@ -76,7 +76,7 @@ describe(actionUtil.ACTION, () => {
       }
       const expectedResponse = {
         errors: [
-          'sender account error:Invalid BANANO Account (not 64 characters)',
+          'receiver account error:Invalid BANANO Account (not 64 characters)',
         ],
         success: false,
       };

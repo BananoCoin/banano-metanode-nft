@@ -54,7 +54,7 @@ const start = (sender, receiver) => {
   if (!senderAcccountValid.valid) {
     throw Error('sender account error:' + senderAcccountValid.message);
   }
-  const receiverAcccountValid = bananojs.getBananoAccountValidationInfo(sender);
+  const receiverAcccountValid = bananojs.getBananoAccountValidationInfo(receiver);
   if (!receiverAcccountValid.valid) {
     throw Error('receiver account error:' + receiverAcccountValid.message);
   }
