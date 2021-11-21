@@ -48,7 +48,7 @@ const deactivate = () => {
 };
 
 const addAction = (actions) => {
-  actions[ACTION] = (context, req, res) => {
+  actions[ACTION] = async (context, req, res) => {
     loggingUtil.debug('swap put_abort_signatures start', req.body);
     /* istanbul ignore if */
     if (req === undefined) {
@@ -78,8 +78,8 @@ const addAction = (actions) => {
     const resp = {};
     try {
       const nonce = req.body.nonce;
-      swapUtil.signBlock(nonce, 'change_abort_receive_atomic_swap', req.body.abort_receive_atomic_swap_signature);
-      swapUtil.signBlock(nonce, 'change_abort_payment', req.body.abort_payment_signature);
+      await swapUtil.signBlock(nonce, 'change_abort_receive_atomic_swap', req.body.abort_receive_atomic_swap_signature);
+      await swapUtil.signBlock(nonce, 'change_abort_payment', req.body.abort_payment_signature);
       resp.success = true;
     } catch (error) {
       loggingUtil.trace(error);

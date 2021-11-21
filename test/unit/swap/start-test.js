@@ -9,7 +9,7 @@ const expect = chai.expect;
 const actionUtil = require('../../../scripts/actions/swap/start.js');
 const swapUtil = require('../../../scripts/swap-util.js');
 const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
-const {SENDER_SEED, RECEIVER_SEED} = require('../../util/mock-block-factory.js');
+const mockBlockFactory = require('../../util/mock-block-factory.js');
 
 // constants
 
@@ -18,8 +18,8 @@ const {SENDER_SEED, RECEIVER_SEED} = require('../../util/mock-block-factory.js')
 // functions
 describe(actionUtil.ACTION, () => {
   it('get status 200', async () => {
-    const senderAccount = await bananojs.getBananoAccountFromSeed(SENDER_SEED, 0);
-    const receiverAccount = await bananojs.getBananoAccountFromSeed(RECEIVER_SEED, 0);
+    const senderAccount = await bananojs.getBananoAccountFromSeed(mockBlockFactory.SENDER_SEED, 0);
+    const receiverAccount = await bananojs.getBananoAccountFromSeed(mockBlockFactory.RECEIVER_SEED, 0);
     const context = {
     };
     let actualResponse;
@@ -62,7 +62,7 @@ describe(actionUtil.ACTION, () => {
       expect(actualResponse).to.deep.equal(expectedResponse);
     });
     it('bad receiver', async () => {
-      const senderAccount = await bananojs.getBananoAccountFromSeed(SENDER_SEED, 0);
+      const senderAccount = await bananojs.getBananoAccountFromSeed(mockBlockFactory.SENDER_SEED, 0);
       const context = {
       };
       let actualResponse;
@@ -87,12 +87,16 @@ describe(actionUtil.ACTION, () => {
   });
 
   beforeEach(async () => {
+    bananojs.setBananodeApi(mockBlockFactory.getBananodeApi(()=>{}));
+    mockBlockFactory.init(config, loggingUtil);
     swapUtil.init(config, loggingUtil);
     actionUtil.init(config, loggingUtil);
   });
 
   afterEach(async () => {
-    swapUtil.deactivate();
     actionUtil.deactivate();
+    swapUtil.deactivate();
+    mockBlockFactory.deactivate();
+    bananojs.setBananodeApi(undefined);
   });
 });

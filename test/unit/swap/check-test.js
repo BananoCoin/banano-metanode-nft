@@ -9,7 +9,7 @@ const expect = chai.expect;
 const actionUtil = require('../../../scripts/actions/swap/check.js');
 const swapUtil = require('../../../scripts/swap-util.js');
 const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
-const {getSendBlock, getReceiveBlock, getChangeBlock, SENDER_SEED, RECEIVER_SEED} = require('../../util/mock-block-factory.js');
+const mockBlockFactory = require('../../util/mock-block-factory.js');
 
 // constants
 
@@ -17,32 +17,36 @@ const {getSendBlock, getReceiveBlock, getChangeBlock, SENDER_SEED, RECEIVER_SEED
 
 // functions
 const getTestData = async () => {
-  const senderAccount = await bananojs.getBananoAccountFromSeed(SENDER_SEED, 0);
+  const senderAccount = await bananojs.getBananoAccountFromSeed(mockBlockFactory.SENDER_SEED, 0);
   // console.log('check-test', 'senderAccount', senderAccount);
 
-  const receiverAccount = await bananojs.getBananoAccountFromSeed(RECEIVER_SEED, 0);
+  const receiverAccount = await bananojs.getBananoAccountFromSeed(mockBlockFactory.RECEIVER_SEED, 0);
   // console.log('check-test', 'receiverAccount', receiverAccount);
 
-  const sendAtomicSwapBlock = await getSendBlock(SENDER_SEED, 0, receiverAccount);
+  const nonce = await swapUtil.start(senderAccount, receiverAccount);
+  // console.log('check-test', 'nonce', nonce);
+
+  const sendAtomicSwapBlock = await mockBlockFactory.getSendBlock(mockBlockFactory.SENDER_SEED, 0, receiverAccount);
   // console.log('check-test', 'sendAtomicSwapBlock', sendAtomicSwapBlock);
 
-  const receiveAtomicSwapBlock = await getReceiveBlock(RECEIVER_SEED, 0, sendAtomicSwapBlock.contents);
+  const receiveAtomicSwapBlock = await mockBlockFactory.getReceiveBlock(mockBlockFactory.RECEIVER_SEED, 0, sendAtomicSwapBlock.contents);
   // console.log('check-test', 'receiveAtomicSwapBlock', receiveAtomicSwapBlock);
 
-  const changeAbortReceiveAtomicSwapBlock = await getChangeBlock(RECEIVER_SEED, 0);
+  const changeAbortReceiveAtomicSwapBlock = await mockBlockFactory.getAbortChangeBlock(mockBlockFactory.RECEIVER_SEED, 0);
   // console.log('check-test', 'changeAbortReceiveAtomicSwapBlock', changeAbortReceiveAtomicSwapBlock);
 
-  const sendPaymentBlock = await getSendBlock(RECEIVER_SEED, 0, senderAccount);
+  const sendPaymentBlock = await mockBlockFactory.getSendBlock(mockBlockFactory.RECEIVER_SEED, 0, senderAccount);
   // console.log('check-test', 'sendPaymentBlock', sendPaymentBlock);
 
-  const changeAbortPaymentBlock = await getChangeBlock(SENDER_SEED, 0);
+  const changeAbortPaymentBlock = await mockBlockFactory.getAbortChangeBlock(mockBlockFactory.SENDER_SEED, 0);
   // console.log('check-test', 'changeAbortPaymentBlock', changeAbortPaymentBlock);
 
-  const receivePaymentBlock = await getReceiveBlock(SENDER_SEED, 0, sendPaymentBlock.contents);
+  const receivePaymentBlock = await mockBlockFactory.getReceiveBlock(mockBlockFactory.SENDER_SEED, 0, sendPaymentBlock.contents);
   // console.log('check-test', 'receivePaymentBlock', receivePaymentBlock);
   return {
     senderAccount: senderAccount,
     receiverAccount: receiverAccount,
+    nonce: nonce,
     sendAtomicSwapBlock: sendAtomicSwapBlock,
     receiveAtomicSwapBlock: receiveAtomicSwapBlock,
     changeAbortReceiveAtomicSwapBlock: changeAbortReceiveAtomicSwapBlock,
@@ -55,10 +59,9 @@ const getTestData = async () => {
 
 describe(actionUtil.ACTION, async () => {
   it('get status 200', async () => {
-    const {senderAccount, receiverAccount, sendAtomicSwapBlock, receiveAtomicSwapBlock,
+    const {nonce, senderAccount, receiverAccount, sendAtomicSwapBlock, receiveAtomicSwapBlock,
       changeAbortReceiveAtomicSwapBlock, sendPaymentBlock, changeAbortPaymentBlock,
       receivePaymentBlock} = await getTestData();
-    const nonce = swapUtil.start(senderAccount, receiverAccount);
     swapUtil.setBlock(nonce, 'send_atomic_swap', sendAtomicSwapBlock);
     swapUtil.setBlock(nonce, 'receive_atomic_swap', receiveAtomicSwapBlock);
     swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', changeAbortReceiveAtomicSwapBlock);
@@ -114,7 +117,7 @@ describe(actionUtil.ACTION, async () => {
     });
     it(`no block of type 'change_abort_receive_atomic_swap' found with nonce`, async () => {
       const {senderAccount, receiverAccount} = await getTestData();
-      const nonce = swapUtil.start(senderAccount, receiverAccount);
+      const nonce = await swapUtil.start(senderAccount, receiverAccount);
       const context = {
       };
       let actualResponse;
@@ -143,7 +146,7 @@ describe(actionUtil.ACTION, async () => {
       const {senderAccount, receiverAccount,
         changeAbortReceiveAtomicSwapBlock, changeAbortPaymentBlock} =
         await getTestData();
-      const nonce = swapUtil.start(senderAccount, receiverAccount);
+      const nonce = await swapUtil.start(senderAccount, receiverAccount);
       swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', changeAbortReceiveAtomicSwapBlock);
       swapUtil.setBlock(nonce, 'change_abort_payment', changeAbortPaymentBlock);
       const context = {
@@ -172,7 +175,7 @@ describe(actionUtil.ACTION, async () => {
     });
     it(`req.body.stage is required to be 'start' or 'abort' and was 'error'`, async () => {
       const {senderAccount, receiverAccount} = await getTestData();
-      const nonce = swapUtil.start(senderAccount, receiverAccount);
+      const nonce = await swapUtil.start(senderAccount, receiverAccount);
       swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', {});
       swapUtil.setBlock(nonce, 'change_abort_payment', {});
       const context = {
@@ -208,7 +211,7 @@ describe(actionUtil.ACTION, async () => {
         },
         subtype: 'epoch',
       };
-      const nonce = swapUtil.start(senderAccount, receiverAccount);
+      const nonce = await swapUtil.start(senderAccount, receiverAccount);
       swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', epochBlock);
       const context = {
       };
@@ -237,7 +240,7 @@ describe(actionUtil.ACTION, async () => {
     it(`blockData.subtype is required to be 'send_atomic_swap', or 'send_payment' and was 'change_abort_receive_atomic_swap'.`, async () => {
       const {senderAccount, receiverAccount, sendAtomicSwapBlock} =
         await getTestData();
-      const nonce = swapUtil.start(senderAccount, receiverAccount);
+      const nonce = await swapUtil.start(senderAccount, receiverAccount);
       swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', sendAtomicSwapBlock);
       const context = {
       };
@@ -266,7 +269,7 @@ describe(actionUtil.ACTION, async () => {
     it(`blockData.subtype is required to be 'receive_atomic_swap', or 'receive_payment' and was 'send_atomic_swap'.`, async () => {
       const {senderAccount, receiverAccount, receiveAtomicSwapBlock} =
         await getTestData();
-      const nonce = swapUtil.start(senderAccount, receiverAccount);
+      const nonce = await swapUtil.start(senderAccount, receiverAccount);
       swapUtil.setBlock(nonce, 'send_atomic_swap', receiveAtomicSwapBlock);
       const context = {
       };
@@ -295,7 +298,7 @@ describe(actionUtil.ACTION, async () => {
     it(`blockData.subtype is required to be 'change_abort_receive_atomic_swap', or 'change_abort_payment' and was 'send_atomic_swap'.`, async () => {
       const {senderAccount, receiverAccount, changeAbortReceiveAtomicSwapBlock} =
         await getTestData();
-      const nonce = swapUtil.start(senderAccount, receiverAccount);
+      const nonce = await swapUtil.start(senderAccount, receiverAccount);
       swapUtil.setBlock(nonce, 'send_atomic_swap', changeAbortReceiveAtomicSwapBlock);
       const context = {
       };
@@ -326,7 +329,7 @@ describe(actionUtil.ACTION, async () => {
     const {senderAccount, receiverAccount,
       changeAbortReceiveAtomicSwapBlock, changeAbortPaymentBlock} =
       await getTestData();
-    const nonce = swapUtil.start(senderAccount, receiverAccount);
+    const nonce = await swapUtil.start(senderAccount, receiverAccount);
     swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', changeAbortReceiveAtomicSwapBlock);
     swapUtil.setBlock(nonce, 'change_abort_payment', changeAbortPaymentBlock);
     const context = {
@@ -350,10 +353,9 @@ describe(actionUtil.ACTION, async () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
   it('all blocks, check start', async () => {
-    const {senderAccount, receiverAccount, sendAtomicSwapBlock, receiveAtomicSwapBlock,
+    const {nonce, senderAccount, receiverAccount, sendAtomicSwapBlock, receiveAtomicSwapBlock,
       changeAbortReceiveAtomicSwapBlock, sendPaymentBlock, changeAbortPaymentBlock,
       receivePaymentBlock} = await getTestData();
-    const nonce = swapUtil.start(senderAccount, receiverAccount);
     swapUtil.setBlock(nonce, 'send_atomic_swap', sendAtomicSwapBlock);
     swapUtil.setBlock(nonce, 'receive_atomic_swap', receiveAtomicSwapBlock);
     swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', changeAbortReceiveAtomicSwapBlock);
@@ -408,12 +410,16 @@ describe(actionUtil.ACTION, async () => {
   });
 
   beforeEach(async () => {
+    bananojs.setBananodeApi(mockBlockFactory.getBananodeApi(()=>{}));
+    mockBlockFactory.init(config, loggingUtil);
     swapUtil.init(config, loggingUtil);
     actionUtil.init(config, loggingUtil);
   });
 
   afterEach(async () => {
-    swapUtil.deactivate();
     actionUtil.deactivate();
+    swapUtil.deactivate();
+    mockBlockFactory.deactivate();
+    bananojs.setBananodeApi(undefined);
   });
 });

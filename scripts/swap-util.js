@@ -49,7 +49,7 @@ const deactivate = () => {
   swaps.clear();
 };
 
-const start = (sender, receiver) => {
+const start = async (sender, receiver) => {
   const senderAcccountValid = bananojs.getBananoAccountValidationInfo(sender);
   if (!senderAcccountValid.valid) {
     throw Error('sender account error:' + senderAcccountValid.message);
@@ -63,12 +63,15 @@ const start = (sender, receiver) => {
   const swap = {
     sender: sender,
     receiver: receiver,
+    senderAccountInfo: await bananojs.getAccountInfo(sender),
+    receiverAccountInfo: await bananojs.getAccountInfo(receiver),
     nonce: nonce,
     blocks: new Map(),
   };
   START_BLOCK_TYPES.forEach((blockType) => {
     swap.blocks.set(blockType, null);
   });
+  // console.log('swap-util', 'start', swap);
 
   swaps.set(nonce, swap);
   return nonce;
@@ -165,9 +168,26 @@ const checkSendBlock = (block, blockType, swap) => {
   switch (blockType) {
     case
       'send_atomic_swap':
+      if (block.account != swap.sender) {
+        throw Error(`${blockType} block is required to have 'account' be the sender,` +
+        `'${swap.sender}', and was '${block.account}'.`);
+      }
+      if (block.previous != swap.senderAccountInfo.frontier) {
+        throw Error(`${blockType} block is required to have 'previous' be the frontier,` +
+        `'${swap.senderAccountInfo.frontier}', and was '${block.previous}'.`);
+      }
       break;
     case
       'send_payment':
+      if (block.account != swap.receiver) {
+        throw Error(`${blockType} block is required to have 'account' be the receiver, '${swap.receiver}', and was '${block.account}'.`);
+      }
+      const receiveAtomicSwapBlock = swap.blocks.get('receive_atomic_swap');
+      // console.log('checkSendBlock receiveAtomicSwapBlock', receiveAtomicSwapBlock);
+      if (block.previous != receiveAtomicSwapBlock.hash) {
+        throw Error(`${blockType} block is required to have 'previous' be the receive_atomic_swap,` +
+        `'${receiveAtomicSwapBlock.hash}', and was '${block.previous}'.`);
+      }
       break;
     default:
       throw Error(`blockData.subtype is required to be 'send_atomic_swap', or 'send_payment' and was '${blockType}'.`);

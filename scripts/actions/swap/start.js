@@ -42,7 +42,7 @@ const deactivate = () => {
 };
 
 const addAction = (actions) => {
-  actions[ACTION] = (context, req, res) => {
+  actions[ACTION] = async (context, req, res) => {
     loggingUtil.debug('swap start', req.body);
     /* istanbul ignore if */
     if (req === undefined) {
@@ -66,7 +66,7 @@ const addAction = (actions) => {
 
     const resp = {};
     try {
-      const nonce = swapUtil.start(req.body.sender, req.body.receiver);
+      const nonce = await swapUtil.start(req.body.sender, req.body.receiver);
       resp.success = true;
       resp.nonce = nonce;
     } catch (error) {

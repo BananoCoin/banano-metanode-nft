@@ -9,7 +9,7 @@ const expect = chai.expect;
 const actionUtil = require('../../../scripts/actions/swap/put-abort-signatures.js');
 const swapUtil = require('../../../scripts/swap-util.js');
 const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
-const {SENDER_SEED, RECEIVER_SEED} = require('../../util/mock-block-factory.js');
+const mockBlockFactory = require('../../util/mock-block-factory.js');
 
 // constants
 
@@ -18,9 +18,9 @@ const {SENDER_SEED, RECEIVER_SEED} = require('../../util/mock-block-factory.js')
 // functions
 describe(actionUtil.ACTION, () => {
   it('get status 200', async () => {
-    const senderAccount = await bananojs.getBananoAccountFromSeed(SENDER_SEED, 0);
-    const receiverAccount = await bananojs.getBananoAccountFromSeed(RECEIVER_SEED, 0);
-    const nonce = swapUtil.start(senderAccount, receiverAccount);
+    const senderAccount = await bananojs.getBananoAccountFromSeed(mockBlockFactory.SENDER_SEED, 0);
+    const receiverAccount = await bananojs.getBananoAccountFromSeed(mockBlockFactory.RECEIVER_SEED, 0);
+    const nonce = await swapUtil.start(senderAccount, receiverAccount);
     swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', {contents: {}});
     swapUtil.setBlock(nonce, 'change_abort_payment', {contents: {}});
     const context = {
@@ -46,9 +46,9 @@ describe(actionUtil.ACTION, () => {
 
   describe('errors', async () => {
     it('call setBlock first', async () => {
-      const senderAccount = await bananojs.getBananoAccountFromSeed(SENDER_SEED, 0);
-      const receiverAccount = await bananojs.getBananoAccountFromSeed(RECEIVER_SEED, 0);
-      const nonce = swapUtil.start(senderAccount, receiverAccount);
+      const senderAccount = await bananojs.getBananoAccountFromSeed(mockBlockFactory.SENDER_SEED, 0);
+      const receiverAccount = await bananojs.getBananoAccountFromSeed(mockBlockFactory.RECEIVER_SEED, 0);
+      const nonce = await swapUtil.start(senderAccount, receiverAccount);
       const context = {
       };
       let actualResponse;
@@ -102,12 +102,16 @@ describe(actionUtil.ACTION, () => {
   });
 
   beforeEach(async () => {
+    bananojs.setBananodeApi(mockBlockFactory.getBananodeApi(()=>{}));
+    mockBlockFactory.init(config, loggingUtil);
     swapUtil.init(config, loggingUtil);
     actionUtil.init(config, loggingUtil);
   });
 
   afterEach(async () => {
-    swapUtil.deactivate();
     actionUtil.deactivate();
+    swapUtil.deactivate();
+    mockBlockFactory.deactivate();
+    bananojs.setBananodeApi(undefined);
   });
 });

@@ -45,7 +45,7 @@ const deactivate = () => {
 };
 
 const addAction = (actions) => {
-  actions[ACTION] = (context, req, res) => {
+  actions[ACTION] = async (context, req, res) => {
     /* istanbul ignore if */
     if (req === undefined) {
       throw Error('req is required');
@@ -73,7 +73,7 @@ const addAction = (actions) => {
 
     const resp = {};
     try {
-      swapUtil.checkSwapAndReturnBlocks(req.body.nonce, req.body.stage, req.body.blocks, resp);
+      await swapUtil.checkSwapAndReturnBlocks(req.body.nonce, req.body.stage, req.body.blocks, resp);
       resp.success = true;
     } catch (error) {
       loggingUtil.trace(error);
