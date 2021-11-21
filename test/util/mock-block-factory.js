@@ -26,7 +26,7 @@ const getBananodeApi = (fn) => {
   const bananodeApi = {};
   bananodeApi.process = (block, subtype) => {
     // console.log('mock-block-factory', 'block', block);
-    fn(block);
+    fn(block, subtype);
   };
   bananodeApi.getAccountInfo = (accountAddress) => {
     return {
@@ -44,8 +44,8 @@ const getSendBlock = async (seed, seedIx, newOwnerAccount) => {
   try {
     const representative = await getRepresentative();
     let sendBlock = undefined;
-    bananojs.setBananodeApi(getBananodeApi((block) => {
-      sendBlock = block;
+    bananojs.setBananodeApi(getBananodeApi((block, subtype) => {
+      sendBlock = {contents: block, subtype: subtype};
     }));
     const fn = bananojs.sendAmountToBananoAccountWithRepresentativeAndPrevious;
     await fn(seed, seedIx, newOwnerAccount, '1', representative, previousHash);
@@ -63,8 +63,8 @@ const getReceiveBlock = async (seed, seedIx, block) => {
     const hash = bananojs.bananoUtil.hash(block);
     const representative = await getRepresentative();
     let receiveBlock = undefined;
-    const bananodeApi = getBananodeApi((block) => {
-      receiveBlock = block;
+    const bananodeApi = getBananodeApi((block, subtype) => {
+      receiveBlock = {contents: block, subtype: subtype};
     });
     bananojs.setBananodeApi(bananodeApi);
     const fn = bananojs.bananoUtil.receive;
@@ -81,8 +81,8 @@ const getChangeBlock = async (seed, seedIx) => {
     const privateKey = bananojs.bananoUtil.getPrivateKey(seed, seedIx);
     const representative = await getRepresentative();
     let changeBlock = undefined;
-    const bananodeApi = getBananodeApi((block) => {
-      changeBlock = block;
+    const bananodeApi = getBananodeApi((block, subtype) => {
+      changeBlock = {contents: block, subtype: subtype};
     });
     bananojs.setBananodeApi(bananodeApi);
     const fn = bananojs.bananoUtil.change;

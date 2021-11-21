@@ -21,8 +21,8 @@ describe(actionUtil.ACTION, () => {
     const senderAccount = await bananojs.getBananoAccountFromSeed(SENDER_SEED, 0);
     const receiverAccount = await bananojs.getBananoAccountFromSeed(RECEIVER_SEED, 0);
     const nonce = swapUtil.start(senderAccount, receiverAccount);
-    swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', {});
-    swapUtil.setBlock(nonce, 'change_abort_payment', {});
+    swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', {contents: {}});
+    swapUtil.setBlock(nonce, 'change_abort_payment', {contents: {}});
     const context = {
     };
     let actualResponse;

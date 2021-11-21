@@ -102,7 +102,7 @@ const signBlock = (nonce, blockType, signature) => {
   if (block == null) {
     throw Error(`no block of type '${blockType}' found with nonce '${nonce}', call setBlock first.`);
   }
-  block.signature = signature;
+  block.contents.signature = signature;
 };
 
 
@@ -137,6 +137,7 @@ const checkSwapAndReturnBlocks = (nonce, stageEnum, blocksFlag, resp) => {
     if (block == null) {
       throw Error(`no block of type '${blockType}' found with nonce '${nonce}', call setBlock first.`);
     }
+    checkBlock(block, blockType, swap);
     switch (blocksFlag) {
       case 'true':
         blocks.push({type: blockType, block: block});
@@ -150,6 +151,109 @@ const checkSwapAndReturnBlocks = (nonce, stageEnum, blocksFlag, resp) => {
 
   if (blocksFlag === 'true') {
     resp.blocks = blocks;
+  }
+};
+
+const checkSendBlock = (block, blockType, swap) => {
+  // check
+  // account: 'ban_3rzxi6sc4rng6ebit1e6cf1cidn8kp3ckiwgqxmsmrgmy6ajbzumbk5wd331',
+  // previous: '2222222222222222222222222222222222222222222222222222222222222222',
+  // representative: 'ban_16aj46aj46aj46aj46aj46aj46aj46aj46aj46aj46aj46aj46ajbtsyew7c',
+  // balance: '1',
+  // link: '0000000000000000000000000000000000000000000000000000000000000000',
+  // signature: ''
+  switch (blockType) {
+    case
+      'send_atomic_swap':
+      break;
+    case
+      'send_payment':
+      break;
+    default:
+      throw Error(`blockData.subtype is required to be 'send_atomic_swap', or 'send_payment' and was '${blockType}'.`);
+  }
+};
+
+const checkReceiveBlock = (block, blockType, swap) => {
+  // check
+  // account: 'ban_3rzxi6sc4rng6ebit1e6cf1cidn8kp3ckiwgqxmsmrgmy6ajbzumbk5wd331',
+  // previous: '2222222222222222222222222222222222222222222222222222222222222222',
+  // representative: 'ban_16aj46aj46aj46aj46aj46aj46aj46aj46aj46aj46aj46aj46ajbtsyew7c',
+  // balance: '1',
+  // link: '0000000000000000000000000000000000000000000000000000000000000000',
+  // signature: ''
+  switch (blockType) {
+    case
+      'receive_atomic_swap':
+      break;
+    case
+      'receive_payment':
+      break;
+    default:
+      throw Error(`blockData.subtype is required to be 'receive_atomic_swap', or 'receive_payment' and was '${blockType}'.`);
+  }
+};
+
+const checkChangeBlock = (block, blockType, swap) => {
+  // check
+  // account: 'ban_3rzxi6sc4rng6ebit1e6cf1cidn8kp3ckiwgqxmsmrgmy6ajbzumbk5wd331',
+  // previous: '2222222222222222222222222222222222222222222222222222222222222222',
+  // representative: 'ban_16aj46aj46aj46aj46aj46aj46aj46aj46aj46aj46aj46aj46ajbtsyew7c',
+  // balance: '1',
+  // link: '0000000000000000000000000000000000000000000000000000000000000000',
+  // signature: ''
+  switch (blockType) {
+    case
+      'change_abort_receive_atomic_swap':
+      break;
+    case
+      'change_abort_payment':
+      break;
+    default:
+      throw Error(`blockData.subtype is required to be 'change_abort_receive_atomic_swap', or 'change_abort_payment' and was '${blockType}'.`);
+  }
+};
+
+const checkBlock = (blockData, blockType, swap) => {
+  // console.log('checkBlock', 'blockData', blockData);
+  // console.log('checkBlock', 'blockType', blockType);
+  // console.log('checkBlock', 'swap', swap);
+  /* istanbul ignore if */
+  if (blockData === undefined) {
+    throw Error(`blockData is required.`);
+  }
+  /* istanbul ignore if */
+  if (blockData.contents === undefined) {
+    throw Error(`blockData.contents is required.`);
+  }
+  /* istanbul ignore if */
+  if (blockData.subtype === undefined) {
+    throw Error(`blockData.contents is required.`);
+  }
+  /* istanbul ignore if */
+  if (blockData.contents.type != 'state') {
+    throw Error(`blockData.contents.type is required to be 'state' and was '${blockData.contents.type}'.`);
+  }
+  /* istanbul ignore if */
+  if (blockType === undefined) {
+    throw Error(`blockType is required.`);
+  }
+  /* istanbul ignore if */
+  if (swap === undefined) {
+    throw Error(`swap is required.`);
+  }
+  switch (blockData.subtype) {
+    case 'send':
+      checkSendBlock(blockData.contents, blockType, swap);
+      break;
+    case 'receive':
+      checkReceiveBlock(blockData.contents, blockType, swap);
+      break;
+    case 'change':
+      checkChangeBlock(blockData.contents, blockType, swap);
+      break;
+    default:
+      throw Error(`blockData.subtype is required to be 'send', 'receive', or 'change' and was '${blockData.subtype}'.`);
   }
 };
 
