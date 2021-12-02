@@ -183,6 +183,7 @@ const checkSendBlock = (block, blockType, swap) => {
         throw Error(`${blockType} block is required to have 'account' be the receiver, '${swap.receiver}', and was '${block.account}'.`);
       }
       const receiveAtomicSwapBlock = swap.blocks.get('receive_atomic_swap');
+      // console.log('checkSendBlock block', block);
       // console.log('checkSendBlock receiveAtomicSwapBlock', receiveAtomicSwapBlock);
       if (block.previous != receiveAtomicSwapBlock.hash) {
         throw Error(`${blockType} block is required to have 'previous' be the receive_atomic_swap,` +
