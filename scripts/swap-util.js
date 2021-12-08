@@ -63,6 +63,8 @@ const start = async (sender, receiver) => {
   const swap = {
     sender: sender,
     receiver: receiver,
+    senderPublicKey: await bananojs.getAccountPublicKey(sender),
+    receiverPublicKey: await bananojs.getAccountPublicKey(receiver),
     senderAccountInfo: await bananojs.getAccountInfo(sender),
     receiverAccountInfo: await bananojs.getAccountInfo(receiver),
     nonce: nonce,
@@ -165,6 +167,12 @@ const checkSendBlock = (block, blockType, swap) => {
   // balance: '1',
   // link: '0000000000000000000000000000000000000000000000000000000000000000',
   // signature: ''
+
+  // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/atomic_swap.md#sendatomic_swap
+
+  // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/atomic_swap.md#sendpayment
+
+  // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/atomic_swap.md#atomic_swap_representative
   switch (blockType) {
     case
       'send_atomic_swap':
@@ -175,6 +183,10 @@ const checkSendBlock = (block, blockType, swap) => {
       if (block.previous != swap.senderAccountInfo.frontier) {
         throw Error(`${blockType} block is required to have 'previous' be the frontier,` +
         `'${swap.senderAccountInfo.frontier}', and was '${block.previous}'.`);
+      }
+      if (block.link != swap.receiverPublicKey) {
+        throw Error(`${blockType} block is required to have 'link' be the receiver_public_key,` +
+        `'${swap.receiverPublicKey}', and was '${block.link}'.`);
       }
       break;
     case
@@ -188,6 +200,10 @@ const checkSendBlock = (block, blockType, swap) => {
       if (block.previous != receiveAtomicSwapBlock.hash) {
         throw Error(`${blockType} block is required to have 'previous' be the receive_atomic_swap,` +
         `'${receiveAtomicSwapBlock.hash}', and was '${block.previous}'.`);
+      }
+      if (block.link != swap.senderPublicKey) {
+        throw Error(`${blockType} block is required to have 'link' be the sender_public_key,` +
+        `'${swap.senderPublicKey}', and was '${block.link}'.`);
       }
       break;
     default:
@@ -203,6 +219,11 @@ const checkReceiveBlock = (block, blockType, swap) => {
   // balance: '1',
   // link: '0000000000000000000000000000000000000000000000000000000000000000',
   // signature: ''
+
+  // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/atomic_swap.md#receiveatomic_swap
+
+  // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/atomic_swap.md#receivepayment
+
   switch (blockType) {
     case
       'receive_atomic_swap':
@@ -223,6 +244,11 @@ const checkChangeBlock = (block, blockType, swap) => {
   // balance: '1',
   // link: '0000000000000000000000000000000000000000000000000000000000000000',
   // signature: ''
+
+  // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/atomic_swap.md#changeabort_payment
+
+  // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/atomic_swap.md#changeabort_receive_atomic_swap
+
   switch (blockType) {
     case
       'change_abort_receive_atomic_swap':
