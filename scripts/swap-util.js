@@ -111,7 +111,7 @@ const signBlock = (nonce, blockType, signature) => {
 };
 
 
-const checkSwapAndReturnBlocks = (nonce, stageEnum, blocksFlag, resp) => {
+const checkSwapAndReturnBlocks = async (nonce, stageEnum, blocksFlag, resp) => {
   if (!swaps.has(nonce)) {
     throw Error(`no swap found with nonce '${nonce}'.`);
   }
@@ -142,7 +142,7 @@ const checkSwapAndReturnBlocks = (nonce, stageEnum, blocksFlag, resp) => {
     if (block == null) {
       throw Error(`no block of type '${blockType}' found with nonce '${nonce}', call setBlock first.`);
     }
-    checkBlock(block, blockType, swap);
+    await checkBlock(block, blockType, swap);
     switch (blocksFlag) {
       case 'true':
         blocks.push({type: blockType, block: block});
@@ -159,7 +159,44 @@ const checkSwapAndReturnBlocks = (nonce, stageEnum, blocksFlag, resp) => {
   }
 };
 
-const checkSendBlock = (block, blockType, swap) => {
+const hexToBigInt = (hex) => {
+  return BigInt('0x' + hex);
+};
+
+const parseRepresentative = async (representative) => {
+  const representativePublicKey = await bananojs.getAccountPublicKey(representative);
+  // Representative field can be represented as a 64-char hex. The hex is split into segments encoding requirements for the atomic swap.
+  //
+  // ban_1atomicswap is used as a header to detect send#atomic_swap blocks containing encoded requirements.
+  //
+  // asset height is the Banano block height for the frontier block of the asset to swap.
+  // The asset height can also refer to a receive#atomic_swap_delegation block. For more details see atomic_swap_delegation.
+  //
+  // receive height is the recipient's current account block height + 1.
+  //
+  // min raw is the minimum amount of raw to send back for the swap to be valid.
+  //
+  //            header          asset height   receive height  min raw (inclusive)
+  // hex length 13 chars        10 chars       10 chars        31 chars
+  // hex        23559C159E22C   0000000001     00000001CA      0000017FB3B29F21F77C409E0000000
+  // value      ban_1atomicswap block 1        block 458       19 BAN
+  // Example: ban_1atomicswap11111111i111119711113hysu79s3yxy639i11111cquj6wdh
+  const header = representativePublicKey.substring(0, 13);
+  if (header !== '23559C159E22C') {
+    throw Error(`representative '${representative}' is required to have 'header' be` +
+    `'23559C159E22C', and was '${header}'.`);
+  }
+  const assetHeight = hexToBigInt(representativePublicKey.substring(13, 23));
+  const receiveHeight = hexToBigInt(representativePublicKey.substring(23, 33));
+  const minRaw = hexToBigInt(representativePublicKey.substring(33));
+  return {
+    assetHeight: assetHeight,
+    receiveHeight: receiveHeight,
+    minRaw: minRaw,
+  };
+};
+
+const checkSendBlock = async (block, blockType, swap) => {
   // check
   // account: 'ban_3rzxi6sc4rng6ebit1e6cf1cidn8kp3ckiwgqxmsmrgmy6ajbzumbk5wd331',
   // previous: '2222222222222222222222222222222222222222222222222222222222222222',
@@ -188,6 +225,15 @@ const checkSendBlock = (block, blockType, swap) => {
         throw Error(`${blockType} block is required to have 'link' be the receiver_public_key,` +
         `'${swap.receiverPublicKey}', and was '${block.link}'.`);
       }
+      const parsedRepresentative = await parseRepresentative(block.representative);
+      if (BigInt(block.balance) < parsedRepresentative.minRaw) {
+        throw Error(`${blockType} block is required to have 'balance' be over min_raw,` +
+        `'${parsedRepresentative.minRaw}', and was '${block.balance}'.`);
+      }
+      // TODO:
+      // confirmation_height
+      // assetHeight: assetHeight,
+      // receiveHeight: receiveHeight,
       break;
     case
       'send_payment':
@@ -261,7 +307,7 @@ const checkChangeBlock = (block, blockType, swap) => {
   }
 };
 
-const checkBlock = (blockData, blockType, swap) => {
+const checkBlock = async (blockData, blockType, swap) => {
   // console.log('checkBlock', 'blockData', blockData);
   // console.log('checkBlock', 'blockType', blockType);
   // console.log('checkBlock', 'swap', swap);
@@ -291,13 +337,13 @@ const checkBlock = (blockData, blockType, swap) => {
   }
   switch (blockData.subtype) {
     case 'send':
-      checkSendBlock(blockData.contents, blockType, swap);
+      await checkSendBlock(blockData.contents, blockType, swap);
       break;
     case 'receive':
-      checkReceiveBlock(blockData.contents, blockType, swap);
+      await checkReceiveBlock(blockData.contents, blockType, swap);
       break;
     case 'change':
-      checkChangeBlock(blockData.contents, blockType, swap);
+      await checkChangeBlock(blockData.contents, blockType, swap);
       break;
     default:
       throw Error(`blockData.subtype is required to be 'send', 'receive', or 'change' and was '${blockData.subtype}'.`);

@@ -421,7 +421,7 @@ describe(actionUtil.ACTION, async () => {
         expect(actualResponse).to.deep.equal(expectedResponse);
       });
       it(`send_atomic_swap block is required to have 'link' be the receiver_public_key, and was not.`, async () => {
-        const {nonce, senderAccount, receiverPublicKey, sendAtomicSwapBlock, receiveAtomicSwapBlock,
+        const {nonce, receiverPublicKey, sendAtomicSwapBlock, receiveAtomicSwapBlock,
           changeAbortReceiveAtomicSwapBlock, sendPaymentBlock, changeAbortPaymentBlock,
           receivePaymentBlock} = await getTestData();
         sendAtomicSwapBlock.contents.link = 'BAD_LINK';
@@ -531,7 +531,7 @@ describe(actionUtil.ACTION, async () => {
         expect(actualResponse).to.deep.equal(expectedResponse);
       });
       it(`send_payment block is required to have 'link' be the sender_public_key, and was not.`, async () => {
-        const {nonce, receiverAccount, senderPublicKey, sendAtomicSwapBlock, receiveAtomicSwapBlock,
+        const {nonce, senderPublicKey, sendAtomicSwapBlock, receiveAtomicSwapBlock,
           changeAbortReceiveAtomicSwapBlock, sendPaymentBlock, changeAbortPaymentBlock,
           receivePaymentBlock} = await getTestData();
         sendPaymentBlock.contents.link = 'BAD_LINK';
