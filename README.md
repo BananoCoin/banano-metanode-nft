@@ -4,7 +4,7 @@ An RPC node for issuing NFTs on the banano blockchain.
 
 # NFT Template Spec
 
-  [NFT Template Spec](https://github.com/Airtune/73-meta-tokens/blob/main/mint_nft.md)
+  [NFT Template Spec](https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/mint_blocks.md)
 
 # NFT Minting documentation
 
