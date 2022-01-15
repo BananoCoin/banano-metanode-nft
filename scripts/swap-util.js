@@ -163,8 +163,29 @@ const hexToBigInt = (hex) => {
   return BigInt('0x' + hex);
 };
 
-const parseRepresentative = async (representative) => {
-  const representativePublicKey = await bananojs.getAccountPublicKey(representative);
+const zeroPadToLength = (name, value, length) => {
+  value = value.toString();
+  if (value.length > length) {
+    throw Error(`${name} '${value}' is required to have 'length' be ` +
+    `'${length}', and was '${value.length}'.`);
+  }
+  value = value.padStart(length, '0');
+  return value;
+};
+
+const createRepresentative = (assetHeight, receiveHeight, minRaw) => {
+/* istanbul ignore if */
+  if (assetHeight === undefined) {
+    throw Error(`assetHeight is required.`);
+  }
+  /* istanbul ignore if */
+  if (receiveHeight === undefined) {
+    throw Error(`receiveHeight is required.`);
+  }
+  /* istanbul ignore if */
+  if (minRaw === undefined) {
+    throw Error(`minRaw is required.`);
+  }
   // Representative field can be represented as a 64-char hex. The hex is split into segments encoding requirements for the atomic swap.
   //
   // ban_1atomicswap is used as a header to detect send#atomic_swap blocks containing encoded requirements.
@@ -181,6 +202,28 @@ const parseRepresentative = async (representative) => {
   // hex        23559C159E22C   0000000001     00000001CA      0000017FB3B29F21F77C409E0000000
   // value      ban_1atomicswap block 1        block 458       19 BAN
   // Example: ban_1atomicswap11111111i111119711113hysu79s3yxy639i11111cquj6wdh
+  const header = '23559C159E22C';
+  let assetHeightHex = BigInt(assetHeight).toString(16);
+  let receiveHeightHex = BigInt(receiveHeight).toString(16);
+  let minRawHex = BigInt(minRaw).toString(16);
+  assetHeightHex = zeroPadToLength('assetHeight', assetHeightHex, 10);
+  receiveHeightHex = zeroPadToLength('receiveHeight', receiveHeightHex, 10);
+  minRawHex = zeroPadToLength('minRaw', minRawHex, 31);
+  // console.log('creatRepresentative', 'assetHeight', assetHeight);
+  // console.log('creatRepresentative', 'assetHeightHex', assetHeightHex);
+  // console.log('creatRepresentative', 'receiveHeightHex', receiveHeightHex);
+  // console.log('creatRepresentative', 'minRaw', minRawHex);
+  const publicKey = `${header}${assetHeightHex}${receiveHeightHex}${minRawHex}`;
+  // console.log('creatRepresentative', 'publicKey', publicKey);
+  const representative = bananojs.getBananoAccount(publicKey);
+  // console.log('creatRepresentative', 'representative', representative);
+  return representative;
+};
+
+const parseRepresentative = async (representative) => {
+  // console.log('parseRepresentative', 'representative', representative);
+  const representativePublicKey = await bananojs.getAccountPublicKey(representative);
+  // console.log('parseRepresentative', 'publicKey', representativePublicKey);
   const header = representativePublicKey.substring(0, 13);
   if (header !== '23559C159E22C') {
     throw Error(`representative '${representative}' is required to have 'header' be` +
@@ -189,6 +232,7 @@ const parseRepresentative = async (representative) => {
   const assetHeight = hexToBigInt(representativePublicKey.substring(13, 23));
   const receiveHeight = hexToBigInt(representativePublicKey.substring(23, 33));
   const minRaw = hexToBigInt(representativePublicKey.substring(33));
+  // console.log('parseRepresentative', 'minRaw', minRaw);
   return {
     assetHeight: assetHeight,
     receiveHeight: receiveHeight,
@@ -226,6 +270,9 @@ const checkSendBlock = async (block, blockType, swap) => {
         `'${swap.receiverPublicKey}', and was '${block.link}'.`);
       }
       const parsedRepresentative = await parseRepresentative(block.representative);
+      // console.log('checkSendBlock', 'representative', block.representative);
+      // console.log('checkSendBlock', 'parsedRepresentative.minRaw', parsedRepresentative.minRaw);
+      // console.log('checkSendBlock', 'block.balance', block.balance);
       if (BigInt(block.balance) < parsedRepresentative.minRaw) {
         throw Error(`${blockType} block is required to have 'balance' be over min_raw,` +
         `'${parsedRepresentative.minRaw}', and was '${block.balance}'.`);
@@ -356,3 +403,4 @@ exports.start = start;
 exports.setBlock = setBlock;
 exports.signBlock = signBlock;
 exports.checkSwapAndReturnBlocks = checkSwapAndReturnBlocks;
+exports.createRepresentative = createRepresentative;

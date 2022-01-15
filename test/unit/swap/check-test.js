@@ -458,6 +458,7 @@ describe(actionUtil.ACTION, async () => {
       });
     });
     describe('send_payment', async () => {
+      const minRaw = '1900000000000000000000000000000';
       it(`send_payment block is required to have 'previous' be the receive_atomic_swap hash, and was not.`, async () => {
         const {nonce, sendAtomicSwapBlock, receiveAtomicSwapBlock,
           changeAbortReceiveAtomicSwapBlock, sendPaymentBlock, changeAbortPaymentBlock,
@@ -556,6 +557,101 @@ describe(actionUtil.ACTION, async () => {
           loggingUtil.trace(error);
         }
         const expectedError = `send_payment block is required to have 'link' be the sender_public_key,'${senderPublicKey}', and was 'BAD_LINK'.`;
+        const expectedResponse = {
+          success: false,
+          errors: [
+            expectedError,
+          ],
+        };
+        loggingUtil.debug('actualResponse', actualResponse);
+        loggingUtil.debug('expectedResponse', expectedResponse);
+        expect(actualResponse).to.deep.equal(expectedResponse);
+      });
+      it(`send_payment block is required to have 'representative' be '23559C159E22C', and was not.`, async () => {
+        const {nonce, sendAtomicSwapBlock, receiveAtomicSwapBlock,
+          changeAbortReceiveAtomicSwapBlock, sendPaymentBlock, changeAbortPaymentBlock,
+          receivePaymentBlock} = await getTestData();
+        sendAtomicSwapBlock.contents.representative = 'ban_1badrepnbjn31u3i5rn6x7cqrhk98se73db81bga7ux3uowhs48dd7nanu64';
+        swapUtil.setBlock(nonce, 'send_atomic_swap', sendAtomicSwapBlock);
+        swapUtil.setBlock(nonce, 'receive_atomic_swap', receiveAtomicSwapBlock);
+        swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', changeAbortReceiveAtomicSwapBlock);
+        swapUtil.setBlock(nonce, 'send_payment', sendPaymentBlock);
+        swapUtil.setBlock(nonce, 'change_abort_payment', changeAbortPaymentBlock);
+        swapUtil.setBlock(nonce, 'receive_payment', receivePaymentBlock);
+
+        const context = {
+        };
+        let actualResponse;
+        try {
+          const request = {
+            nonce: nonce,
+            stage: 'start',
+            blocks: 'false',
+          };
+          actualResponse = await getResponse(actionUtil, context, request);
+        } catch (error) {
+          loggingUtil.trace(error);
+        }
+        const expectedError = `representative '${sendAtomicSwapBlock.contents.representative}' is required to have 'header' be'23559C159E22C', and was '250BC32D44C68'.`;
+        const expectedResponse = {
+          success: false,
+          errors: [
+            expectedError,
+          ],
+        };
+        loggingUtil.debug('actualResponse', actualResponse);
+        loggingUtil.debug('expectedResponse', expectedResponse);
+        expect(actualResponse).to.deep.equal(expectedResponse);
+      });
+      it(`send_atomic_swap block is required to have 'balance' be over min_raw, and was not.`, async () => {
+        const {nonce, sendAtomicSwapBlock, receiveAtomicSwapBlock,
+          changeAbortReceiveAtomicSwapBlock, sendPaymentBlock, changeAbortPaymentBlock,
+          receivePaymentBlock} = await getTestData();
+        sendAtomicSwapBlock.contents.representative = swapUtil.createRepresentative(1, 458, minRaw);
+        swapUtil.setBlock(nonce, 'send_atomic_swap', sendAtomicSwapBlock);
+        swapUtil.setBlock(nonce, 'receive_atomic_swap', receiveAtomicSwapBlock);
+        swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', changeAbortReceiveAtomicSwapBlock);
+        swapUtil.setBlock(nonce, 'send_payment', sendPaymentBlock);
+        swapUtil.setBlock(nonce, 'change_abort_payment', changeAbortPaymentBlock);
+        swapUtil.setBlock(nonce, 'receive_payment', receivePaymentBlock);
+
+        const context = {
+        };
+        let actualResponse;
+        try {
+          const request = {
+            nonce: nonce,
+            stage: 'start',
+            blocks: 'false',
+          };
+          actualResponse = await getResponse(actionUtil, context, request);
+        } catch (error) {
+          loggingUtil.trace(error);
+        }
+        const expectedError = `send_atomic_swap block is required to have 'balance' be over min_raw,'${minRaw}', and was '0'.`;
+        const expectedResponse = {
+          success: false,
+          errors: [
+            expectedError,
+          ],
+        };
+        loggingUtil.debug('actualResponse', actualResponse);
+        loggingUtil.debug('expectedResponse', expectedResponse);
+        expect(actualResponse).to.deep.equal(expectedResponse);
+      });
+      it(`send_atomic_swap block is required to have 'receiveHeight' be under length 10, and was not.`, async () => {
+        const actualResponse = {
+          success: true,
+          errors: [
+          ],
+        };
+        try {
+          swapUtil.createRepresentative(1, '0x12345678901', minRaw);
+        } catch (error) {
+          actualResponse.success = false;
+          actualResponse.errors.push(error.message);
+        }
+        const expectedError = `receiveHeight '12345678901' is required to have 'length' be '10', and was '11'.`;
         const expectedResponse = {
           success: false,
           errors: [

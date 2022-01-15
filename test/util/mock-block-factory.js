@@ -5,6 +5,8 @@ const bananojs = require('@bananocoin/bananojs');
 // modules
 
 // constants
+
+// const representativeAccount = 'ban_1atomicswap11111111i111119711113hysu79s3yxy639i11111cquj6wdh';
 const representativePublicKey = '23559C159E22C000000000000000000000000000000000000000000000000000';
 const previousHash = '2222222222222222222222222222222222222222222222222222222222222222';
 
@@ -42,6 +44,7 @@ const deactivate = () => {
 };
 
 const getRepresentative = async () => {
+  // const representativePublicKey = await bananojs.getAccountPublicKey(representativeAccount);
   return await bananojs.getBananoAccount(representativePublicKey);
 };
 
