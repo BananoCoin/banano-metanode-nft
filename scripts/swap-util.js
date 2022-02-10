@@ -258,45 +258,57 @@ const checkSendBlock = async (block, blockType, swap) => {
     case
       'send_atomic_swap':
       if (block.account != swap.sender) {
-        throw Error(`${blockType} block is required to have 'account' be the sender,` +
-        `'${swap.sender}', and was '${block.account}'.`);
+        throw Error(`${blockType} block is required to have 'account' be the sender` +
+        ` '${swap.sender}', and was '${block.account}'.`);
       }
       if (block.previous != swap.senderAccountInfo.frontier) {
-        throw Error(`${blockType} block is required to have 'previous' be the frontier,` +
-        `'${swap.senderAccountInfo.frontier}', and was '${block.previous}'.`);
+        throw Error(`${blockType} block is required to have 'previous' be the frontier` +
+        ` '${swap.senderAccountInfo.frontier}', and was '${block.previous}'.`);
       }
       if (block.link != swap.receiverPublicKey) {
-        throw Error(`${blockType} block is required to have 'link' be the receiver_public_key,` +
-        `'${swap.receiverPublicKey}', and was '${block.link}'.`);
+        throw Error(`${blockType} block is required to have 'link' be the receiver_public_key` +
+        ` '${swap.receiverPublicKey}', and was '${block.link}'.`);
       }
       const parsedRepresentative = await parseRepresentative(block.representative);
       // console.log('checkSendBlock', 'representative', block.representative);
       // console.log('checkSendBlock', 'parsedRepresentative.minRaw', parsedRepresentative.minRaw);
       // console.log('checkSendBlock', 'block.balance', block.balance);
       if (BigInt(block.balance) < parsedRepresentative.minRaw) {
-        throw Error(`${blockType} block is required to have 'balance' be over min_raw,` +
-        `'${parsedRepresentative.minRaw}', and was '${block.balance}'.`);
+        throw Error(`${blockType} block is required to have 'balance' be over min_raw` +
+        ` '${parsedRepresentative.minRaw}', and was '${block.balance}'.`);
       }
-      // TODO:
-      // confirmation_height
-      // assetHeight: assetHeight,
-      // receiveHeight: receiveHeight,
+      // console.log('checkSendBlock', 'parsedRepresentative', parsedRepresentative);
+      // console.log('checkSendBlock', 'block', block);
+      // console.log('checkSendBlock', 'receiverAccountInfo', swap.receiverAccountInfo);
+
+      const senderConfirmationHeight = BigInt(swap.senderAccountInfo.confirmation_height);
+      if (senderConfirmationHeight !== BigInt(parsedRepresentative.assetHeight)) {
+        throw Error(`${blockType} sender account info is required to have 'confirmation_height' be equal to assetHeight`+
+        ` '${parsedRepresentative.assetHeight}', and was '${senderConfirmationHeight}'.`);
+      }
+
+      const receiverConfirmationHeight = BigInt(swap.receiverAccountInfo.confirmation_height);
+      if (receiverConfirmationHeight !== BigInt(parsedRepresentative.receiveHeight)) {
+        throw Error(`${blockType} receiver account info is required to have 'confirmation_height' be equal to receiveHeight`+
+        ` '${parsedRepresentative.receiveHeight}', and was '${receiverConfirmationHeight}'.`);
+      }
       break;
     case
       'send_payment':
       if (block.account != swap.receiver) {
-        throw Error(`${blockType} block is required to have 'account' be the receiver, '${swap.receiver}', and was '${block.account}'.`);
+        throw Error(`${blockType} block is required to have 'account' be the receiver`+
+        ` '${swap.receiver}', and was '${block.account}'.`);
       }
       const receiveAtomicSwapBlock = swap.blocks.get('receive_atomic_swap');
       // console.log('checkSendBlock block', block);
       // console.log('checkSendBlock receiveAtomicSwapBlock', receiveAtomicSwapBlock);
       if (block.previous != receiveAtomicSwapBlock.hash) {
-        throw Error(`${blockType} block is required to have 'previous' be the receive_atomic_swap,` +
-        `'${receiveAtomicSwapBlock.hash}', and was '${block.previous}'.`);
+        throw Error(`${blockType} block is required to have 'previous' be the receive_atomic_swap` +
+         ` '${receiveAtomicSwapBlock.hash}', and was '${block.previous}'.`);
       }
       if (block.link != swap.senderPublicKey) {
-        throw Error(`${blockType} block is required to have 'link' be the sender_public_key,` +
-        `'${swap.senderPublicKey}', and was '${block.link}'.`);
+        throw Error(`${blockType} block is required to have 'link' be the sender_public_key` +
+        ` '${swap.senderPublicKey}', and was '${block.link}'.`);
       }
       break;
     default:

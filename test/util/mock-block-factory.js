@@ -6,6 +6,7 @@ const bananojs = require('@bananocoin/bananojs');
 
 // constants
 
+// rep from https://github.com/Airtune/73-meta-tokens/blob/134ac0556ef82ecf0734014d8cfc8f0fce58cad1/meta_ledger_protocol/atomic_swap.md
 // const representativeAccount = 'ban_1atomicswap11111111i111119711113hysu79s3yxy639i11111cquj6wdh';
 const representativePublicKey = '23559C159E22C000000000000000000000000000000000000000000000000000';
 const previousHash = '2222222222222222222222222222222222222222222222222222222222222222';
@@ -16,6 +17,7 @@ let config;
 let loggingUtil;
 let frontier;
 let balance;
+let confirmationHeight;
 /* eslint-enable no-unused-vars */
 
 // functions
@@ -31,6 +33,7 @@ const init = (_config, _loggingUtil) => {
   config = _config;
   loggingUtil = _loggingUtil;
   frontier = previousHash;
+  confirmationHeight = '0';
   balance = '1';
 };
 
@@ -41,6 +44,7 @@ const deactivate = () => {
   /* eslint-enable no-unused-vars */
   frontier = undefined;
   balance = undefined;
+  confirmationHeight = undefined;
 };
 
 const getRepresentative = async () => {
@@ -58,6 +62,7 @@ const getBananodeApi = (fn) => {
     return {
       balance: balance,
       frontier: frontier,
+      confirmation_height: confirmationHeight,
     };
   };
   bananodeApi.getGeneratedWork = () =>{

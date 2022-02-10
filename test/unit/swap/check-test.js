@@ -373,7 +373,7 @@ describe(actionUtil.ACTION, async () => {
         } catch (error) {
           loggingUtil.trace(error);
         }
-        const expectedError = `send_atomic_swap block is required to have 'previous' be the frontier,'${senderAccountInfo.frontier}', and was 'BAD_HASH'.`;
+        const expectedError = `send_atomic_swap block is required to have 'previous' be the frontier '${senderAccountInfo.frontier}', and was 'BAD_HASH'.`;
         const expectedResponse = {
           success: false,
           errors: [
@@ -409,7 +409,7 @@ describe(actionUtil.ACTION, async () => {
         } catch (error) {
           loggingUtil.trace(error);
         }
-        const expectedError = `send_atomic_swap block is required to have 'account' be the sender,'${senderAccount}', and was 'BAD_ACCOUNT'.`;
+        const expectedError = `send_atomic_swap block is required to have 'account' be the sender '${senderAccount}', and was 'BAD_ACCOUNT'.`;
         const expectedResponse = {
           success: false,
           errors: [
@@ -445,7 +445,7 @@ describe(actionUtil.ACTION, async () => {
         } catch (error) {
           loggingUtil.trace(error);
         }
-        const expectedError = `send_atomic_swap block is required to have 'link' be the receiver_public_key,'${receiverPublicKey}', and was 'BAD_LINK'.`;
+        const expectedError = `send_atomic_swap block is required to have 'link' be the receiver_public_key '${receiverPublicKey}', and was 'BAD_LINK'.`;
         const expectedResponse = {
           success: false,
           errors: [
@@ -484,7 +484,7 @@ describe(actionUtil.ACTION, async () => {
         } catch (error) {
           loggingUtil.trace(error);
         }
-        const expectedError = `send_payment block is required to have 'previous' be the receive_atomic_swap,'${receiveAtomicSwapBlock.hash}', and was 'BAD_HASH'.`;
+        const expectedError = `send_payment block is required to have 'previous' be the receive_atomic_swap '${receiveAtomicSwapBlock.hash}', and was 'BAD_HASH'.`;
         const expectedResponse = {
           success: false,
           errors: [
@@ -520,7 +520,7 @@ describe(actionUtil.ACTION, async () => {
         } catch (error) {
           loggingUtil.trace(error);
         }
-        const expectedError = `send_payment block is required to have 'account' be the receiver, '${receiverAccount}', and was 'BAD_ACCOUNT'.`;
+        const expectedError = `send_payment block is required to have 'account' be the receiver '${receiverAccount}', and was 'BAD_ACCOUNT'.`;
         const expectedResponse = {
           success: false,
           errors: [
@@ -556,7 +556,7 @@ describe(actionUtil.ACTION, async () => {
         } catch (error) {
           loggingUtil.trace(error);
         }
-        const expectedError = `send_payment block is required to have 'link' be the sender_public_key,'${senderPublicKey}', and was 'BAD_LINK'.`;
+        const expectedError = `send_payment block is required to have 'link' be the sender_public_key '${senderPublicKey}', and was 'BAD_LINK'.`;
         const expectedResponse = {
           success: false,
           errors: [
@@ -628,7 +628,7 @@ describe(actionUtil.ACTION, async () => {
         } catch (error) {
           loggingUtil.trace(error);
         }
-        const expectedError = `send_atomic_swap block is required to have 'balance' be over min_raw,'${minRaw}', and was '0'.`;
+        const expectedError = `send_atomic_swap block is required to have 'balance' be over min_raw '${minRaw}', and was '0'.`;
         const expectedResponse = {
           success: false,
           errors: [
@@ -652,6 +652,78 @@ describe(actionUtil.ACTION, async () => {
           actualResponse.errors.push(error.message);
         }
         const expectedError = `receiveHeight '12345678901' is required to have 'length' be '10', and was '11'.`;
+        const expectedResponse = {
+          success: false,
+          errors: [
+            expectedError,
+          ],
+        };
+        loggingUtil.debug('actualResponse', actualResponse);
+        loggingUtil.debug('expectedResponse', expectedResponse);
+        expect(actualResponse).to.deep.equal(expectedResponse);
+      });
+      it(`send_atomic_swap sender account info is required to have 'confirmation_height' be equal to assetHeight '1', and was not.`, async () => {
+        const {nonce, sendAtomicSwapBlock, receiveAtomicSwapBlock,
+          changeAbortReceiveAtomicSwapBlock, sendPaymentBlock, changeAbortPaymentBlock,
+          receivePaymentBlock} = await getTestData();
+        sendAtomicSwapBlock.contents.representative = swapUtil.createRepresentative(1, 0, '0');
+        swapUtil.setBlock(nonce, 'send_atomic_swap', sendAtomicSwapBlock);
+        swapUtil.setBlock(nonce, 'receive_atomic_swap', receiveAtomicSwapBlock);
+        swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', changeAbortReceiveAtomicSwapBlock);
+        swapUtil.setBlock(nonce, 'send_payment', sendPaymentBlock);
+        swapUtil.setBlock(nonce, 'change_abort_payment', changeAbortPaymentBlock);
+        swapUtil.setBlock(nonce, 'receive_payment', receivePaymentBlock);
+
+        const context = {
+        };
+        let actualResponse;
+        try {
+          const request = {
+            nonce: nonce,
+            stage: 'start',
+            blocks: 'false',
+          };
+          actualResponse = await getResponse(actionUtil, context, request);
+        } catch (error) {
+          loggingUtil.trace(error);
+        }
+        const expectedError = `send_atomic_swap sender account info is required to have 'confirmation_height' be equal to assetHeight '1', and was '0'.`;
+        const expectedResponse = {
+          success: false,
+          errors: [
+            expectedError,
+          ],
+        };
+        loggingUtil.debug('actualResponse', actualResponse);
+        loggingUtil.debug('expectedResponse', expectedResponse);
+        expect(actualResponse).to.deep.equal(expectedResponse);
+      });
+      it(`send_atomic_swap receiver account info is required to have 'confirmation_height' be equal to receiveHeight '1', and was not.`, async () => {
+        const {nonce, sendAtomicSwapBlock, receiveAtomicSwapBlock,
+          changeAbortReceiveAtomicSwapBlock, sendPaymentBlock, changeAbortPaymentBlock,
+          receivePaymentBlock} = await getTestData();
+        sendAtomicSwapBlock.contents.representative = swapUtil.createRepresentative(0, 1, '0');
+        swapUtil.setBlock(nonce, 'send_atomic_swap', sendAtomicSwapBlock);
+        swapUtil.setBlock(nonce, 'receive_atomic_swap', receiveAtomicSwapBlock);
+        swapUtil.setBlock(nonce, 'change_abort_receive_atomic_swap', changeAbortReceiveAtomicSwapBlock);
+        swapUtil.setBlock(nonce, 'send_payment', sendPaymentBlock);
+        swapUtil.setBlock(nonce, 'change_abort_payment', changeAbortPaymentBlock);
+        swapUtil.setBlock(nonce, 'receive_payment', receivePaymentBlock);
+
+        const context = {
+        };
+        let actualResponse;
+        try {
+          const request = {
+            nonce: nonce,
+            stage: 'start',
+            blocks: 'false',
+          };
+          actualResponse = await getResponse(actionUtil, context, request);
+        } catch (error) {
+          loggingUtil.trace(error);
+        }
+        const expectedError = `send_atomic_swap receiver account info is required to have 'confirmation_height' be equal to receiveHeight '1', and was '0'.`;
         const expectedResponse = {
           success: false,
           errors: [
