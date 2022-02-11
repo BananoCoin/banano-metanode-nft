@@ -83,6 +83,7 @@ const addModules = () => {
   modules.push(require('./actions/get-whitelist.js'));
   modules.push(require('./actions/get-nft-api-url.js'));
   modules.push(require('./actions/nft/get-nft-asset-owner.js'));
+  modules.push(require('./actions/nft/get-nft-asset-template.js'));
   modules.push(require('./actions/nft/get-nft-owner-assets.js'));
   modules.push(require('./actions/nft/get-nft-template-owner.js'));
   modules.push(require('./actions/nft/get-nft-info.js'));

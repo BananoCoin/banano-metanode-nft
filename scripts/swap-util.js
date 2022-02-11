@@ -4,6 +4,8 @@ const crypto = require('crypto');
 const bananojs = require('@bananocoin/bananojs');
 
 // modules
+// https://github.com/Airtune/73-meta-tokens/blob/main/meta_client_protocol/atomic_swap.md
+// https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/atomic_swap.md
 
 // constants
 const START_BLOCK_TYPES = [
