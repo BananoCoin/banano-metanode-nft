@@ -170,7 +170,7 @@ const initServer = () => {
 
   const actions = {};
 
-  app.post('/', async (req, res) => {
+  const actionsFn = async (req, res) => {
     try {
       // loggingUtil.log('post', req.body);
       const actionFn = actions[req.body.action];
@@ -204,7 +204,14 @@ const initServer = () => {
       /* istanbul ignore next */
       console.trace(error);
     }
+  };
+
+  app.get('/api', async (req, res) => {
+    req.body = req.query;
+    actionsFn(req, res);
   });
+
+  app.post('/', actionsFn);
 
   app.get('/favicon.ico', async (req, res) => {
     res.redirect(302, '/favicon-16x16.png');

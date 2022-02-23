@@ -32,22 +32,22 @@ An RPC node for issuing NFTs on the banano blockchain.
 -   do more input validation on the site. such as for bad banano addresses or bad hashes.
 -   change 'transfer nft' to a dropdown.
 -   add whitelisted template owners, template owner forgeries, and template asset forgeries (over asset count)
--   (bug) figure out why you can't send two assets to the same account withount recieving the first asset first.
+-   (bug) figure out why you can't send two assets to the same account without receiving the first asset first.
 -   (bug) figure out why you have to refresh the template before the ownership change shows up.
 
     [todo](https://github.com/BananoCoin/banano-metanode-nft/issues)
 
-1.  check signatures of all blocks are valid.
+-   check signatures of all blocks are valid.
 
-2.  add 'timeout_ms' to swap_start, and maxTimeoutMs to config.
+-   add 'timeout_ms' to swap_start, and maxTimeoutMs to config.
 
-3.  atomic swaps
+-   atomic swaps
 
-    1.  add GUI that lists all atomic current active atomic swaps (nonce, sender, receiver).
-            swap_list  
-    2.  If your swap is not in the list, call
-            swap_start (sender, receiver)
-    3.  To add all your blocks call
-            swap_put_block
-    4.  if you want to abort, call
-            swap_put_abort_signatures
+    -   add GUI that lists all atomic current active atomic swaps (nonce, sender, receiver).
+              swap_list  
+    -   If your swap is not in the list, call
+             swap_start (sender, receiver)
+    -   To add all your blocks call
+             swap_put_block
+    -   if you want to abort, call
+             swap_put_abort_signatures

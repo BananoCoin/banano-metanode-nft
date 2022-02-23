@@ -159,15 +159,17 @@ window.updateAccountInfo = async () => {
   }
   const pendingBlocks = pending.blocks[account];
 
-  const hashes = [...Object.keys(pendingBlocks)];
-  if (hashes.length !== 0) {
-    const hash = hashes[0];
-    const response = await window.bananocoinBananojs.receiveBananoDepositsForSeed(seed, seedIx, representative, hash);
-    if (response.pendingMessage) {
-      innerText += '\nPending ' + response.pendingMessage;
-    }
-    if (response.receiveMessage) {
-      innerText += '\nReceive ' + response.receiveMessage;
+  if (pendingBlocks !== undefined) {
+    const hashes = [...Object.keys(pendingBlocks)];
+    if (hashes.length !== 0) {
+      const hash = hashes[0];
+      const response = await window.bananocoinBananojs.receiveBananoDepositsForSeed(seed, seedIx, representative, hash);
+      if (response.pendingMessage) {
+        innerText += '\nPending ' + response.pendingMessage;
+      }
+      if (response.receiveMessage) {
+        innerText += '\nReceive ' + response.receiveMessage;
+      }
     }
   }
   accountInfoElt.innerText = innerText;
