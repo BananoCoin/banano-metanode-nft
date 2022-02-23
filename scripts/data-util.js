@@ -59,7 +59,7 @@ const getReceiveBlockHash = (fs, sendHash) => {
 
 const makeReceiveBlockHashDir = (fs) => {
   if (!fs.existsSync(config.receiveBlockHashDataDir)) {
-    fs.mkdirSync(config.receiveBlockHashDataDir, {recursive: true});
+    fs.mkdirSync(config.receiveBlockHashDataDir, { recursive: true });
   }
 };
 
@@ -88,7 +88,7 @@ const getAccountInfo = (fs, owner) => {
 
 const makeAccountInfoDir = (fs) => {
   if (!fs.existsSync(config.accountInfosDir)) {
-    fs.mkdirSync(config.accountInfosDir, {recursive: true});
+    fs.mkdirSync(config.accountInfosDir, { recursive: true });
   }
 };
 
@@ -115,7 +115,7 @@ const getNextAssetOwner = (fs, owner) => {
 
 const makeNextAssetOwnerDir = (fs) => {
   if (!fs.existsSync(config.nextAssetOwnerDir)) {
-    fs.mkdirSync(config.nextAssetOwnerDir, {recursive: true});
+    fs.mkdirSync(config.nextAssetOwnerDir, { recursive: true });
   }
 };
 
@@ -130,7 +130,7 @@ const setNextAssetOwner = (fs, owner, count) => {
 const makeOwnedAssetsDir = (fs, owner) => {
   const ownedAssetsDir = getOwnedAssetsDir(fs, owner);
   if (!fs.existsSync(ownedAssetsDir)) {
-    fs.mkdirSync(ownedAssetsDir, {recursive: true});
+    fs.mkdirSync(ownedAssetsDir, { recursive: true });
   }
 };
 
@@ -185,7 +185,7 @@ const getTemplateForAsset = (fs, asset) => {
 
 const makeTemplateForAssetDir = (fs) => {
   if (!fs.existsSync(config.assetTemplateDataDir)) {
-    fs.mkdirSync(config.assetTemplateDataDir, {recursive: true});
+    fs.mkdirSync(config.assetTemplateDataDir, { recursive: true });
   }
 };
 
@@ -214,7 +214,7 @@ const getTemplateCounterForAsset = (fs, asset) => {
 
 const makeTemplateCounterForAssetDir = (fs) => {
   if (!fs.existsSync(config.assetTemplateCounterDataDir)) {
-    fs.mkdirSync(config.assetTemplateCounterDataDir, {recursive: true});
+    fs.mkdirSync(config.assetTemplateCounterDataDir, { recursive: true });
   }
 };
 
@@ -230,7 +230,7 @@ const setTemplateCounterForAsset = (fs, asset, template) => {
 const makeTemplatetDir = (fs, template) => {
   const dir = path.join(config.templateDataDir, template);
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, {recursive: true});
+    fs.mkdirSync(dir, { recursive: true });
   }
 };
 
@@ -269,7 +269,6 @@ const addTemplateAndAsset = (fs, template, asset) => {
   fs.closeSync(filePtr);
 };
 
-
 const getTemplateMaxSupplyFile = (fs, template) => {
   return path.join(config.templateMaxSupplyDataDir, template);
 };
@@ -286,7 +285,7 @@ const getTemplateMaxSupply = (fs, template) => {
 
 const makeTemplateMaxSupplyDir = (fs) => {
   if (!fs.existsSync(config.templateMaxSupplyDataDir)) {
-    fs.mkdirSync(config.templateMaxSupplyDataDir, {recursive: true});
+    fs.mkdirSync(config.templateMaxSupplyDataDir, { recursive: true });
   }
 };
 

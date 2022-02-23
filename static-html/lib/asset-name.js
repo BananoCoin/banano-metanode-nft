@@ -6,8 +6,8 @@ const shorten = (asset) => {
     return asset;
   }
   const front = asset.substring(0, 4);
-  const back = asset.substring(asset.length-4);
+  const back = asset.substring(asset.length - 4);
   return front + '...' + back;
 };
 
-export {shorten};
+export { shorten };

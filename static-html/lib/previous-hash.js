@@ -1,4 +1,3 @@
-
 const getPreviousHash = async () => {
   const seed = window.localStorage.seed;
   const account = await window.bananocoinBananojs.getBananoAccountFromSeed(seed, seedIx);
@@ -10,4 +9,4 @@ const getPreviousHash = async () => {
   return previousHash;
 };
 
-export {getPreviousHash};
+export { getPreviousHash };

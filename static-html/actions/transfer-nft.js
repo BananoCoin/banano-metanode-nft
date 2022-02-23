@@ -1,83 +1,92 @@
-import {addText, addChildElement} from '../lib/dom.js';
-import {getPreviousHash} from '../lib/previous-hash.js';
+import { addText, addChildElement } from '../lib/dom.js';
+import { getPreviousHash } from '../lib/previous-hash.js';
 
 const addTransferNft = () => {
   const wrapperElt = document.getElementById('transferNftWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
-    'method': 'POST',
-    'class': '',
-    'onsubmit': 'return false;',
+    method: 'POST',
+    class: '',
+    onsubmit: 'return false;',
   });
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideTransferNftWrapper();',
-  }), 'Main Menu');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return hideTransferNftWrapper();',
+    }),
+    'Main Menu'
+  );
   addText(addChildElement(formElt, 'h2'), 'Transfer NFT');
 
   addText(formElt, window.localStorage.assetOwnerAccount || '');
 
   addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
   addChildElement(formElt, 'input', {
-    'id': 'transferNftTemplateCid',
-    'class': '',
-    'type': 'text',
-    'size': '66',
-    'max_length': '64',
-    'placeholder': 'select from drop down',
-    'list': 'knownTemplateList',
-    'autocomplete': 'off',
+    id: 'transferNftTemplateCid',
+    class: '',
+    type: 'text',
+    size: '66',
+    max_length: '64',
+    placeholder: 'select from drop down',
+    list: 'knownTemplateList',
+    autocomplete: 'off',
   });
   addChildElement(formElt, 'br');
-  addText(addChildElement(formElt, 'button', {
-    'id': 'mint-nft',
-    'type': 'button',
-    'class': '',
-    'onclick': 'checkTransferNftCID();return false;',
-  }), 'Check CID');
-  addText(addChildElement(formElt, 'button', {
-    'id': 'refreshCidList',
-    'type': 'button',
-    'class': '',
-    'onclick': 'clearTransferNftTemplateCid();getKnownTemplateList();return false;',
-  }), 'Refresh Template List');
+  addText(
+    addChildElement(formElt, 'button', {
+      id: 'mint-nft',
+      type: 'button',
+      class: '',
+      onclick: 'checkTransferNftCID();return false;',
+    }),
+    'Check CID'
+  );
+  addText(
+    addChildElement(formElt, 'button', {
+      id: 'refreshCidList',
+      type: 'button',
+      class: '',
+      onclick: 'clearTransferNftTemplateCid();getKnownTemplateList();return false;',
+    }),
+    'Refresh Template List'
+  );
   addChildElement(formElt, 'div', {
-    'id': 'transferAssets',
-    'class': 'selectable',
+    id: 'transferAssets',
+    class: 'selectable',
   });
   addChildElement(formElt, 'br');
   addText(addChildElement(formElt, 'h3'), 'Hash of Asset to Transfer');
   addChildElement(formElt, 'input', {
-    'id': 'hashOfAssetToTransfer',
-    'class': '',
-    'type': 'text',
-    'size': '66',
-    'max_length': '64',
-    'value': '',
-    'list': 'knownAssetList',
-    'autocomplete': 'off',
+    id: 'hashOfAssetToTransfer',
+    class: '',
+    type: 'text',
+    size: '66',
+    max_length: '64',
+    value: '',
+    list: 'knownAssetList',
+    autocomplete: 'off',
   });
   addText(addChildElement(formElt, 'h3'), 'New Owner Account');
   addChildElement(formElt, 'input', {
-    'id': 'newOwnerAccount',
-    'class': '',
-    'type': 'text',
-    'size': '66',
-    'max_length': '64',
-    'value': '',
+    id: 'newOwnerAccount',
+    class: '',
+    type: 'text',
+    size: '66',
+    max_length: '64',
+    value: '',
   });
   addChildElement(formElt, 'br');
   const checkCidElt = addChildElement(formElt, 'button', {
-    'id': 'transfer-nft',
-    'type': 'button',
-    'class': '',
-    'onclick': 'transferNft();return false;',
+    id: 'transfer-nft',
+    type: 'button',
+    class: '',
+    onclick: 'transferNft();return false;',
   });
   addText(checkCidElt, 'Transfer NFT');
   addChildElement(wrapperElt, 'div', {
-    'id': 'transferNftInfo',
-    'class': 'selectable container column',
+    id: 'transferNftInfo',
+    class: 'selectable container column',
   });
 };
-
 
 window.clearTransferNftTemplateCid = () => {
   document.getElementById('transferNftTemplateCid').value = '';
@@ -131,8 +140,7 @@ window.checkTransferNftCID = async () => {
     return;
   }
 
-  document.getElementById('transferAssets').innerHTML =
-    'Error, please check CID Info for errors.';
+  document.getElementById('transferAssets').innerHTML = 'Error, please check CID Info for errors.';
 };
 
 window.transferNft = async () => {
@@ -148,4 +156,4 @@ window.transferNft = async () => {
   transferNftInfo.innerText = response;
 };
 
-export {addTransferNft};
+export { addTransferNft };

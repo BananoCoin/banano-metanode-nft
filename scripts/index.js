@@ -37,7 +37,6 @@ if (loggingUtil.isDebugEnabled()) {
 
 loggingUtil.trace = console.trace;
 
-
 // variables
 const modules = [];
 /* eslint-disable no-unused-vars */
@@ -127,13 +126,13 @@ const initServer = () => {
     if (req.method == 'GET') {
       if (allowlist.indexOf(req.header('Origin')) !== -1) {
         // reflect (enable) the requested origin in the CORS response
-        corsOptions = {origin: true};
+        corsOptions = { origin: true };
       } else {
         // disable CORS for this request
-        corsOptions = {origin: false};
+        corsOptions = { origin: false };
       }
     } else {
-      corsOptions = {origin: true};
+      corsOptions = { origin: true };
     }
     loggingUtil.debug('cors', req.method, req.originalUrl, 'corsOptions', corsOptions);
     // callback expects two parameters: error and options
@@ -146,15 +145,19 @@ const initServer = () => {
 
   app.use(express.static('static-html'));
 
-  app.use(express.urlencoded({
-    limit: '50mb',
-    extended: true,
-  }));
+  app.use(
+    express.urlencoded({
+      limit: '50mb',
+      extended: true,
+    })
+  );
 
-  app.use(express.json({
-    limit: '50mb',
-    extended: true,
-  }));
+  app.use(
+    express.json({
+      limit: '50mb',
+      extended: true,
+    })
+  );
 
   app.use((err, req, res, next) => {
     if (err) {
@@ -211,7 +214,6 @@ const initServer = () => {
     res.redirect(302, '/favicon.ico');
   });
 
-
   app.get('/js-lib/bananocoin-bananojs.js', async (req, res) => {
     const bananojsPath = path.join('node_modules', '@bananocoin', 'bananojs', 'dist', 'bananocoin-bananojs.js');
     const data = fs.readFileSync(bananojsPath);
@@ -258,8 +260,8 @@ const closeProgram = async () => {
   process.exit(0);
 };
 
-const isObject = function(obj) {
-  return (!!obj) && (obj.constructor === Object);
+const isObject = function (obj) {
+  return !!obj && obj.constructor === Object;
 };
 
 const overrideValues = (src, dest) => {
@@ -280,8 +282,7 @@ const overrideConfig = () => {
   loggingUtil.debug('SUCCESS overrideConfig', config);
 };
 
-init()
-    .catch((e) => {
-      console.info('FAILURE init.', e.message);
-      console.trace('FAILURE init.', e);
-    });
+init().catch((e) => {
+  console.info('FAILURE init.', e.message);
+  console.trace('FAILURE init.', e);
+});

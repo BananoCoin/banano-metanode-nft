@@ -49,7 +49,7 @@ const deactivate = () => {
  *  - starting from a send block, identified by the asset_hash,
  *  get the representative.
  *  - call updateAssetOwnerHistory using the asset_hash as the asset,
-*   and the representative as the owner.
+ *   and the representative as the owner.
  * @memberof NFT
  * @param {Object} context the context, used to get cached data.
  * - from filesystem in nodejs,
@@ -138,8 +138,7 @@ const getNftAssetsOwner = async (context, req, res) => {
       history: [],
     };
 
-    const chainAccountInfoCache =
-      ipfsUtil.getChainAccountInfoCache(fetch, ACTION);
+    const chainAccountInfoCache = ipfsUtil.getChainAccountInfoCache(fetch, ACTION);
 
     await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, resp.asset_owner, chainAccountInfoCache);
 

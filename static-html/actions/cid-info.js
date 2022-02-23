@@ -1,47 +1,53 @@
-import {addText, addChildElement, clear} from '../lib/dom.js';
-import {postIpfsHtmlMessage, addJsonImageLink} from '../lib/ipfs-html.js';
+import { addText, addChildElement, clear } from '../lib/dom.js';
+import { postIpfsHtmlMessage, addJsonImageLink } from '../lib/ipfs-html.js';
 
 const addCidInfo = () => {
   const wrapperElt = document.getElementById('cidInfoWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
-    'method': 'POST',
-    'class': '',
-    'onsubmit': 'return false;',
+    method: 'POST',
+    class: '',
+    onsubmit: 'return false;',
   });
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideViewNftTemplateWrapper();',
-  }), 'Main Menu');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return hideViewNftTemplateWrapper();',
+    }),
+    'Main Menu'
+  );
   addText(addChildElement(formElt, 'h2'), 'CID Info');
   addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
   addChildElement(formElt, 'input', {
-    'id': 'cid',
-    'class': '',
-    'type': 'text',
-    'size': '66',
-    'max_length': '64',
-    'placeholder': 'select from drop down',
-    'list': 'knownTemplateList',
-    'autocomplete': 'off',
+    id: 'cid',
+    class: '',
+    type: 'text',
+    size: '66',
+    max_length: '64',
+    placeholder: 'select from drop down',
+    list: 'knownTemplateList',
+    autocomplete: 'off',
   });
   addChildElement(formElt, 'br');
   const checkCidElt = addChildElement(formElt, 'button', {
-    'id': 'check-cid',
-    'type': 'button',
-    'class': '',
-    'onclick': 'checkCid();return false;',
+    id: 'check-cid',
+    type: 'button',
+    class: '',
+    onclick: 'checkCid();return false;',
   });
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button',
-    'class': '',
-    'onclick': 'clearCid();getKnownTemplateList();return false;',
-  }), 'Refresh Template List');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      class: '',
+      onclick: 'clearCid();getKnownTemplateList();return false;',
+    }),
+    'Refresh Template List'
+  );
   addText(checkCidElt, 'Get CID Info');
   addChildElement(wrapperElt, 'div', {
-    'id': 'cidInfo',
-    'class': 'selectable container column',
+    id: 'cidInfo',
+    class: 'selectable container column',
   });
 };
-
 
 window.clearCid = () => {
   document.getElementById('cid').value = '';
@@ -72,13 +78,12 @@ window.checkCid = async () => {
 
   let html = '';
   if (responseJson.success) {
-    html += `<span><strong>Success!</strong> ipfs_cid `+
-    `<strong>${responseJson.ipfs_cid}</strong> has the `+
-    `correct information, with no errors.</span>`;
+    html += `<span><strong>Success!</strong> ipfs_cid ` + `<strong>${responseJson.ipfs_cid}</strong> has the ` + `correct information, with no errors.</span>`;
   } else {
-    html += `<span><strong>Failure!</strong> ipfs_cid `+
-    `<strong>${responseJson.ipfs_cid}</strong> has the `+
-    `<strong>wrong</strong> information, with <strong>errors</strong>.</span>`;
+    html +=
+      `<span><strong>Failure!</strong> ipfs_cid ` +
+      `<strong>${responseJson.ipfs_cid}</strong> has the ` +
+      `<strong>wrong</strong> information, with <strong>errors</strong>.</span>`;
   }
   if (responseJson.json !== undefined) {
     html += '<span class="bordered container column">';
@@ -112,4 +117,4 @@ window.checkCid = async () => {
   }
 };
 
-export {addCidInfo};
+export { addCidInfo };

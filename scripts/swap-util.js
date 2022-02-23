@@ -8,19 +8,9 @@ const bananojs = require('@bananocoin/bananojs');
 // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/atomic_swap.md
 
 // constants
-const START_BLOCK_TYPES = [
-  'send_atomic_swap',
-  'receive_atomic_swap',
-  'change_abort_receive_atomic_swap',
-  'send_payment',
-  'change_abort_payment',
-  'receive_payment',
-];
+const START_BLOCK_TYPES = ['send_atomic_swap', 'receive_atomic_swap', 'change_abort_receive_atomic_swap', 'send_payment', 'change_abort_payment', 'receive_payment'];
 
-const ABORT_BLOCK_TYPES = [
-  'change_abort_receive_atomic_swap',
-  'change_abort_payment',
-];
+const ABORT_BLOCK_TYPES = ['change_abort_receive_atomic_swap', 'change_abort_payment'];
 
 // variables
 const swaps = new Map();
@@ -112,7 +102,6 @@ const signBlock = (nonce, blockType, signature) => {
   block.contents.signature = signature;
 };
 
-
 const checkSwapAndReturnBlocks = async (nonce, stageEnum, blocksFlag, resp) => {
   if (!swaps.has(nonce)) {
     throw Error(`no swap found with nonce '${nonce}'.`);
@@ -147,7 +136,7 @@ const checkSwapAndReturnBlocks = async (nonce, stageEnum, blocksFlag, resp) => {
     await checkBlock(block, blockType, swap);
     switch (blocksFlag) {
       case 'true':
-        blocks.push({type: blockType, block: block});
+        blocks.push({ type: blockType, block: block });
         break;
       case 'false':
         break;
@@ -168,15 +157,14 @@ const hexToBigInt = (hex) => {
 const zeroPadToLength = (name, value, length) => {
   value = value.toString();
   if (value.length > length) {
-    throw Error(`${name} '${value}' is required to have 'length' be ` +
-    `'${length}', and was '${value.length}'.`);
+    throw Error(`${name} '${value}' is required to have 'length' be ` + `'${length}', and was '${value.length}'.`);
   }
   value = value.padStart(length, '0');
   return value;
 };
 
 const createRepresentative = (assetHeight, receiveHeight, minRaw) => {
-/* istanbul ignore if */
+  /* istanbul ignore if */
   if (assetHeight === undefined) {
     throw Error(`assetHeight is required.`);
   }
@@ -228,8 +216,7 @@ const parseRepresentative = async (representative) => {
   // console.log('parseRepresentative', 'publicKey', representativePublicKey);
   const header = representativePublicKey.substring(0, 13);
   if (header !== '23559C159E22C') {
-    throw Error(`representative '${representative}' is required to have 'header' be` +
-    `'23559C159E22C', and was '${header}'.`);
+    throw Error(`representative '${representative}' is required to have 'header' be` + `'23559C159E22C', and was '${header}'.`);
   }
   const assetHeight = hexToBigInt(representativePublicKey.substring(13, 23));
   const receiveHeight = hexToBigInt(representativePublicKey.substring(23, 33));
@@ -257,27 +244,22 @@ const checkSendBlock = async (block, blockType, swap) => {
 
   // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/atomic_swap.md#atomic_swap_representative
   switch (blockType) {
-    case
-      'send_atomic_swap':
+    case 'send_atomic_swap':
       if (block.account != swap.sender) {
-        throw Error(`${blockType} block is required to have 'account' be the sender` +
-        ` '${swap.sender}', and was '${block.account}'.`);
+        throw Error(`${blockType} block is required to have 'account' be the sender` + ` '${swap.sender}', and was '${block.account}'.`);
       }
       if (block.previous != swap.senderAccountInfo.frontier) {
-        throw Error(`${blockType} block is required to have 'previous' be the frontier` +
-        ` '${swap.senderAccountInfo.frontier}', and was '${block.previous}'.`);
+        throw Error(`${blockType} block is required to have 'previous' be the frontier` + ` '${swap.senderAccountInfo.frontier}', and was '${block.previous}'.`);
       }
       if (block.link != swap.receiverPublicKey) {
-        throw Error(`${blockType} block is required to have 'link' be the receiver_public_key` +
-        ` '${swap.receiverPublicKey}', and was '${block.link}'.`);
+        throw Error(`${blockType} block is required to have 'link' be the receiver_public_key` + ` '${swap.receiverPublicKey}', and was '${block.link}'.`);
       }
       const parsedRepresentative = await parseRepresentative(block.representative);
       // console.log('checkSendBlock', 'representative', block.representative);
       // console.log('checkSendBlock', 'parsedRepresentative.minRaw', parsedRepresentative.minRaw);
       // console.log('checkSendBlock', 'block.balance', block.balance);
       if (BigInt(block.balance) < parsedRepresentative.minRaw) {
-        throw Error(`${blockType} block is required to have 'balance' be over min_raw` +
-        ` '${parsedRepresentative.minRaw}', and was '${block.balance}'.`);
+        throw Error(`${blockType} block is required to have 'balance' be over min_raw` + ` '${parsedRepresentative.minRaw}', and was '${block.balance}'.`);
       }
       // console.log('checkSendBlock', 'parsedRepresentative', parsedRepresentative);
       // console.log('checkSendBlock', 'block', block);
@@ -285,32 +267,32 @@ const checkSendBlock = async (block, blockType, swap) => {
 
       const senderConfirmationHeight = BigInt(swap.senderAccountInfo.confirmation_height);
       if (senderConfirmationHeight !== BigInt(parsedRepresentative.assetHeight)) {
-        throw Error(`${blockType} sender account info is required to have 'confirmation_height' be equal to assetHeight`+
-        ` '${parsedRepresentative.assetHeight}', and was '${senderConfirmationHeight}'.`);
+        throw Error(
+          `${blockType} sender account info is required to have 'confirmation_height' be equal to assetHeight` +
+            ` '${parsedRepresentative.assetHeight}', and was '${senderConfirmationHeight}'.`
+        );
       }
 
       const receiverConfirmationHeight = BigInt(swap.receiverAccountInfo.confirmation_height);
       if (receiverConfirmationHeight !== BigInt(parsedRepresentative.receiveHeight)) {
-        throw Error(`${blockType} receiver account info is required to have 'confirmation_height' be equal to receiveHeight`+
-        ` '${parsedRepresentative.receiveHeight}', and was '${receiverConfirmationHeight}'.`);
+        throw Error(
+          `${blockType} receiver account info is required to have 'confirmation_height' be equal to receiveHeight` +
+            ` '${parsedRepresentative.receiveHeight}', and was '${receiverConfirmationHeight}'.`
+        );
       }
       break;
-    case
-      'send_payment':
+    case 'send_payment':
       if (block.account != swap.receiver) {
-        throw Error(`${blockType} block is required to have 'account' be the receiver`+
-        ` '${swap.receiver}', and was '${block.account}'.`);
+        throw Error(`${blockType} block is required to have 'account' be the receiver` + ` '${swap.receiver}', and was '${block.account}'.`);
       }
       const receiveAtomicSwapBlock = swap.blocks.get('receive_atomic_swap');
       // console.log('checkSendBlock block', block);
       // console.log('checkSendBlock receiveAtomicSwapBlock', receiveAtomicSwapBlock);
       if (block.previous != receiveAtomicSwapBlock.hash) {
-        throw Error(`${blockType} block is required to have 'previous' be the receive_atomic_swap` +
-         ` '${receiveAtomicSwapBlock.hash}', and was '${block.previous}'.`);
+        throw Error(`${blockType} block is required to have 'previous' be the receive_atomic_swap` + ` '${receiveAtomicSwapBlock.hash}', and was '${block.previous}'.`);
       }
       if (block.link != swap.senderPublicKey) {
-        throw Error(`${blockType} block is required to have 'link' be the sender_public_key` +
-        ` '${swap.senderPublicKey}', and was '${block.link}'.`);
+        throw Error(`${blockType} block is required to have 'link' be the sender_public_key` + ` '${swap.senderPublicKey}', and was '${block.link}'.`);
       }
       break;
     default:
@@ -332,11 +314,9 @@ const checkReceiveBlock = (block, blockType, swap) => {
   // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/atomic_swap.md#receivepayment
 
   switch (blockType) {
-    case
-      'receive_atomic_swap':
+    case 'receive_atomic_swap':
       break;
-    case
-      'receive_payment':
+    case 'receive_payment':
       break;
     default:
       throw Error(`blockData.subtype is required to be 'receive_atomic_swap', or 'receive_payment' and was '${blockType}'.`);
@@ -357,11 +337,9 @@ const checkChangeBlock = (block, blockType, swap) => {
   // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/atomic_swap.md#changeabort_receive_atomic_swap
 
   switch (blockType) {
-    case
-      'change_abort_receive_atomic_swap':
+    case 'change_abort_receive_atomic_swap':
       break;
-    case
-      'change_abort_payment':
+    case 'change_abort_payment':
       break;
     default:
       throw Error(`blockData.subtype is required to be 'change_abort_receive_atomic_swap', or 'change_abort_payment' and was '${blockType}'.`);

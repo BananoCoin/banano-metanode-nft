@@ -13,7 +13,7 @@ const actionUtil = require('../../scripts/actions/get-nft-owner-assets.js');
 const ipfsUtil = require('../../scripts/ipfs-util.js');
 const dataUtil = require('../../scripts/data-util.js');
 const actualResponseUtil = require('../util/actual-response-util.js');
-const {loggingUtil, getResponse} = require('../util/get-response.js');
+const { loggingUtil, getResponse } = require('../util/get-response.js');
 const testData = require('./get-owner-assets-test-1nft-nejq.json');
 
 // constants
@@ -34,7 +34,7 @@ describe(actionUtil.ACTION, () => {
   it(owner, async () => {
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, {owner: owner});
+      actualResponse = await getResponse(actionUtil, context, { owner: owner });
     } catch (error) {
       loggingUtil.trace(error);
     }

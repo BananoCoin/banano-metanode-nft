@@ -182,15 +182,13 @@ const getNftAssetsOwners = async (context, req, res) => {
       }
     }
 
-    const chainAccountInfoCache =
-      ipfsUtil.getChainAccountInfoCache(fetch, ACTION);
+    const chainAccountInfoCache = ipfsUtil.getChainAccountInfoCache(fetch, ACTION);
 
     for (let ix = 0; ix < resp.asset_owners.length; ix++) {
       // asset is the hash of the send block that created the asset.
       // owner is who it was sent to.
       const assetOwner = resp.asset_owners[ix];
-      await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, assetOwner,
-          chainAccountInfoCache);
+      await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, assetOwner, chainAccountInfoCache);
     }
     chainAccountInfoCache.putChainAccountInfo(fs);
   }

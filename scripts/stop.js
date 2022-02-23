@@ -19,7 +19,7 @@ const timeoutErrorFn = () => {
 
 const timeoutId = setTimeout(timeoutErrorFn, 30000);
 
-const acknCallbackFn = function(err, userData) {
+const acknCallbackFn = function (err, userData) {
   clearTimeout(timeoutId);
   setTimeout(() => {
     process.exit(0);

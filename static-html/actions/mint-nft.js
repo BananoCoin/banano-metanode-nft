@@ -1,56 +1,69 @@
-import {addText, addChildElement} from '../lib/dom.js';
-import {getPreviousHash} from '../lib/previous-hash.js';
+import { addText, addChildElement } from '../lib/dom.js';
+import { getPreviousHash } from '../lib/previous-hash.js';
 
 const addMintNft = () => {
   const wrapperElt = document.getElementById('mintNftWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
-    'method': 'POST',
-    'class': '',
-    'onsubmit': 'return false;',
+    method: 'POST',
+    class: '',
+    onsubmit: 'return false;',
   });
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideMintNftWrapper();',
-  }), 'Main Menu');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return hideMintNftWrapper();',
+    }),
+    'Main Menu'
+  );
   addText(addChildElement(formElt, 'h2'), 'Mint NFT');
   addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
   addChildElement(formElt, 'input', {
-    'id': 'mintNftTemplateCid',
-    'class': '',
-    'type': 'text',
-    'size': '66',
-    'max_length': '64',
-    'placeholder': 'select from drop down',
-    'list': 'knownTemplateList',
-    'autocomplete': 'off',
+    id: 'mintNftTemplateCid',
+    class: '',
+    type: 'text',
+    size: '66',
+    max_length: '64',
+    placeholder: 'select from drop down',
+    list: 'knownTemplateList',
+    autocomplete: 'off',
   });
   addChildElement(formElt, 'br');
-  addText(addChildElement(formElt, 'button', {
-    'id': 'mint-nft',
-    'type': 'button',
-    'class': '',
-    'onclick': 'checkMintNftCID();return false;',
-  }), 'Check CID');
-  addText(addChildElement(formElt, 'button', {
-    'id': 'refreshCidList',
-    'type': 'button',
-    'class': '',
-    'onclick': 'clearMintNftTemplateCid();getKnownTemplateList();return false;',
-  }), 'Refresh Template List');
+  addText(
+    addChildElement(formElt, 'button', {
+      id: 'mint-nft',
+      type: 'button',
+      class: '',
+      onclick: 'checkMintNftCID();return false;',
+    }),
+    'Check CID'
+  );
+  addText(
+    addChildElement(formElt, 'button', {
+      id: 'refreshCidList',
+      type: 'button',
+      class: '',
+      onclick: 'clearMintNftTemplateCid();getKnownTemplateList();return false;',
+    }),
+    'Refresh Template List'
+  );
   addText(addChildElement(formElt, 'h3'), 'Representative');
   addChildElement(formElt, 'div', {
-    'id': 'mintRepresentativeAccount',
-    'class': 'selectable',
+    id: 'mintRepresentativeAccount',
+    class: 'selectable',
   });
   addChildElement(formElt, 'br');
-  addText(addChildElement(formElt, 'button', {
-    'id': 'mint-nft',
-    'type': 'button',
-    'class': '',
-    'onclick': 'mintNft();return false;',
-  }), 'Mint NFT');
+  addText(
+    addChildElement(formElt, 'button', {
+      id: 'mint-nft',
+      type: 'button',
+      class: '',
+      onclick: 'mintNft();return false;',
+    }),
+    'Mint NFT'
+  );
   addChildElement(formElt, 'div', {
-    'id': 'mintNftInfo',
-    'class': 'selectable container column',
+    id: 'mintNftInfo',
+    class: 'selectable container column',
   });
 };
 
@@ -71,17 +84,14 @@ window.checkMintNftCID = async () => {
     const responseJson = await response.json();
     if (responseJson.success) {
       if (responseJson.json !== undefined) {
-        document.getElementById('mintRepresentativeAccount').innerText =
-          responseJson.representative_account;
+        document.getElementById('mintRepresentativeAccount').innerText = responseJson.representative_account;
       }
     }
     return;
   }
 
-  document.getElementById('mintRepresentativeAccount').innerText =
-    'Error, please check CID Info for errors.';
+  document.getElementById('mintRepresentativeAccount').innerText = 'Error, please check CID Info for errors.';
 };
-
 
 window.mintNft = async () => {
   const seed = window.localStorage.seed;
@@ -98,4 +108,4 @@ window.mintNft = async () => {
   mintNftInfoElt.innerText = response;
 };
 
-export {addMintNft};
+export { addMintNft };

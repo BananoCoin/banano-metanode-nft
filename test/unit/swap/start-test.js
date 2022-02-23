@@ -8,7 +8,7 @@ const bananojs = require('@bananocoin/bananojs');
 const expect = chai.expect;
 const actionUtil = require('../../../scripts/actions/swap/start.js');
 const swapUtil = require('../../../scripts/swap-util.js');
-const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
+const { config, loggingUtil, getResponse } = require('../../util/get-response.js');
 const mockBlockFactory = require('../../util/mock-block-factory.js');
 
 // constants
@@ -20,11 +20,10 @@ describe(actionUtil.ACTION, () => {
   it('get status 200', async () => {
     const senderAccount = await bananojs.getBananoAccountFromSeed(mockBlockFactory.SENDER_SEED, 0);
     const receiverAccount = await bananojs.getBananoAccountFromSeed(mockBlockFactory.RECEIVER_SEED, 0);
-    const context = {
-    };
+    const context = {};
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, {'sender': senderAccount, 'receiver': receiverAccount});
+      actualResponse = await getResponse(actionUtil, context, { sender: senderAccount, receiver: receiverAccount });
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -40,11 +39,10 @@ describe(actionUtil.ACTION, () => {
   });
   describe('errors', () => {
     it('bad sender', async () => {
-      const context = {
-      };
+      const context = {};
       let actualResponse;
       try {
-        actualResponse = await getResponse(actionUtil, context, {'sender': 'a', 'receiver': 'b'});
+        actualResponse = await getResponse(actionUtil, context, { sender: 'a', receiver: 'b' });
       } catch (error) {
         loggingUtil.trace(error);
       }
@@ -52,9 +50,7 @@ describe(actionUtil.ACTION, () => {
         delete actualResponse.nonce;
       }
       const expectedResponse = {
-        errors: [
-          'sender account error:Invalid BANANO Account (not 64 characters)',
-        ],
+        errors: ['sender account error:Invalid BANANO Account (not 64 characters)'],
         success: false,
       };
       loggingUtil.debug('actualResponse', actualResponse);
@@ -63,11 +59,10 @@ describe(actionUtil.ACTION, () => {
     });
     it('bad receiver', async () => {
       const senderAccount = await bananojs.getBananoAccountFromSeed(mockBlockFactory.SENDER_SEED, 0);
-      const context = {
-      };
+      const context = {};
       let actualResponse;
       try {
-        actualResponse = await getResponse(actionUtil, context, {'sender': senderAccount, 'receiver': 'b'});
+        actualResponse = await getResponse(actionUtil, context, { sender: senderAccount, receiver: 'b' });
       } catch (error) {
         loggingUtil.trace(error);
       }
@@ -75,9 +70,7 @@ describe(actionUtil.ACTION, () => {
         delete actualResponse.nonce;
       }
       const expectedResponse = {
-        errors: [
-          'receiver account error:Invalid BANANO Account (not 64 characters)',
-        ],
+        errors: ['receiver account error:Invalid BANANO Account (not 64 characters)'],
         success: false,
       };
       loggingUtil.debug('actualResponse', actualResponse);
@@ -87,7 +80,7 @@ describe(actionUtil.ACTION, () => {
   });
 
   beforeEach(async () => {
-    bananojs.setBananodeApi(mockBlockFactory.getBananodeApi(()=>{}));
+    bananojs.setBananodeApi(mockBlockFactory.getBananodeApi(() => {}));
     mockBlockFactory.init(config, loggingUtil);
     swapUtil.init(config, loggingUtil);
     actionUtil.init(config, loggingUtil);

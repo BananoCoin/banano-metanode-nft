@@ -1,51 +1,37 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
+    <title>Banano NFT Tools</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
 
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta charset="utf-8">
-  <title>Banano NFT Tools</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
-</head>
-
-<body class="not_selectable" onload="onLoad()">
-  <div class="container column nowrap">
-    <div id="versionWrapper" class="container column nowrap">
-      <span>Current NFT Template Spec Version:
-        <span id="currentVersionWrapper"></span>
-        Supported NFT Template Spec Versions:
-        <span id="supportedVersionsWrapper"></span>
-      </span>
+  <body class="not_selectable" onload="onLoad()">
+    <div class="container column nowrap">
+      <div id="versionWrapper" class="container column nowrap">
+        <span
+          >Current NFT Template Spec Version:
+          <span id="currentVersionWrapper"></span>
+          Supported NFT Template Spec Versions:
+          <span id="supportedVersionsWrapper"></span>
+        </span>
+      </div>
+      <div id="navigationWrapper" class="container column nowrap"></div>
+      <div id="seedWrapper" class="container column nowrap" style="display: none"></div>
+      <div id="accountWrapper" class="container column nowrap" style="display: none"></div>
+      <div id="galleryWrapper" class="container column nowrap" style="display: none"></div>
+      <div id="cidPinWrapper" class="container column nowrap" style="display: none"></div>
+      <div id="cidInfoWrapper" class="container column nowrap" style="display: none"></div>
+      <div id="templateOwnerCheckWrapper" class="container column nowrap" style="display: none"></div>
+      <div id="ownerAssetCheckWrapper" class="container column nowrap" style="display: none"></div>
+      <div id="mintNftWrapper" class="container column nowrap" style="display: none"></div>
+      <div id="transferNftWrapper" class="container column nowrap" style="display: none"></div>
+      <div id="knownTemplateListWrapper" class="container column nowrap" style="display: none"></div>
+      <div id="linkWrapper" class="container column nowrap" style="display: none"></div>
+      <div id="knownAssetListWrapper" class="container column nowrap" style="display: none"></div>
     </div>
-    <div id="navigationWrapper" class="container column nowrap">
-    </div>
-    <div id="seedWrapper" class="container column nowrap" style="display: none;">
-    </div>
-    <div id="accountWrapper" class="container column nowrap" style="display: none;">
-    </div>
-    <div id="galleryWrapper" class="container column nowrap" style="display: none;">
-    </div>
-    <div id="cidPinWrapper" class="container column nowrap" style="display: none;">
-    </div>
-    <div id="cidInfoWrapper" class="container column nowrap" style="display: none;">
-    </div>
-    <div id="templateOwnerCheckWrapper" class="container column nowrap" style="display: none;">
-    </div>
-    <div id="ownerAssetCheckWrapper" class="container column nowrap" style="display: none;">
-    </div>
-    <div id="mintNftWrapper" class="container column nowrap" style="display: none;">
-    </div>
-    <div id="transferNftWrapper" class="container column nowrap" style="display: none;">
-    </div>
-    <div id="knownTemplateListWrapper" class="container column nowrap" style="display: none;">
-    </div>
-    <div id="linkWrapper" class="container column nowrap" style="display: none;">
-    </div>
-    <div id="knownAssetListWrapper" class="container column nowrap" style="display: none;">
-    </div>
-  </div>
-  <script type="module" src="index.js"></script>
-  <script type="module" src="js-lib/bananocoin-bananojs.js"></script>
-</body>
-
+    <script type="module" src="index.js"></script>
+    <script type="module" src="js-lib/bananocoin-bananojs.js"></script>
+  </body>
 </html>
