@@ -75,9 +75,7 @@ const addAction = (actions) => {
     } catch (error) {
       loggingUtil.trace(error);
       resp.success = false;
-      resp.errors = [
-        error.message,
-      ];
+      resp.errors = [error.message];
     } finally {
       res.send(resp);
     }

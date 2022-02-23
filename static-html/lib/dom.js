@@ -1,4 +1,3 @@
-
 const addAttributes = (child, attributes) => {
   if (attributes) {
     Object.keys(attributes).forEach((attibute) => {
@@ -40,4 +39,4 @@ const clear = (parent) => {
   }
 };
 
-export {addAttributes, addText, addChildElement, hide, show, clear};
+export { addAttributes, addText, addChildElement, hide, show, clear };

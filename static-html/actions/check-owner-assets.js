@@ -1,17 +1,21 @@
-import {addText, addChildElement} from '../lib/dom.js';
-import {shorten} from '../lib/asset-name.js';
-import {postIpfsHtmlMessage, addJsonImageLink} from '../lib/ipfs-html.js';
+import { addText, addChildElement } from '../lib/dom.js';
+import { shorten } from '../lib/asset-name.js';
+import { postIpfsHtmlMessage, addJsonImageLink } from '../lib/ipfs-html.js';
 
 const addOwnerAssetCheck = () => {
   const wrapperElt = document.getElementById('ownerAssetCheckWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
-    'method': 'POST',
-    'class': '',
-    'onsubmit': 'return false;',
+    method: 'POST',
+    class: '',
+    onsubmit: 'return false;',
   });
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideOwnerAssetCheckWrapper();',
-  }), 'Main Menu');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return hideOwnerAssetCheckWrapper();',
+    }),
+    'Main Menu'
+  );
   addText(addChildElement(formElt, 'h2'), 'Check Owner Assets');
   addText(addChildElement(formElt, 'h3'), 'Banano Account that owns Assets');
   const getValue = () => {
@@ -27,13 +31,13 @@ const addOwnerAssetCheck = () => {
   addText(shareHrefElt, 'Share');
   addChildElement(formElt, 'br');
   const assetOwnerAccountElt = addChildElement(formElt, 'input', {
-    'id': 'assetOwnerAccount',
-    'class': '',
-    'type': 'text',
-    'size': '66',
-    'max_length': '64',
-    'value': getValue(),
-    'placeholder': 'Banano Account',
+    id: 'assetOwnerAccount',
+    class: '',
+    type: 'text',
+    size: '66',
+    max_length: '64',
+    value: getValue(),
+    placeholder: 'Banano Account',
   });
   assetOwnerAccountElt.addEventListener('input', () => {
     window.localStorage.assetOwnerAccount = assetOwnerAccountElt.value;
@@ -42,18 +46,17 @@ const addOwnerAssetCheck = () => {
 
   addChildElement(formElt, 'br');
   const checkCidElt = addChildElement(formElt, 'button', {
-    'id': 'check-ownership',
-    'type': 'button',
-    'class': '',
-    'onclick': 'checkOwnerAssets();return false;',
+    id: 'check-ownership',
+    type: 'button',
+    class: '',
+    onclick: 'checkOwnerAssets();return false;',
   });
   addText(checkCidElt, 'Check Owner Assets');
   addChildElement(wrapperElt, 'div', {
-    'id': 'ownerAssetsInfo',
-    'class': 'selectable container column',
+    id: 'ownerAssetsInfo',
+    class: 'selectable container column',
   });
 };
-
 
 window.checkOwnerAssets = async () => {
   console.log('checkOwnerAssets');
@@ -113,10 +116,10 @@ window.checkOwnerAssets = async () => {
       };
       setTimeout(fn, timer);
 
-      timer+= 1000;
+      timer += 1000;
     });
   };
   setTimeout(callback, 0);
 };
 
-export {addOwnerAssetCheck};
+export { addOwnerAssetCheck };

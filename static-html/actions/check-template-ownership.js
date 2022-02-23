@@ -1,51 +1,57 @@
-import {addText, addChildElement} from '../lib/dom.js';
+import { addText, addChildElement } from '../lib/dom.js';
 
 const addTemplateOwnerCheck = () => {
   const wrapperElt = document.getElementById('templateOwnerCheckWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
-    'method': 'POST',
-    'class': '',
-    'onsubmit': 'return false;',
+    method: 'POST',
+    class: '',
+    onsubmit: 'return false;',
   });
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideTemplateOwnerCheckWrapper();',
-  }), 'Main Menu');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return hideTemplateOwnerCheckWrapper();',
+    }),
+    'Main Menu'
+  );
   addText(addChildElement(formElt, 'h2'), 'Check Template Ownership');
   addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
 
   addChildElement(formElt, 'input', {
-    'id': 'templateOwnerCid',
-    'class': '',
-    'type': 'text',
-    'size': '66',
-    'max_length': '64',
-    'placeholder': 'select from drop down',
-    'list': 'knownTemplateList',
-    'autocomplete': 'off',
+    id: 'templateOwnerCid',
+    class: '',
+    type: 'text',
+    size: '66',
+    max_length: '64',
+    placeholder: 'select from drop down',
+    list: 'knownTemplateList',
+    autocomplete: 'off',
   });
   addChildElement(formElt, 'br');
   const checkCidElt = addChildElement(formElt, 'button', {
-    'id': 'check-ownership',
-    'type': 'button',
-    'class': '',
-    'onclick': 'checkTemplateOwnership();return false;',
+    id: 'check-ownership',
+    type: 'button',
+    class: '',
+    onclick: 'checkTemplateOwnership();return false;',
   });
   addText(checkCidElt, 'Get Ownership Info');
   addChildElement(wrapperElt, 'div', {
-    'id': 'templateOwnershipInfo',
-    'class': 'selectable container column',
+    id: 'templateOwnershipInfo',
+    class: 'selectable container column',
   });
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button',
-    'class': '',
-    'onclick': 'clearTemplateOwnerCidCid();getKnownTemplateList();return false;',
-  }), 'Refresh Template List');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      class: '',
+      onclick: 'clearTemplateOwnerCidCid();getKnownTemplateList();return false;',
+    }),
+    'Refresh Template List'
+  );
 };
 
 window.clearTemplateOwnerCidCid = () => {
   document.getElementById('templateOwnerCid').value = '';
 };
-
 
 window.checkTemplateOwnership = async () => {
   console.log('checkTemplateOwnership');
@@ -95,4 +101,4 @@ window.checkTemplateOwnership = async () => {
   setTimeout(callback, 0);
 };
 
-export {addTemplateOwnerCheck};
+export { addTemplateOwnerCheck };

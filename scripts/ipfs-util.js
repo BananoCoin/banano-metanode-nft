@@ -60,18 +60,16 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
 
   const isValidIpfsCid = () => {
     const bytes = bs58.decode(ipfsCid);
-    const hex = bytes.toString('hex');
+    const ipfsCidHex = Buffer.from(bytes).toString('hex');
     const regExp = new RegExp('^1220[0123456789abcdefABCDEF]{64}$');
-    return regExp.test(hex);
+    return regExp.test(ipfsCidHex);
   };
   try {
     if (!isValidIpfsCid()) {
       throw Error(`hex value is not '1220' + 64 hex chars.`);
     }
   } catch (error) {
-    const validCharSet = new Set([...'123456789'+
-      'ABCDEFGHJKLMNPQRSTUVWXYZ'+
-      'abcdefghijkmnopqrstuvwxyz']);
+    const validCharSet = new Set([...('123456789' + 'ABCDEFGHJKLMNPQRSTUVWXYZ' + 'abcdefghijkmnopqrstuvwxyz')]);
     let invalidCharacters = '';
     if (error.message == 'Non-base58 character') {
       [...ipfsCid].forEach((char) => {
@@ -81,15 +79,13 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
       });
     }
 
-    const message = `ipfsCid '${ipfsCid}' is invalid. error '${error.message}'`+
-        ` ${invalidCharacters}`;
+    const message = `ipfsCid '${ipfsCid}' is invalid. error '${error.message}'` + ` ${invalidCharacters}`;
     throw Error(message.trim());
   }
 
-
   const fetchWithTimeout = async (resource, options) => {
-    return new Promise( async (resolve, reject) => {
-      const {timeout = config.fetchTimeout} = options;
+    return new Promise(async (resolve, reject) => {
+      const { timeout = config.fetchTimeout } = options;
 
       const controller = new AbortController();
       /* istanbul ignore next */
@@ -103,26 +99,30 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
         ...options,
         signal: controller.signal,
       })
-          .catch((error) => {
-            loggingUtil.debug('getNftInfoForIpfsCid', 'error', error.message);
-            clearTimeout(id);
-            if (error.message == 'The user aborted a request.') {
-              error.message = `timeout waiting for response from IPFS CID lookup`;
-            }
-            resolve({status: 408, statusText: error.message, headers: {get: () => {}}});
-          })
-          .then((response) => {
-            loggingUtil.debug('getNftInfoForIpfsCid', 'response', response);
-            clearTimeout(id);
-            resolve(response);
+        .catch((error) => {
+          loggingUtil.debug('getNftInfoForIpfsCid', 'error', error.message);
+          clearTimeout(id);
+          if (error.message == 'The user aborted a request.') {
+            error.message = `timeout waiting for response from IPFS CID lookup`;
+          }
+          resolve({
+            status: 408,
+            statusText: error.message,
+            headers: { get: () => {} },
           });
+        })
+        .then((response) => {
+          loggingUtil.debug('getNftInfoForIpfsCid', 'response', response);
+          clearTimeout(id);
+          resolve(response);
+        });
     });
   };
 
   const url = `${config.ipfsApiUrl}/${ipfsCid}`;
 
   const headers = {
-    'accept': '*/*',
+    accept: '*/*',
     'accept-language': 'en-US,en',
     'content-type': 'application/json',
   };
@@ -230,15 +230,9 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
       // resp.base64 = buffer.toString('base64');
     }
   } else if (nftJsonResponse.status === 408) {
-    resp.errors = [
-      nftJsonResponse.statusText,
-    ];
+    resp.errors = [nftJsonResponse.statusText];
   } else {
-    resp.errors = [
-      'unknown error from IPFS CID lookup',
-      'status:' + nftJsonResponse.status,
-      'statusText:' + nftJsonResponse.statusText,
-    ];
+    resp.errors = ['unknown error from IPFS CID lookup', 'status:' + nftJsonResponse.status, 'statusText:' + nftJsonResponse.statusText];
   }
   return resp;
 };
@@ -271,8 +265,7 @@ const getOwnedAssets = async (fetch, bananojs, fs, action, owner, chainAccountIn
     };
     loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset', dirtyOwnerAsset);
     await updateAssetOwnerHistory(fetch, bananojs, fs, action, dirtyOwnerAsset, chainAccountInfoCache);
-    loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset.owner',
-        dirtyOwnerAsset.owner, 'owner', owner, 'same?', dirtyOwnerAsset.owner !== owner);
+    loggingUtil.log(action, 'getOwnedAssets', 'dirtyOwnerAsset.owner', dirtyOwnerAsset.owner, 'owner', owner, 'same?', dirtyOwnerAsset.owner !== owner);
     if (dirtyOwnerAsset.owner !== owner) {
       dataUtil.deleteOwnerAsset(fs, owner, dirtyOwnerAsset.asset);
     }
@@ -319,36 +312,27 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
 
   // find the receive block that received the send.
   let receiveHash = await getReceiveBlock(fetch, fs, action, assetOwner.owner, sendHash);
-  loggingUtil.log(action, 'getNftAssetsOwners',
-      'asset', assetRepresentativeAccount,
-      'sendHash', '=>', 'receiveHash',
-      sendHash, '=>', receiveHash);
+  loggingUtil.log(action, 'getNftAssetsOwners', 'asset', assetRepresentativeAccount, 'sendHash', '=>', 'receiveHash', sendHash, '=>', receiveHash);
   if (receiveHash === undefined) {
     // show an entry in history if it is sent but never received
-    assetOwner.history.push(
-        {
-          owner: assetOwner.owner,
-          send: sendHash,
-          receive: '',
-        },
-    );
+    assetOwner.history.push({
+      owner: assetOwner.owner,
+      send: sendHash,
+      receive: '',
+    });
   } else {
     while (receiveHash !== undefined) {
       // looking in the history of asset_owner.owner,
       // starting at the receiveHash (the point the owner received the nft)
       // find the next send block with the representative set to the same nft hash (the asset_owner.asset)
       // and return the hash of the send block, and the new owner.
-      assetOwner.history.push(
-          {
-            owner: assetOwner.owner,
-            send: sendHash,
-            receive: receiveHash,
-          },
-      );
+      assetOwner.history.push({
+        owner: assetOwner.owner,
+        send: sendHash,
+        receive: receiveHash,
+      });
 
-      const nextAssetOwner = await getNextAssetOwner(fetch, fs, bananojs,
-          action, assetRepresentativeAccount, assetOwner.owner, receiveHash,
-          getChainAccountInfo);
+      const nextAssetOwner = await getNextAssetOwner(fetch, fs, bananojs, action, assetRepresentativeAccount, assetOwner.owner, receiveHash, getChainAccountInfo);
       if (nextAssetOwner !== undefined) {
         loggingUtil.log(action, 'getNftAssetsOwners', 'assetOwner', '=>', 'nextAssetOwner', assetOwner.owner, '=>', nextAssetOwner.owner);
         assetOwner.owner = nextAssetOwner.owner;
@@ -364,13 +348,11 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
 
         if (isReceiveHashUndefined()) {
           // show an entry in history if it is sent but not received
-          assetOwner.history.push(
-              {
-                owner: assetOwner.owner,
-                send: sendHash,
-                receive: '',
-              },
-          );
+          assetOwner.history.push({
+            owner: assetOwner.owner,
+            send: sendHash,
+            receive: '',
+          });
         }
       } else {
         receiveHash = undefined;
@@ -379,7 +361,7 @@ const updateAssetOwnerHistory = async (fetch, bananojs, fs, action, assetOwner, 
   }
 
   assetOwner.received = 'false';
-  if (assetOwner.history[assetOwner.history.length-1].receive.length > 0) {
+  if (assetOwner.history[assetOwner.history.length - 1].receive.length > 0) {
     assetOwner.received = 'true';
   }
   dataUtil.addOwnerAsset(fs, assetOwner.owner, assetOwner.asset);
@@ -418,9 +400,7 @@ const getReceiveBlock = async (fetch, fs, action, owner, sendHash) => {
 
       /* istanbul ignore if */
       if (loggingUtil.isDebugEnabled()) {
-        loggingUtil.debug(action, 'getReceiveBlock', 'historyElt', ix,
-            owner, '=>', sendHash, 'link', historyElt.link, 'match',
-            (historyElt.link == sendHash));
+        loggingUtil.debug(action, 'getReceiveBlock', 'historyElt', ix, owner, '=>', sendHash, 'link', historyElt.link, 'match', historyElt.link == sendHash);
       }
 
       dataUtil.setReceiveBlockHash(fs, historyElt.link, historyElt.hash);
@@ -474,8 +454,7 @@ const getNextAssetOwner = async (fetch, fs, bananojs, action, assetRepresentativ
     // console.log('getNextAssetOwner', 'chains account info', JSON.parse(chainAccountInfo));
     // console.log('getNextAssetOwner', 'cached account info', JSON.parse(cacheAccountInfo).confirmation_height);
     // console.log('getNextAssetOwner', 'chains account info', JSON.parse(chainAccountInfo).confirmation_height);
-    if ((cacheAccountInfo == chainAccountInfo) &&
-        dataUtil.hasNextAssetOwner(fs, receiveHash)) {
+    if (cacheAccountInfo == chainAccountInfo && dataUtil.hasNextAssetOwner(fs, receiveHash)) {
       // if we have cached the account info
       // and the cached account info is the same as the provided account info,
       // then no send blocks were published, and we can returned the cached data.
@@ -543,8 +522,7 @@ const getNextAssetOwnerForCache = async (fetch, bananojs, action, assetRepresent
       loggingUtil.debug(action, 'getNextAssetOwner', ix, 'representative', historyElt.representative);
       loggingUtil.debug(action, 'getNextAssetOwner', ix, 'assetRepresentativeAccount', assetRepresentativeAccount);
       const isHistoryEltSend = () => {
-        const retval = (historyElt.type == 'send') ||
-          ((historyElt.type == 'state') && (historyElt.subtype == 'send'));
+        const retval = historyElt.type == 'send' || (historyElt.type == 'state' && historyElt.subtype == 'send');
         loggingUtil.log('isHistoryEltSend', retval, historyElt.type, historyElt.subtype);
         return retval;
       };
@@ -561,7 +539,7 @@ const getNextAssetOwnerForCache = async (fetch, bananojs, action, assetRepresent
       }
 
       const isConfirmationHeightFrontier = () => {
-        const retval = (historyElt.hash == confirmationHeightFrontier);
+        const retval = historyElt.hash == confirmationHeightFrontier;
         loggingUtil.log('isConfirmationHeightFrontier', retval, historyElt.hash, confirmationHeightFrontier);
         return retval;
       };
@@ -672,7 +650,6 @@ const listTemplateAssets = (fs, action, template) => {
   return dataUtil.listTemplateAssets(fs, template);
 };
 
-
 const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors, success) => {
   const key = `${inFieldNmPrefix}ipfs_cid`;
   const value = json[key];
@@ -694,7 +671,7 @@ const addRep = async (bananojs, json, inFieldNmPrefix, outFieldNmPrefix, errors,
 };
 
 const getTemplateMaxSupply = (fs, action, template) => {
-  if ((template.length > 0) && dataUtil.hasTemplateMaxSupply(fs, template)) {
+  if (template.length > 0 && dataUtil.hasTemplateMaxSupply(fs, template)) {
     return dataUtil.getTemplateMaxSupply(fs, template);
   } else {
     return '';

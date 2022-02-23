@@ -6,7 +6,7 @@ const chai = require('chai');
 // modules
 const expect = chai.expect;
 const actionUtil = require('../../scripts/actions/get-bananode-api-url.js');
-const {config, loggingUtil, getResponse} = require('../util/get-response.js');
+const { config, loggingUtil, getResponse } = require('../util/get-response.js');
 
 // constants
 
@@ -15,8 +15,7 @@ const {config, loggingUtil, getResponse} = require('../util/get-response.js');
 // functions
 describe(actionUtil.ACTION, () => {
   it('get status 200', async () => {
-    const context = {
-    };
+    const context = {};
     let actualResponse;
     try {
       actualResponse = await getResponse(actionUtil, context, {});

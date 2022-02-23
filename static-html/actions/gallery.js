@@ -1,16 +1,20 @@
-import {addText, addChildElement} from '../lib/dom.js';
-import {postIpfsHtmlMessage, addJsonImageLink} from '../lib/ipfs-html.js';
+import { addText, addChildElement } from '../lib/dom.js';
+import { postIpfsHtmlMessage, addJsonImageLink } from '../lib/ipfs-html.js';
 
 const addGallery = () => {
   const wrapperElt = document.getElementById('galleryWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
-    'method': 'POST',
-    'class': '',
-    'onsubmit': 'return false;',
+    method: 'POST',
+    class: '',
+    onsubmit: 'return false;',
   });
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideGalleryWrapper();',
-  }), 'Main Menu');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return hideGalleryWrapper();',
+    }),
+    'Main Menu'
+  );
   addText(addChildElement(formElt, 'h2'), 'Gallery');
   const shareHrefElt = addChildElement(formElt, 'a', {
     target: '_blank',
@@ -20,31 +24,32 @@ const addGallery = () => {
 
   addChildElement(formElt, 'br');
   const checkCidElt = addChildElement(formElt, 'button', {
-    'id': 'gallery',
-    'type': 'button',
-    'class': '',
-    'onclick': 'loadGallery();return false;',
+    id: 'gallery',
+    type: 'button',
+    class: '',
+    onclick: 'loadGallery();return false;',
   });
   addText(checkCidElt, 'Load Gallery');
   addChildElement(wrapperElt, 'div', {
-    'id': 'galleryInfo',
-    'class': 'selectable container column',
+    id: 'galleryInfo',
+    class: 'selectable container column',
   });
-  addText(addChildElement(formElt, 'button', {
-    'id': 'refreshCidList',
-    'type': 'button',
-    'class': '',
-    'onclick': 'getKnownTemplateList();return false;',
-  }), 'Refresh Template List');
+  addText(
+    addChildElement(formElt, 'button', {
+      id: 'refreshCidList',
+      type: 'button',
+      class: '',
+      onclick: 'getKnownTemplateList();return false;',
+    }),
+    'Refresh Template List'
+  );
 };
-
 
 window.loadGallery = async () => {
   console.log('loadGallery');
   const galleryInfo = document.getElementById('galleryInfo');
 
   galleryInfo.innerHTML = 'pending...';
-
 
   const dataListElt = document.getElementById('knownTemplateList');
 
@@ -63,8 +68,7 @@ window.loadGallery = async () => {
     let timer = 0;
     templatesToLoad.forEach((jsonIpfsCid) => {
       const id = `gallery-${jsonIpfsCid}`;
-      const innerElt = addChildElement(elt, 'span', {
-      });
+      const innerElt = addChildElement(elt, 'span', {});
       addChildElement(innerElt, 'span', {
         id: id,
       });
@@ -76,10 +80,10 @@ window.loadGallery = async () => {
       };
       setTimeout(fn, timer);
 
-      timer+= 1000;
+      timer += 1000;
     });
   };
   setTimeout(callback, 0);
 };
 
-export {addGallery};
+export { addGallery };

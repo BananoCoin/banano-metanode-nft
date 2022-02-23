@@ -7,4 +7,4 @@ const normalizeSvgs = (span) => {
   });
 };
 
-export {normalizeSvgs};
+export { normalizeSvgs };

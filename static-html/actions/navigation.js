@@ -1,82 +1,133 @@
-import {addText, addChildElement, hide, show} from '../lib/dom.js';
+import { addText, addChildElement, hide, show } from '../lib/dom.js';
 
 const addNavigation = () => {
   const wrapperElt = document.getElementById('navigationWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
-    'method': 'POST',
-    'onsubmit': 'return false;',
+    method: 'POST',
+    onsubmit: 'return false;',
   });
   addText(addChildElement(formElt, 'h2'), 'Welcome! What are you trying to do?');
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideAll();',
-  }), 'Hide Everything');
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return showAll();',
-  }), 'Show Everything');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return hideAll();',
+    }),
+    'Hide Everything'
+  );
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return showAll();',
+    }),
+    'Show Everything'
+  );
 
   addText(addChildElement(formElt, 'h3'), 'Are you trying to view your seed and account?');
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return showSeedAndAccountWrapper();',
-  }), 'Show Seed And Account');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return showSeedAndAccountWrapper();',
+    }),
+    'Show Seed And Account'
+  );
 
   addText(addChildElement(formElt, 'h3'), 'Are you trying to view your owned assets?');
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return showOwnerAssetCheckWrapper();',
-  }), 'Show Owned Assets');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return showOwnerAssetCheckWrapper();',
+    }),
+    'Show Owned Assets'
+  );
 
   addText(addChildElement(formElt, 'h3'), 'Are you trying to view all known templates?');
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return showGalleryWrapper();',
-  }), 'Show Gallery');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return showGalleryWrapper();',
+    }),
+    'Show Gallery'
+  );
 
   addText(addChildElement(formElt, 'h3'), 'Are you trying to create a new NFT template?');
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return showCreateNftTemplateWrapper();',
-  }), 'Show Tools to Create a Nft Template');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return showCreateNftTemplateWrapper();',
+    }),
+    'Show Tools to Create a Nft Template'
+  );
 
   addText(addChildElement(formElt, 'h3'), 'Are you trying to view an existing NFT template?');
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return showViewNftTemplateWrapper();',
-  }), 'Show Tools to View a Nft Template');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return showViewNftTemplateWrapper();',
+    }),
+    'Show Tools to View a Nft Template'
+  );
 
   addText(addChildElement(formElt, 'h3'), 'Are you trying to check ownership an existing NFT template?');
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return showTemplateOwnerCheckWrapper();',
-  }), 'Show Tools to Check Ownership of an Nft Template');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return showTemplateOwnerCheckWrapper();',
+    }),
+    'Show Tools to Check Ownership of an Nft Template'
+  );
 
   addText(addChildElement(formElt, 'h3'), 'Are you trying to mint a new NFT asset from a template?');
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return showMintNftWrapper();',
-  }), 'Show Tools to Mint a new Asset from a Nft Template');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return showMintNftWrapper();',
+    }),
+    'Show Tools to Mint a new Asset from a Nft Template'
+  );
 
   addText(addChildElement(formElt, 'h3'), 'Are you trying to transfer an existing NFT asset to a new owner?');
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return showTransferNftWrapper();',
-  }), 'Show Tools to Transfer an existing Asset to a new Owner');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return showTransferNftWrapper();',
+    }),
+    'Show Tools to Transfer an existing Asset to a new Owner'
+  );
 
   addText(addChildElement(formElt, 'h3'), 'Are you trying to share a link to a section?');
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return showLinkWrapper();',
-  }), 'Show Links');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return showLinkWrapper();',
+    }),
+    'Show Links'
+  );
   addAllWrapperLinks();
 };
 
 const addAllWrapperLinks = () => {
   const wrapperElt = document.getElementById('linkWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
-    'method': 'POST',
-    'class': '',
-    'onsubmit': 'return false;',
+    method: 'POST',
+    class: '',
+    onsubmit: 'return false;',
   });
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideLinkWrapper();',
-  }), 'Main Menu');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return hideLinkWrapper();',
+    }),
+    'Main Menu'
+  );
 
   const addLink = (name) => {
-    addText(addChildElement(wrapperElt, 'a', {
-      target: '_blank',
-      href: `#show${name}`,
-    }), name);
+    addText(
+      addChildElement(wrapperElt, 'a', {
+        target: '_blank',
+        href: `#show${name}`,
+      }),
+      name
+    );
     addChildElement(wrapperElt, 'br');
   };
   addLink('SeedAndAccount');
@@ -206,4 +257,4 @@ window.hideLinkWrapper = () => {
   hide('linkWrapper');
 };
 
-export {addNavigation};
+export { addNavigation };

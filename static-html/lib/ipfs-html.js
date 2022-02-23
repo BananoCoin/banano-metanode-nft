@@ -1,15 +1,15 @@
-import {addText, addChildElement} from '../lib/dom.js';
-import {normalizeSvgs} from '../lib/svg.js';
-import {shorten} from '../lib/asset-name.js';
+import { addText, addChildElement } from '../lib/dom.js';
+import { normalizeSvgs } from '../lib/svg.js';
+import { shorten } from '../lib/asset-name.js';
 
-const getIpfsHtmlWorkerInst = new Worker('./workers/get-ipfs-html.js', {type: 'module'});
+const getIpfsHtmlWorkerInst = new Worker('./workers/get-ipfs-html.js', { type: 'module' });
 
 window.reloadTemplateAssets = (jsonIpfsCid, assets) => {
   // no blacklist or whitelist means load everything.
   getIpfsHtmlWorkerInst.postMessage([ipfsApiUrl, jsonIpfsCid, JSON.parse(assets)]);
 };
 
-getIpfsHtmlWorkerInst.onmessage = function(e) {
+getIpfsHtmlWorkerInst.onmessage = function (e) {
   const html = e.data[0];
   const assets = e.data[1];
   const jsonIpfsCid = e.data[2];
@@ -28,21 +28,30 @@ getIpfsHtmlWorkerInst.onmessage = function(e) {
     addChildElement(span, 'br');
     addText(span, title);
     addChildElement(span, 'br');
-    addText(addChildElement(span, 'button', {
-      'type': 'button',
-      'class': '',
-      'onclick': `reloadTemplateAssets('${jsonIpfsCid}', '${JSON.stringify(assets)}');return false;`,
-    }), 'Reload Template ' + shorten(jsonIpfsCid));
+    addText(
+      addChildElement(span, 'button', {
+        type: 'button',
+        class: '',
+        onclick: `reloadTemplateAssets('${jsonIpfsCid}', '${JSON.stringify(assets)}');return false;`,
+      }),
+      'Reload Template ' + shorten(jsonIpfsCid)
+    );
     addChildElement(span, 'br');
-    addText(addChildElement(span, 'a', {
-      href: `${ipfsApiUrl}/${jsonIpfsCid}`,
-      target: '_blank',
-    }), 'JSON CID ' + jsonIpfsCid);
+    addText(
+      addChildElement(span, 'a', {
+        href: `${ipfsApiUrl}/${jsonIpfsCid}`,
+        target: '_blank',
+      }),
+      'JSON CID ' + jsonIpfsCid
+    );
     addChildElement(span, 'br');
-    addText(addChildElement(span, 'a', {
-      href: `${ipfsApiUrl}/${imageIpfsCid}`,
-      target: '_blank',
-    }), 'Art CID ' + imageIpfsCid);
+    addText(
+      addChildElement(span, 'a', {
+        href: `${ipfsApiUrl}/${imageIpfsCid}`,
+        target: '_blank',
+      }),
+      'Art CID ' + imageIpfsCid
+    );
   }
 };
 
@@ -57,11 +66,14 @@ const addJsonImageLink = (ipfsApiUrl, jsonIpfsCid, assets) => {
 
     span.innerHTML = 'loading image ....';
     addChildElement(span, 'br');
-    addText(addChildElement(span, 'a', {
-      href: `${ipfsApiUrl}/${jsonIpfsCid}`,
-      target: '_blank',
-    }), 'JSON CID ' + jsonIpfsCid);
+    addText(
+      addChildElement(span, 'a', {
+        href: `${ipfsApiUrl}/${jsonIpfsCid}`,
+        target: '_blank',
+      }),
+      'JSON CID ' + jsonIpfsCid
+    );
   }
 };
 
-export {postIpfsHtmlMessage, addJsonImageLink};
+export { postIpfsHtmlMessage, addJsonImageLink };

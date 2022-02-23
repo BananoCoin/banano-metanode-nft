@@ -8,7 +8,7 @@ const processHashAndSearchParms = () => {
     fn();
   }
 
-  const searchParams = (new URL(document.location)).searchParams;
+  const searchParams = new URL(document.location).searchParams;
   const ids = Array.from(searchParams.keys());
 
   ids.forEach((id) => {
@@ -21,5 +21,4 @@ const processHashAndSearchParms = () => {
   });
 };
 
-
-export {processHashAndSearchParms};
+export { processHashAndSearchParms };

@@ -26,11 +26,11 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets, blacklist, whitelist
     const issuer = templateRsponseJson.issuer;
     title = templateRsponseJson.title;
     imageIpfsCid = templateRsponseJson.art_data_ipfs_cid;
-    if ((blacklist !== undefined) && blacklist.includes(issuer)) {
+    if (blacklist !== undefined && blacklist.includes(issuer)) {
       html += `<h4>Blacklisted</h4>`;
     } else {
       html += `<h4>${title}</h4>`;
-      if ((whitelist === undefined) || whitelist.includes(issuer)) {
+      if (whitelist === undefined || whitelist.includes(issuer)) {
         const imageUrl = ipfsApiUrl + '/' + imageIpfsCid;
         const imageResponse = await fetch(imageUrl, {
           method: 'GET',
@@ -47,9 +47,7 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets, blacklist, whitelist
             // html += text;
             const svg = `data:image/svg+xml;base64,${btoa(text)}`;
             html += `<object title="${imageIpfsCid}" style="width:30vmin;height30vmin;" type="image/svg+xml" data="${svg}"></object>`;
-          } else if ((imageContentType == 'image/png') ||
-              (imageContentType == 'image/gif') ||
-              (imageContentType == 'image/png')) {
+          } else if (imageContentType == 'image/png' || imageContentType == 'image/gif' || imageContentType == 'image/png') {
             const imageObjectUrl = URL.createObjectURL(imageBlob);
             html += `<img title="${imageIpfsCid}" style="width:30vmin;height30vmin;" src="${imageObjectUrl}"></img>`;
           } else {
@@ -69,13 +67,6 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets, blacklist, whitelist
     allowReload = 'true';
   }
 
-  const result = [
-    html,
-    assets,
-    jsonIpfsCid,
-    imageIpfsCid,
-    allowReload,
-    title,
-  ];
+  const result = [html, assets, jsonIpfsCid, imageIpfsCid, allowReload, title];
   postMessage(result);
 };

@@ -1,5 +1,5 @@
-import {getRandomHex32} from '../lib/randomHex32.js';
-import {addText, addChildElement, hide, show, clear} from '../lib/dom.js';
+import { getRandomHex32 } from '../lib/randomHex32.js';
+import { addText, addChildElement, hide, show, clear } from '../lib/dom.js';
 
 const loadSeed = () => {
   if (window.localStorage.seed == undefined) {
@@ -15,45 +15,55 @@ const saveSeed = () => {
 const addSeedHideShow = () => {
   const wrapperElt = document.getElementById('seedWrapper');
   const formElt = addChildElement(wrapperElt, 'form', {
-    'method': 'POST',
-    'class': '',
-    'onsubmit': 'return false;',
+    method: 'POST',
+    class: '',
+    onsubmit: 'return false;',
   });
-  addText(addChildElement(formElt, 'button', {
-    'type': 'button', 'onclick': 'return hideSeedAndAccountWrapper();',
-  }), 'Main Menu');
+  addText(
+    addChildElement(formElt, 'button', {
+      type: 'button',
+      onclick: 'return hideSeedAndAccountWrapper();',
+    }),
+    'Main Menu'
+  );
 
   addText(addChildElement(formElt, 'h2'), 'Seed');
   addChildElement(formElt, 'br');
-  addText(addChildElement(formElt, 'button', {
-    'id': 'seed-show',
-    'type': 'button',
-    'class': '',
-    'onclick': 'return showSeed();',
-  }), 'Show Seed');
-  addText(addChildElement(formElt, 'button', {
-    'id': 'seed-hide',
-    'type': 'button',
-    'class': '',
-    'style': 'display:none',
-    'onclick': 'return hideSeed();',
-  }), 'Hide Seed');
+  addText(
+    addChildElement(formElt, 'button', {
+      id: 'seed-show',
+      type: 'button',
+      class: '',
+      onclick: 'return showSeed();',
+    }),
+    'Show Seed'
+  );
+  addText(
+    addChildElement(formElt, 'button', {
+      id: 'seed-hide',
+      type: 'button',
+      class: '',
+      style: 'display:none',
+      onclick: 'return hideSeed();',
+    }),
+    'Hide Seed'
+  );
   addChildElement(formElt, 'br');
   addChildElement(formElt, 'input', {
-    'id': 'seed',
-    'class': '',
-    'type': 'text',
-    'size': '66',
-    'max_length': '64',
-    'value': window.localStorage.seed,
-    'style': 'display:none',
-    'onchange': 'updateSeedAndAccountInfo(); return false;',
-    'oninput': 'updateSeedAndAccountInfo(); return false;',
+    id: 'seed',
+    class: '',
+    type: 'text',
+    size: '66',
+    max_length: '64',
+    value: window.localStorage.seed,
+    style: 'display:none',
+    onchange: 'updateSeedAndAccountInfo(); return false;',
+    oninput: 'updateSeedAndAccountInfo(); return false;',
   });
   addChildElement(formElt, 'div', {
-    'id': 'seedError',
-    'style': 'display:none',
-    'class': 'selectable',
+    id: 'seedError',
+    style: 'display:none',
+    class: 'selectable',
   });
 };
 
@@ -77,30 +87,29 @@ const updateSeed = () => {
   }
 };
 
-
 const addAccountAndInfo = () => {
   const wrapperElt = document.getElementById('accountWrapper');
   addText(addChildElement(wrapperElt, 'h2'), 'Account');
   addChildElement(wrapperElt, 'div', {
-    'id': 'account',
-    'class': 'selectable',
+    id: 'account',
+    class: 'selectable',
   });
   const accountFormElt = addChildElement(wrapperElt, 'form', {
-    'method': 'POST',
-    'class': '',
+    method: 'POST',
+    class: '',
   });
 
   addText(addChildElement(accountFormElt, 'h2'), 'Account Info');
   const updateAccountInfoElt = addChildElement(accountFormElt, 'button', {
-    'id': 'update-account-info',
-    'type': 'button',
-    'class': '',
-    'onclick': 'updateAccountInfo();return false;',
+    id: 'update-account-info',
+    type: 'button',
+    class: '',
+    onclick: 'updateAccountInfo();return false;',
   });
   addText(updateAccountInfoElt, 'Refresh Account Info');
   addChildElement(accountFormElt, 'div', {
-    'id': 'accountInfo',
-    'class': 'selectable',
+    id: 'accountInfo',
+    class: 'selectable',
   });
 };
 
@@ -180,4 +189,4 @@ window.hideSeed = () => {
   return false;
 };
 
-export {loadSeed, addSeedHideShow, addAccountAndInfo};
+export { loadSeed, addSeedHideShow, addAccountAndInfo };

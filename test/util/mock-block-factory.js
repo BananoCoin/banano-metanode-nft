@@ -65,7 +65,7 @@ const getBananodeApi = (fn) => {
       confirmation_height: confirmationHeight,
     };
   };
-  bananodeApi.getGeneratedWork = () =>{
+  bananodeApi.getGeneratedWork = () => {
     return '0';
   };
   return bananodeApi;
@@ -75,12 +75,14 @@ const getSendBlock = async (seed, seedIx, newOwnerAccount) => {
   try {
     const representative = await getRepresentative();
     let sendBlock = undefined;
-    bananojs.setBananodeApi(getBananodeApi((block, subtype) => {
-      frontier = bananojs.getBlockHash(block);
-      balance = BigInt(balance) - BigInt(block.balance);
-      balance = balance.toString();
-      sendBlock = {contents: block, subtype: subtype, hash: frontier};
-    }));
+    bananojs.setBananodeApi(
+      getBananodeApi((block, subtype) => {
+        frontier = bananojs.getBlockHash(block);
+        balance = BigInt(balance) - BigInt(block.balance);
+        balance = balance.toString();
+        sendBlock = { contents: block, subtype: subtype, hash: frontier };
+      })
+    );
     const fn = bananojs.sendAmountToBananoAccountWithRepresentativeAndPrevious;
     await fn(seed, seedIx, newOwnerAccount, '1', representative, frontier);
     return sendBlock;
@@ -101,7 +103,7 @@ const getReceiveBlock = async (seed, seedIx, block) => {
       frontier = bananojs.getBlockHash(block);
       balance = BigInt(balance) + BigInt(block.balance);
       balance = balance.toString();
-      receiveBlock = {contents: block, subtype: subtype, hash: frontier};
+      receiveBlock = { contents: block, subtype: subtype, hash: frontier };
     });
     bananojs.setBananodeApi(bananodeApi);
     const fn = bananojs.bananoUtil.receive;
@@ -121,7 +123,7 @@ const getAbortChangeBlock = async (seed, seedIx) => {
     const bananodeApi = getBananodeApi((block, subtype) => {
       // change blocks in this mock are for aborting, so do not change the frontier.
       // frontier = bananojs.getBlockHash(block);
-      changeBlock = {contents: block, subtype: subtype, hash: frontier};
+      changeBlock = { contents: block, subtype: subtype, hash: frontier };
     });
     bananojs.setBananodeApi(bananodeApi);
     const fn = bananojs.bananoUtil.change;

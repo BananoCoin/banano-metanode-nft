@@ -102,8 +102,7 @@ const getNftOwnerAssets = async (context, req, res) => {
   resp.success = true;
   resp.asset_owners = [];
 
-  const chainAccountInfoCache =
-        ipfsUtil.getChainAccountInfoCache(fetch, ACTION);
+  const chainAccountInfoCache = ipfsUtil.getChainAccountInfoCache(fetch, ACTION);
   const ownedAssets = await ipfsUtil.getOwnedAssets(fetch, bananojs, fs, ACTION, owner, chainAccountInfoCache);
 
   loggingUtil.log(ACTION, 'getNftOwnerAssets', 'ownedAssets', ownedAssets);
@@ -112,7 +111,7 @@ const getNftOwnerAssets = async (context, req, res) => {
     const template = ipfsUtil.getTemplateForAsset(fs, ACTION, ownedAsset);
     const templateCounter = ipfsUtil.getTemplateCounterForAsset(fs, ACTION, ownedAsset);
     const maxSupply = ipfsUtil.getTemplateMaxSupply(fs, ACTION, template);
-    if ((template.length > 0) && (templateCounter.length > 0)) {
+    if (template.length > 0 && templateCounter.length > 0) {
       const assetOwner = {
         asset: ownedAsset,
         template: template,
@@ -129,8 +128,7 @@ const getNftOwnerAssets = async (context, req, res) => {
     // asset is the hash of the send block that created the asset.
     // owner is who it was sent to.
     const assetOwner = resp.asset_owners[ix];
-    await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, assetOwner,
-        chainAccountInfoCache);
+    await ipfsUtil.updateAssetOwnerHistory(fetch, bananojs, fs, ACTION, assetOwner, chainAccountInfoCache);
   }
   chainAccountInfoCache.putChainAccountInfo(fs);
 
