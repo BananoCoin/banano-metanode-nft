@@ -126,13 +126,13 @@ const initServer = () => {
     if (req.method == 'GET') {
       if (allowlist.indexOf(req.header('Origin')) !== -1) {
         // reflect (enable) the requested origin in the CORS response
-        corsOptions = { origin: true };
+        corsOptions = {origin: true};
       } else {
         // disable CORS for this request
-        corsOptions = { origin: false };
+        corsOptions = {origin: false};
       }
     } else {
-      corsOptions = { origin: true };
+      corsOptions = {origin: true};
     }
     loggingUtil.debug('cors', req.method, req.originalUrl, 'corsOptions', corsOptions);
     // callback expects two parameters: error and options
@@ -146,17 +146,17 @@ const initServer = () => {
   app.use(express.static('static-html'));
 
   app.use(
-    express.urlencoded({
-      limit: '50mb',
-      extended: true,
-    })
+      express.urlencoded({
+        limit: '50mb',
+        extended: true,
+      }),
   );
 
   app.use(
-    express.json({
-      limit: '50mb',
-      extended: true,
-    })
+      express.json({
+        limit: '50mb',
+        extended: true,
+      }),
   );
 
   app.use((err, req, res, next) => {
@@ -267,7 +267,7 @@ const closeProgram = async () => {
   process.exit(0);
 };
 
-const isObject = function (obj) {
+const isObject = function(obj) {
   return !!obj && obj.constructor === Object;
 };
 

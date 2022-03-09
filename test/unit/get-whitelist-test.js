@@ -6,7 +6,7 @@ const chai = require('chai');
 // modules
 const expect = chai.expect;
 const actionUtil = require('../../scripts/actions/get-whitelist.js');
-const { config, loggingUtil, getResponse } = require('../util/get-response.js');
+const {config, loggingUtil, getResponse} = require('../util/get-response.js');
 
 // constants
 

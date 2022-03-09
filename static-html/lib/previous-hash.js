@@ -9,4 +9,4 @@ const getPreviousHash = async () => {
   return previousHash;
 };
 
-export { getPreviousHash };
+export {getPreviousHash};

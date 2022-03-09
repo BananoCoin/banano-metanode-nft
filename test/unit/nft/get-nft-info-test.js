@@ -10,7 +10,7 @@ const expect = chai.expect;
 const actionUtil = require('../../../scripts/actions/nft/get-nft-info.js');
 const ipfsUtil = require('../../../scripts/ipfs-util.js');
 const mockFs = require('../../util/mock-fs.js');
-const { config, loggingUtil, getResponse } = require('../../util/get-response.js');
+const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
 
 // constants
 const goodIpfsCid = 'QmQJXwo7Ee1cgP2QVRMQGrgz29knQrUMfciq2wQWAvdzzS';
@@ -55,7 +55,7 @@ describe(actionUtil.ACTION, () => {
     };
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }

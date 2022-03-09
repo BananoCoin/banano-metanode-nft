@@ -1,5 +1,5 @@
-import { addText, addChildElement, clear } from '../lib/dom.js';
-import { postIpfsHtmlMessage, addJsonImageLink } from '../lib/ipfs-html.js';
+import {addText, addChildElement, clear} from '../lib/dom.js';
+import {postIpfsHtmlMessage, addJsonImageLink} from '../lib/ipfs-html.js';
 
 const addCidInfo = () => {
   const wrapperElt = document.getElementById('cidInfoWrapper');
@@ -9,11 +9,11 @@ const addCidInfo = () => {
     onsubmit: 'return false;',
   });
   addText(
-    addChildElement(formElt, 'button', {
-      type: 'button',
-      onclick: 'return hideViewNftTemplateWrapper();',
-    }),
-    'Main Menu'
+      addChildElement(formElt, 'button', {
+        type: 'button',
+        onclick: 'return hideViewNftTemplateWrapper();',
+      }),
+      'Main Menu',
   );
   addText(addChildElement(formElt, 'h2'), 'CID Info');
   addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
@@ -35,12 +35,12 @@ const addCidInfo = () => {
     onclick: 'checkCid();return false;',
   });
   addText(
-    addChildElement(formElt, 'button', {
-      type: 'button',
-      class: '',
-      onclick: 'clearCid();getKnownTemplateList();return false;',
-    }),
-    'Refresh Template List'
+      addChildElement(formElt, 'button', {
+        type: 'button',
+        class: '',
+        onclick: 'clearCid();getKnownTemplateList();return false;',
+      }),
+      'Refresh Template List',
   );
   addText(checkCidElt, 'Get CID Info');
   addChildElement(wrapperElt, 'div', {
@@ -117,4 +117,4 @@ window.checkCid = async () => {
   }
 };
 
-export { addCidInfo };
+export {addCidInfo};

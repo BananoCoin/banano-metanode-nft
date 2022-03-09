@@ -12,7 +12,7 @@ const ipfsUtil = require('../../../scripts/ipfs-util.js');
 const dataUtil = require('../../../scripts/data-util.js');
 const mockFs = require('../../util/mock-fs.js');
 const mockFetch = require('../../util/mock-fetch.js');
-const { config, loggingUtil, getResponse } = require('../../util/get-response.js');
+const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
 
 // constants
 const goodOwner2 = 'ban_11111111111111111111111111111111111111111111111111147dcwzp3c';
@@ -38,10 +38,10 @@ describe(actionUtil.ACTION, () => {
     };
   };
   it('get status 200 goodSendHash no history', async () => {
-    const context = getContext([{ head: goodSendHash4, history: [] }, { account: goodOwner2 }]);
+    const context = getContext([{head: goodSendHash4, history: []}, {account: goodOwner2}]);
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { asset_hash: goodSendHash4 });
+      actualResponse = await getResponse(actionUtil, context, {asset_hash: goodSendHash4});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -65,10 +65,10 @@ describe(actionUtil.ACTION, () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
   it('get status 200 goodSendHash no blockInfo', async () => {
-    const context = getContext([{ head: goodSendHash6 }, { account: goodOwner2 }]);
+    const context = getContext([{head: goodSendHash6}, {account: goodOwner2}]);
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { asset_hash: goodSendHash6 });
+      actualResponse = await getResponse(actionUtil, context, {asset_hash: goodSendHash6});
     } catch (error) {
       loggingUtil.trace(error);
     }

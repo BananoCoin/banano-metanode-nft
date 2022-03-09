@@ -21,4 +21,4 @@ const processHashAndSearchParms = () => {
   });
 };
 
-export { processHashAndSearchParms };
+export {processHashAndSearchParms};

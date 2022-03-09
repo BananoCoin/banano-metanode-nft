@@ -1,5 +1,5 @@
-import { addText, addChildElement } from '../lib/dom.js';
-import { getPreviousHash } from '../lib/previous-hash.js';
+import {addText, addChildElement} from '../lib/dom.js';
+import {getPreviousHash} from '../lib/previous-hash.js';
 
 const addMintNft = () => {
   const wrapperElt = document.getElementById('mintNftWrapper');
@@ -9,11 +9,11 @@ const addMintNft = () => {
     onsubmit: 'return false;',
   });
   addText(
-    addChildElement(formElt, 'button', {
-      type: 'button',
-      onclick: 'return hideMintNftWrapper();',
-    }),
-    'Main Menu'
+      addChildElement(formElt, 'button', {
+        type: 'button',
+        onclick: 'return hideMintNftWrapper();',
+      }),
+      'Main Menu',
   );
   addText(addChildElement(formElt, 'h2'), 'Mint NFT');
   addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
@@ -29,22 +29,22 @@ const addMintNft = () => {
   });
   addChildElement(formElt, 'br');
   addText(
-    addChildElement(formElt, 'button', {
-      id: 'mint-nft',
-      type: 'button',
-      class: '',
-      onclick: 'checkMintNftCID();return false;',
-    }),
-    'Check CID'
+      addChildElement(formElt, 'button', {
+        id: 'mint-nft',
+        type: 'button',
+        class: '',
+        onclick: 'checkMintNftCID();return false;',
+      }),
+      'Check CID',
   );
   addText(
-    addChildElement(formElt, 'button', {
-      id: 'refreshCidList',
-      type: 'button',
-      class: '',
-      onclick: 'clearMintNftTemplateCid();getKnownTemplateList();return false;',
-    }),
-    'Refresh Template List'
+      addChildElement(formElt, 'button', {
+        id: 'refreshCidList',
+        type: 'button',
+        class: '',
+        onclick: 'clearMintNftTemplateCid();getKnownTemplateList();return false;',
+      }),
+      'Refresh Template List',
   );
   addText(addChildElement(formElt, 'h3'), 'Representative');
   addChildElement(formElt, 'div', {
@@ -53,13 +53,13 @@ const addMintNft = () => {
   });
   addChildElement(formElt, 'br');
   addText(
-    addChildElement(formElt, 'button', {
-      id: 'mint-nft',
-      type: 'button',
-      class: '',
-      onclick: 'mintNft();return false;',
-    }),
-    'Mint NFT'
+      addChildElement(formElt, 'button', {
+        id: 'mint-nft',
+        type: 'button',
+        class: '',
+        onclick: 'mintNft();return false;',
+      }),
+      'Mint NFT',
   );
   addChildElement(formElt, 'div', {
     id: 'mintNftInfo',
@@ -108,4 +108,4 @@ window.mintNft = async () => {
   mintNftInfoElt.innerText = response;
 };
 
-export { addMintNft };
+export {addMintNft};

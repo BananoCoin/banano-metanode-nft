@@ -6,7 +6,7 @@ const chai = require('chai');
 // modules
 const expect = chai.expect;
 const dataUtil = require('../../scripts/data-util.js');
-const { config, loggingUtil } = require('../util/get-response.js');
+const {config, loggingUtil} = require('../util/get-response.js');
 const mockFs = require('../util/mock-fs.js');
 
 // constants

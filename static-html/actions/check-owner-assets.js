@@ -1,6 +1,6 @@
-import { addText, addChildElement } from '../lib/dom.js';
-import { shorten } from '../lib/asset-name.js';
-import { postIpfsHtmlMessage, addJsonImageLink } from '../lib/ipfs-html.js';
+import {addText, addChildElement} from '../lib/dom.js';
+import {shorten} from '../lib/asset-name.js';
+import {postIpfsHtmlMessage, addJsonImageLink} from '../lib/ipfs-html.js';
 
 const addOwnerAssetCheck = () => {
   const wrapperElt = document.getElementById('ownerAssetCheckWrapper');
@@ -10,11 +10,11 @@ const addOwnerAssetCheck = () => {
     onsubmit: 'return false;',
   });
   addText(
-    addChildElement(formElt, 'button', {
-      type: 'button',
-      onclick: 'return hideOwnerAssetCheckWrapper();',
-    }),
-    'Main Menu'
+      addChildElement(formElt, 'button', {
+        type: 'button',
+        onclick: 'return hideOwnerAssetCheckWrapper();',
+      }),
+      'Main Menu',
   );
   addText(addChildElement(formElt, 'h2'), 'Check Owner Assets');
   addText(addChildElement(formElt, 'h3'), 'Banano Account that owns Assets');
@@ -122,4 +122,4 @@ window.checkOwnerAssets = async () => {
   setTimeout(callback, 0);
 };
 
-export { addOwnerAssetCheck };
+export {addOwnerAssetCheck};

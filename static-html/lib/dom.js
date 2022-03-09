@@ -39,4 +39,4 @@ const clear = (parent) => {
   }
 };
 
-export { addAttributes, addText, addChildElement, hide, show, clear };
+export {addAttributes, addText, addChildElement, hide, show, clear};

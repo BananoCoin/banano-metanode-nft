@@ -12,7 +12,7 @@ const ipfsUtil = require('../../../scripts/ipfs-util.js');
 const dataUtil = require('../../../scripts/data-util.js');
 const mockFs = require('../../util/mock-fs.js');
 const mockFetch = require('../../util/mock-fetch.js');
-const { config, loggingUtil, getResponse } = require('../../util/get-response.js');
+const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
 
 // constants
 const artIpfsCid = 'QmbzTMo42KADUbLwc43KR9Se6aV3N6wfKqFbSr2qN1gJqR';
@@ -264,23 +264,23 @@ describe(actionUtil.ACTION, () => {
   };
   it('get status 200 goodIpfsCid no owner', async () => {
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: '',
-              representative: '',
-              link: '',
-            },
-          ],
-        },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: '',
+                representative: '',
+                link: '',
+              },
+            ],
+          },
+        ],
+        {},
     );
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -294,24 +294,24 @@ describe(actionUtil.ACTION, () => {
   });
   it('get status 200 goodIpfsCid no account history', async () => {
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: goodSendHash4,
-              representative: goodAssetRep,
-              link: goodLink,
-            },
-          ],
-        },
-        { account: goodOwner3 },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: goodSendHash4,
+                representative: goodAssetRep,
+                link: goodLink,
+              },
+            ],
+          },
+          {account: goodOwner3},
+        ],
+        {},
     );
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -340,10 +340,10 @@ describe(actionUtil.ACTION, () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
   it('get status 200 goodIpfsCid no head history', async () => {
-    const context = getContext([{ head: goodHead, history: [] }], {});
+    const context = getContext([{head: goodHead, history: []}], {});
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -356,10 +356,10 @@ describe(actionUtil.ACTION, () => {
     expect(actualResponse).to.deep.equal(expectedResponse);
   });
   it('get status 200 goodIpfsCid undefined head history', async () => {
-    const context = getContext([{ head: goodHead }], {});
+    const context = getContext([{head: goodHead}], {});
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -373,27 +373,27 @@ describe(actionUtil.ACTION, () => {
   });
   it('get status 200 goodIpfsCid one owner with undefined head history', async () => {
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: goodSendHash4,
-              representative: goodAssetRep,
-              link: goodLink,
-            },
-          ],
-        },
-        {
-          head: nextHead,
-          account: goodOwner3,
-        },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: goodSendHash4,
+                representative: goodAssetRep,
+                link: goodLink,
+              },
+            ],
+          },
+          {
+            head: nextHead,
+            account: goodOwner3,
+          },
+        ],
+        {},
     );
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -423,38 +423,38 @@ describe(actionUtil.ACTION, () => {
   });
   it('get status 200 goodIpfsCid one owner with receive', async () => {
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: goodSendHash4,
-              representative: goodAssetRep,
-              link: goodOwner4link,
-              type: 'state',
-              subtype: 'send',
-            },
-          ],
-        },
-        {
-          account: goodOwner4,
-          head: goodReceiveHash3,
-          history: [
-            {
-              type: 'state',
-              subtype: 'receive',
-              hash: goodReceiveHash3,
-              representative: goodOwner6,
-              link: goodSendHash4,
-            },
-          ],
-        },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: goodSendHash4,
+                representative: goodAssetRep,
+                link: goodOwner4link,
+                type: 'state',
+                subtype: 'send',
+              },
+            ],
+          },
+          {
+            account: goodOwner4,
+            head: goodReceiveHash3,
+            history: [
+              {
+                type: 'state',
+                subtype: 'receive',
+                hash: goodReceiveHash3,
+                representative: goodOwner6,
+                link: goodSendHash4,
+              },
+            ],
+          },
+        ],
+        {},
     );
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -484,27 +484,27 @@ describe(actionUtil.ACTION, () => {
   });
   it('get status 200 goodIpfsCid one owner no receive', async () => {
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: goodSendHash4,
-              representative: goodAssetRep,
-              link: goodOwner4link,
-              type: 'send',
-            },
-          ],
-        },
-        {
-          account: goodOwner4,
-        },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: goodSendHash4,
+                representative: goodAssetRep,
+                link: goodOwner4link,
+                type: 'send',
+              },
+            ],
+          },
+          {
+            account: goodOwner4,
+          },
+        ],
+        {},
     );
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -534,57 +534,57 @@ describe(actionUtil.ACTION, () => {
   });
   it('get status 200 goodIpfsCid two owners sent to unopened account', async () => {
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: goodSendHash4,
-              representative: goodAssetRep,
-              link: goodOwner4link,
-              type: 'send',
-            },
-          ],
-        },
-        {
-          account: goodOwner4,
-          head: goodReceiveHash3,
-          history: [
-            {
-              type: 'receive',
-              hash: goodReceiveHashC,
-              representative: goodOwner6,
-              link: goodOwner4link,
-            },
-            {
-              type: 'receive',
-              hash: goodReceiveHash3,
-              representative: goodOwner6,
-              link: goodSendHash4,
-            },
-            {
-              hash: goodSendHash6,
-              representative: goodOwner4,
-              link: goodOwnerBlink,
-              type: 'send',
-            },
-            {
-              hash: goodSendHash6,
-              representative: goodOwner6,
-              link: goodOwnerBlink,
-              type: 'send',
-            },
-          ],
-        },
-        {
-          account: goodOwnerB,
-        },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: goodSendHash4,
+                representative: goodAssetRep,
+                link: goodOwner4link,
+                type: 'send',
+              },
+            ],
+          },
+          {
+            account: goodOwner4,
+            head: goodReceiveHash3,
+            history: [
+              {
+                type: 'receive',
+                hash: goodReceiveHashC,
+                representative: goodOwner6,
+                link: goodOwner4link,
+              },
+              {
+                type: 'receive',
+                hash: goodReceiveHash3,
+                representative: goodOwner6,
+                link: goodSendHash4,
+              },
+              {
+                hash: goodSendHash6,
+                representative: goodOwner4,
+                link: goodOwnerBlink,
+                type: 'send',
+              },
+              {
+                hash: goodSendHash6,
+                representative: goodOwner6,
+                link: goodOwnerBlink,
+                type: 'send',
+              },
+            ],
+          },
+          {
+            account: goodOwnerB,
+          },
+        ],
+        {},
     );
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -619,63 +619,63 @@ describe(actionUtil.ACTION, () => {
   });
   it('get status 200 goodIpfsCid two owners with receive', async () => {
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: goodSendHash4,
-              representative: goodAssetRep,
-              link: goodOwner4link,
-              type: 'send',
-            },
-          ],
-        },
-        {
-          account: goodOwner4,
-          head: goodReceiveHash3,
-          history: [
-            {
-              type: 'receive',
-              hash: goodReceiveHash3,
-              representative: goodOwner6,
-              link: goodSendHash4,
-            },
-            {
-              hash: goodSendHash6,
-              representative: goodOwner4,
-              link: goodOwnerBlink,
-              type: 'send',
-            },
-            {
-              hash: goodSendHashA,
-              representative: goodOwner6,
-              link: goodOwnerBlink,
-              type: 'send',
-            },
-          ],
-        },
-        {
-          head: goodReceiveHash8,
-        },
-        {
-          account: goodOwnerB,
-          head: goodReceiveHash8,
-          history: [
-            {
-              type: 'receive',
-              hash: goodReceiveHash8,
-              representative: goodOwner6,
-              link: goodSendHashA,
-            },
-          ],
-        },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: goodSendHash4,
+                representative: goodAssetRep,
+                link: goodOwner4link,
+                type: 'send',
+              },
+            ],
+          },
+          {
+            account: goodOwner4,
+            head: goodReceiveHash3,
+            history: [
+              {
+                type: 'receive',
+                hash: goodReceiveHash3,
+                representative: goodOwner6,
+                link: goodSendHash4,
+              },
+              {
+                hash: goodSendHash6,
+                representative: goodOwner4,
+                link: goodOwnerBlink,
+                type: 'send',
+              },
+              {
+                hash: goodSendHashA,
+                representative: goodOwner6,
+                link: goodOwnerBlink,
+                type: 'send',
+              },
+            ],
+          },
+          {
+            head: goodReceiveHash8,
+          },
+          {
+            account: goodOwnerB,
+            head: goodReceiveHash8,
+            history: [
+              {
+                type: 'receive',
+                hash: goodReceiveHash8,
+                representative: goodOwner6,
+                link: goodSendHashA,
+              },
+            ],
+          },
+        ],
+        {},
     );
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -707,17 +707,17 @@ describe(actionUtil.ACTION, () => {
     loggingUtil.debug('actualResponse', actualResponse);
     loggingUtil.debug('expectedResponse', expectedResponse);
     expect(actualResponse).to.deep.equal(expectedResponse);
-    const actualResponse2 = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCid });
+    const actualResponse2 = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid});
     expect(actualResponse2).to.deep.equal(expectedResponse);
     const expectedErrorResponse1 = {
-      errors: ["ipfsCid '0O1' is invalid. error 'Non-base58 character' 0O"],
+      errors: ['ipfsCid \'0O1\' is invalid. error \'Non-base58 character\' 0O'],
       success: false,
     };
-    const actualErrorResponse1 = await getResponse(actionUtil, context, { ipfs_cid: '0O1' });
+    const actualErrorResponse1 = await getResponse(actionUtil, context, {ipfs_cid: '0O1'});
     expect(actualErrorResponse1).to.deep.equal(expectedErrorResponse1);
-    const actualErrorResponse2 = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCid + '1' });
+    const actualErrorResponse2 = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCid + '1'});
     const expectedErrorResponse2 = {
-      errors: ["ipfsCid '" + goodIpfsCid + '1' + "' is invalid." + ` error 'hex value is not '1220' + 64 hex chars.'`],
+      errors: ['ipfsCid \'' + goodIpfsCid + '1' + '\' is invalid.' + ` error 'hex value is not '1220' + 64 hex chars.'`],
       success: false,
     };
     expect(actualErrorResponse2).to.deep.equal(expectedErrorResponse2);
@@ -726,7 +726,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext([], {});
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: badContentTypeIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badContentTypeIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -745,7 +745,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext([], {});
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: badTimeoutIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badTimeoutIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -763,7 +763,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext([], {});
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: badUnknownIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badUnknownIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -781,7 +781,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext([], {});
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: badJsonIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badJsonIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -789,10 +789,10 @@ describe(actionUtil.ACTION, () => {
       content_type: 'application/json',
       errors: [
         'unsupported version:\'\' supported versions:["0.0.1"]',
-        "max_supply:'' not an integer",
-        "transferable:'' not a boolean",
-        "metadata_ipfs_cid:'' error 'ipfs_cid:'' not valid v0 CID (Qm+base58)'",
-        "previous:'' not 64 hex characters",
+        'max_supply:\'\' not an integer',
+        'transferable:\'\' not a boolean',
+        'metadata_ipfs_cid:\'\' error \'ipfs_cid:\'\' not valid v0 CID (Qm+base58)\'',
+        'previous:\'\' not 64 hex characters',
       ],
       ipfs_cid: badJsonIpfsCid,
       json: {
@@ -816,12 +816,12 @@ describe(actionUtil.ACTION, () => {
     const context = getContext([], {});
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: badMissingJsonIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badMissingJsonIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
     const errors = [
-      "command:'undefined' !== 'nft_template'",
+      'command:\'undefined\' !== \'nft_template\'',
       'version undefined',
       'title undefined',
       'issuer undefined',
@@ -844,13 +844,13 @@ describe(actionUtil.ACTION, () => {
     const context = getContext([], {});
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: badJsonBase58Cid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badJsonBase58Cid});
     } catch (error) {
       loggingUtil.trace(error);
     }
     const expectedResponse = {
       content_type: 'application/json',
-      errors: ["metadata_ipfs_cid:'Qm#' error 'ipfs_cid:'Qm#' not valid v0 CID (Qm+base58)'", "previous:'AB' not 64 hex characters"],
+      errors: ['metadata_ipfs_cid:\'Qm#\' error \'ipfs_cid:\'Qm#\' not valid v0 CID (Qm+base58)\'', 'previous:\'AB\' not 64 hex characters'],
       ipfs_cid: badJsonBase58Cid,
       json: {
         command: 'nft_template',
@@ -872,7 +872,7 @@ describe(actionUtil.ACTION, () => {
     const context = getContext([], {});
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: badJsonBase58ShortCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badJsonBase58ShortCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -880,8 +880,8 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       content_type: 'application/json',
       errors: [
-        "metadata_ipfs_cid:'" + badIpfsCid + "' error 'ipfsCidHex:'" + ipfsCidHex + "' not 64 hex chars after prefix 1220, 66'",
-        "previous:'AB' not 64 hex characters",
+        'metadata_ipfs_cid:\'' + badIpfsCid + '\' error \'ipfsCidHex:\'' + ipfsCidHex + '\' not 64 hex chars after prefix 1220, 66\'',
+        'previous:\'AB\' not 64 hex characters',
       ],
       ipfs_cid: badJsonBase58ShortCid,
       json: {
@@ -902,23 +902,23 @@ describe(actionUtil.ACTION, () => {
   });
   it('get status 200 badAbortIpfsCid timeout abort', async () => {
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: '',
-              representative: '',
-              link: '',
-            },
-          ],
-        },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: '',
+                representative: '',
+                link: '',
+              },
+            ],
+          },
+        ],
+        {},
     );
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: badAbortIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badAbortIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -934,23 +934,23 @@ describe(actionUtil.ACTION, () => {
   });
   it('get status 200 badAbortOtherIpfsCid timeout abort', async () => {
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: '',
-              representative: '',
-              link: '',
-            },
-          ],
-        },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: '',
+                representative: '',
+                link: '',
+              },
+            ],
+          },
+        ],
+        {},
     );
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: badAbortOtherIpfsCid });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: badAbortOtherIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -966,38 +966,38 @@ describe(actionUtil.ACTION, () => {
   });
   it('get status 200 goodIpfsCidNoMaxSupply undefined head history', async () => {
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: goodSendHash4,
-              representative: goodAssetRepNoMaxSupply,
-              link: goodOwner4link,
-              type: 'state',
-              subtype: 'send',
-            },
-          ],
-        },
-        {
-          account: goodOwner4,
-          head: goodReceiveHash3,
-          history: [
-            {
-              type: 'state',
-              subtype: 'receive',
-              hash: goodReceiveHash3,
-              representative: goodOwner6,
-              link: goodSendHash4,
-            },
-          ],
-        },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: goodSendHash4,
+                representative: goodAssetRepNoMaxSupply,
+                link: goodOwner4link,
+                type: 'state',
+                subtype: 'send',
+              },
+            ],
+          },
+          {
+            account: goodOwner4,
+            head: goodReceiveHash3,
+            history: [
+              {
+                type: 'state',
+                subtype: 'receive',
+                hash: goodReceiveHash3,
+                representative: goodOwner6,
+                link: goodSendHash4,
+              },
+            ],
+          },
+        ],
+        {},
     );
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { ipfs_cid: goodIpfsCidNoMaxSupply });
+      actualResponse = await getResponse(actionUtil, context, {ipfs_cid: goodIpfsCidNoMaxSupply});
     } catch (error) {
       loggingUtil.trace(error);
     }

@@ -8,7 +8,7 @@ const bananojs = require('@bananocoin/bananojs');
 const expect = chai.expect;
 const actionUtil = require('../../../scripts/actions/swap/put-block.js');
 const swapUtil = require('../../../scripts/swap-util.js');
-const { config, loggingUtil, getResponse } = require('../../util/get-response.js');
+const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
 const mockBlockFactory = require('../../util/mock-block-factory.js');
 
 // constants

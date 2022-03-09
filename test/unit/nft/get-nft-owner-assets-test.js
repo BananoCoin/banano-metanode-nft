@@ -13,7 +13,7 @@ const ipfsUtil = require('../../../scripts/ipfs-util.js');
 const dataUtil = require('../../../scripts/data-util.js');
 const mockFs = require('../../util/mock-fs.js');
 const mockFetch = require('../../util/mock-fetch.js');
-const { config, loggingUtil, getResponse } = require('../../util/get-response.js');
+const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
 
 // constants
 const artIpfsCid = 'QmbzTMo42KADUbLwc43KR9Se6aV3N6wfKqFbSr2qN1gJqR';
@@ -76,10 +76,10 @@ describe(actionUtil.ACTION, () => {
   };
 
   it('get status 200 goodOwner no history', async () => {
-    const context = getContext([{ account: goodOwner4 }], {});
+    const context = getContext([{account: goodOwner4}], {});
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { owner: goodOwner4 });
+      actualResponse = await getResponse(actionUtil, context, {owner: goodOwner4});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -94,37 +94,37 @@ describe(actionUtil.ACTION, () => {
 
   it('get status 200 one owner with no receive', async () => {
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: goodSendHash4,
-              representative: goodAssetRep,
-              link: goodOwner4link,
-              type: 'state',
-              subtype: 'send',
-            },
-            {
-              hash: goodSendHash4,
-              representative: goodAssetRep,
-              link: goodOwner4link,
-              type: 'state',
-              subtype: 'send',
-            },
-          ],
-        },
-        {
-          account: goodOwner4,
-          head: goodReceiveHash3,
-        },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: goodSendHash4,
+                representative: goodAssetRep,
+                link: goodOwner4link,
+                type: 'state',
+                subtype: 'send',
+              },
+              {
+                hash: goodSendHash4,
+                representative: goodAssetRep,
+                link: goodOwner4link,
+                type: 'state',
+                subtype: 'send',
+              },
+            ],
+          },
+          {
+            account: goodOwner4,
+            head: goodReceiveHash3,
+          },
+        ],
+        {},
     );
 
     let actualTemplateResponse;
     try {
-      actualTemplateResponse = await getResponse(templateActionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualTemplateResponse = await getResponse(templateActionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -171,7 +171,7 @@ describe(actionUtil.ACTION, () => {
 
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { owner: goodOwner4 });
+      actualResponse = await getResponse(actionUtil, context, {owner: goodOwner4});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -186,53 +186,53 @@ describe(actionUtil.ACTION, () => {
 
   it('get status 200 one owner with receive', async () => {
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: goodSendHash4,
-              representative: goodAssetRep,
-              link: goodOwner4link,
-              type: 'state',
-              subtype: 'send',
-            },
-            {
-              hash: goodSendHash4,
-              representative: goodAssetRep,
-              link: goodOwner4link,
-              type: 'state',
-              subtype: 'send',
-            },
-          ],
-        },
-        {
-          account: goodOwner4,
-          head: goodReceiveHash3,
-          history: [
-            {
-              type: 'state',
-              subtype: 'receive',
-              hash: goodReceiveHash3,
-              representative: goodOwner4,
-              link: goodSendHash4,
-            },
-            {
-              type: 'state',
-              subtype: 'receive',
-              hash: goodReceiveHash8,
-              representative: goodOwner6,
-              link: goodReceiveHash8,
-            },
-          ],
-        },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: goodSendHash4,
+                representative: goodAssetRep,
+                link: goodOwner4link,
+                type: 'state',
+                subtype: 'send',
+              },
+              {
+                hash: goodSendHash4,
+                representative: goodAssetRep,
+                link: goodOwner4link,
+                type: 'state',
+                subtype: 'send',
+              },
+            ],
+          },
+          {
+            account: goodOwner4,
+            head: goodReceiveHash3,
+            history: [
+              {
+                type: 'state',
+                subtype: 'receive',
+                hash: goodReceiveHash3,
+                representative: goodOwner4,
+                link: goodSendHash4,
+              },
+              {
+                type: 'state',
+                subtype: 'receive',
+                hash: goodReceiveHash8,
+                representative: goodOwner6,
+                link: goodReceiveHash8,
+              },
+            ],
+          },
+        ],
+        {},
     );
 
     let actualTemplateResponse;
     try {
-      actualTemplateResponse = await getResponse(templateActionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualTemplateResponse = await getResponse(templateActionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -274,7 +274,7 @@ describe(actionUtil.ACTION, () => {
     expect(actualTemplateResponse).to.deep.equal(expectedTemplateResponse);
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { owner: goodOwner4 });
+      actualResponse = await getResponse(actionUtil, context, {owner: goodOwner4});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -306,64 +306,64 @@ describe(actionUtil.ACTION, () => {
   it('get status 200 two owner with receive', async () => {
     dataUtil.addOwnerAsset(mockFs, goodOwner4, goodSendHash4);
     const context = getContext(
-      [
-        {
-          head: goodHead,
-          history: [
-            {
-              hash: goodSendHash4,
-              representative: goodAssetRep,
-              link: goodOwner4link,
-              type: 'send',
-            },
-          ],
-        },
-        {
-          account: goodOwner4,
-          head: goodReceiveHash3,
-          history: [
-            {
-              type: 'receive',
-              hash: goodReceiveHash3,
-              representative: goodOwner6,
-              link: goodSendHash4,
-            },
-            {
-              hash: goodSendHash6,
-              representative: goodOwner4,
-              link: goodOwnerBlink,
-              type: 'send',
-            },
-            {
-              hash: goodSendHashA,
-              representative: goodOwner6,
-              link: goodOwnerBlink,
-              type: 'send',
-            },
-          ],
-        },
-        {
-          head: goodReceiveHash8,
-        },
-        {
-          account: goodOwnerB,
-          head: goodReceiveHash8,
-          history: [
-            {
-              type: 'receive',
-              hash: goodReceiveHash8,
-              representative: goodOwner6,
-              link: goodSendHashA,
-            },
-          ],
-        },
-      ],
-      {}
+        [
+          {
+            head: goodHead,
+            history: [
+              {
+                hash: goodSendHash4,
+                representative: goodAssetRep,
+                link: goodOwner4link,
+                type: 'send',
+              },
+            ],
+          },
+          {
+            account: goodOwner4,
+            head: goodReceiveHash3,
+            history: [
+              {
+                type: 'receive',
+                hash: goodReceiveHash3,
+                representative: goodOwner6,
+                link: goodSendHash4,
+              },
+              {
+                hash: goodSendHash6,
+                representative: goodOwner4,
+                link: goodOwnerBlink,
+                type: 'send',
+              },
+              {
+                hash: goodSendHashA,
+                representative: goodOwner6,
+                link: goodOwnerBlink,
+                type: 'send',
+              },
+            ],
+          },
+          {
+            head: goodReceiveHash8,
+          },
+          {
+            account: goodOwnerB,
+            head: goodReceiveHash8,
+            history: [
+              {
+                type: 'receive',
+                hash: goodReceiveHash8,
+                representative: goodOwner6,
+                link: goodSendHashA,
+              },
+            ],
+          },
+        ],
+        {},
     );
 
     let actualTemplateResponse;
     try {
-      actualTemplateResponse = await getResponse(templateActionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualTemplateResponse = await getResponse(templateActionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -397,7 +397,7 @@ describe(actionUtil.ACTION, () => {
     accountInfos[goodOwnerB] = `{"confirmation_height":"2","confirmation_height_frontier":"${goodReceiveHash8}"}`;
 
     try {
-      actualTemplateResponse = await getResponse(templateActionUtil, context, { ipfs_cid: goodIpfsCid });
+      actualTemplateResponse = await getResponse(templateActionUtil, context, {ipfs_cid: goodIpfsCid});
     } catch (error) {
       loggingUtil.trace(error);
     }
@@ -405,7 +405,7 @@ describe(actionUtil.ACTION, () => {
 
     let actualResponse;
     try {
-      actualResponse = await getResponse(actionUtil, context, { owner: goodOwner4 });
+      actualResponse = await getResponse(actionUtil, context, {owner: goodOwner4});
     } catch (error) {
       loggingUtil.trace(error);
     }

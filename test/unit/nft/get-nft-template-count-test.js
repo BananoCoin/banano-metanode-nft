@@ -9,7 +9,7 @@ const actionUtil = require('../../../scripts/actions/nft/get-nft-template-count.
 const ipfsUtil = require('../../../scripts/ipfs-util.js');
 const dataUtil = require('../../../scripts/data-util.js');
 const mockFs = require('../../util/mock-fs.js');
-const { config, loggingUtil, getResponse } = require('../../util/get-response.js');
+const {config, loggingUtil, getResponse} = require('../../util/get-response.js');
 
 // constants
 

@@ -1,14 +1,14 @@
-import { loadSeed, addSeedHideShow, addAccountAndInfo } from './actions/seed-and-account.js';
-import { addCidPinInfo } from './actions/cid-pin.js';
-import { addCidInfo } from './actions/cid-info.js';
-import { addNavigation } from './actions/navigation.js';
-import { addTransferNft } from './actions/transfer-nft.js';
-import { addTemplateOwnerCheck } from './actions/check-template-ownership.js';
-import { addMintNft } from './actions/mint-nft.js';
-import { addOwnerAssetCheck } from './actions/check-owner-assets.js';
-import { addGallery } from './actions/gallery.js';
-import { processHashAndSearchParms } from './lib/hash-and-search-parms.js';
-import { addChildElement, clear } from '../lib/dom.js';
+import {loadSeed, addSeedHideShow, addAccountAndInfo} from './actions/seed-and-account.js';
+import {addCidPinInfo} from './actions/cid-pin.js';
+import {addCidInfo} from './actions/cid-info.js';
+import {addNavigation} from './actions/navigation.js';
+import {addTransferNft} from './actions/transfer-nft.js';
+import {addTemplateOwnerCheck} from './actions/check-template-ownership.js';
+import {addMintNft} from './actions/mint-nft.js';
+import {addOwnerAssetCheck} from './actions/check-owner-assets.js';
+import {addGallery} from './actions/gallery.js';
+import {processHashAndSearchParms} from './lib/hash-and-search-parms.js';
+import {addChildElement, clear} from '../lib/dom.js';
 
 window.bananoApiUrl = '';
 

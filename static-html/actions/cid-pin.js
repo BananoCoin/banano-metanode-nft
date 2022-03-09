@@ -1,5 +1,5 @@
-import { addText, addChildElement, hide, show } from '../lib/dom.js';
-import { getPreviousHash } from '../lib/previous-hash.js';
+import {addText, addChildElement, hide, show} from '../lib/dom.js';
+import {getPreviousHash} from '../lib/previous-hash.js';
 
 const addCidPinInfo = () => {
   const wrapperElt = document.getElementById('cidPinWrapper');
@@ -9,11 +9,11 @@ const addCidPinInfo = () => {
     onsubmit: 'return false;',
   });
   addText(
-    addChildElement(formElt, 'button', {
-      type: 'button',
-      onclick: 'return hideCreateNftTemplateWrapper();',
-    }),
-    'Main Menu'
+      addChildElement(formElt, 'button', {
+        type: 'button',
+        onclick: 'return hideCreateNftTemplateWrapper();',
+      }),
+      'Main Menu',
   );
   addText(addChildElement(formElt, 'h2'), 'Create (and pin) an NFT template');
 
@@ -121,7 +121,7 @@ window.pinCid = async () => {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      Authorization: 'Bearer ' + window.localStorage.pinataApiTokenJWT,
+      'Authorization': 'Bearer ' + window.localStorage.pinataApiTokenJWT,
     },
     body: JSON.stringify(body),
   });
@@ -148,4 +148,4 @@ window.updatePinataApiTokenJWT = () => {
   window.localStorage.pinataApiTokenJWT = document.getElementById('pinataApiTokenJWT').value.trim();
 };
 
-export { addCidPinInfo };
+export {addCidPinInfo};

@@ -10,4 +10,4 @@ const shorten = (asset) => {
   return front + '...' + back;
 };
 
-export { shorten };
+export {shorten};

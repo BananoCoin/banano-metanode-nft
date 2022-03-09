@@ -1,4 +1,4 @@
-import { addText, addChildElement } from '../lib/dom.js';
+import {addText, addChildElement} from '../lib/dom.js';
 
 const addTemplateOwnerCheck = () => {
   const wrapperElt = document.getElementById('templateOwnerCheckWrapper');
@@ -8,11 +8,11 @@ const addTemplateOwnerCheck = () => {
     onsubmit: 'return false;',
   });
   addText(
-    addChildElement(formElt, 'button', {
-      type: 'button',
-      onclick: 'return hideTemplateOwnerCheckWrapper();',
-    }),
-    'Main Menu'
+      addChildElement(formElt, 'button', {
+        type: 'button',
+        onclick: 'return hideTemplateOwnerCheckWrapper();',
+      }),
+      'Main Menu',
   );
   addText(addChildElement(formElt, 'h2'), 'Check Template Ownership');
   addText(addChildElement(formElt, 'h3'), 'IPFS Content ID (CID)');
@@ -40,12 +40,12 @@ const addTemplateOwnerCheck = () => {
     class: 'selectable container column',
   });
   addText(
-    addChildElement(formElt, 'button', {
-      type: 'button',
-      class: '',
-      onclick: 'clearTemplateOwnerCidCid();getKnownTemplateList();return false;',
-    }),
-    'Refresh Template List'
+      addChildElement(formElt, 'button', {
+        type: 'button',
+        class: '',
+        onclick: 'clearTemplateOwnerCidCid();getKnownTemplateList();return false;',
+      }),
+      'Refresh Template List',
   );
 };
 
@@ -101,4 +101,4 @@ window.checkTemplateOwnership = async () => {
   setTimeout(callback, 0);
 };
 
-export { addTemplateOwnerCheck };
+export {addTemplateOwnerCheck};

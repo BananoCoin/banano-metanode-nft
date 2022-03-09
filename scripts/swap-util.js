@@ -136,7 +136,7 @@ const checkSwapAndReturnBlocks = async (nonce, stageEnum, blocksFlag, resp) => {
     await checkBlock(block, blockType, swap);
     switch (blocksFlag) {
       case 'true':
-        blocks.push({ type: blockType, block: block });
+        blocks.push({type: blockType, block: block});
         break;
       case 'false':
         break;
@@ -268,16 +268,16 @@ const checkSendBlock = async (block, blockType, swap) => {
       const senderConfirmationHeight = BigInt(swap.senderAccountInfo.confirmation_height);
       if (senderConfirmationHeight !== BigInt(parsedRepresentative.assetHeight)) {
         throw Error(
-          `${blockType} sender account info is required to have 'confirmation_height' be equal to assetHeight` +
-            ` '${parsedRepresentative.assetHeight}', and was '${senderConfirmationHeight}'.`
+            `${blockType} sender account info is required to have 'confirmation_height' be equal to assetHeight` +
+            ` '${parsedRepresentative.assetHeight}', and was '${senderConfirmationHeight}'.`,
         );
       }
 
       const receiverConfirmationHeight = BigInt(swap.receiverAccountInfo.confirmation_height);
       if (receiverConfirmationHeight !== BigInt(parsedRepresentative.receiveHeight)) {
         throw Error(
-          `${blockType} receiver account info is required to have 'confirmation_height' be equal to receiveHeight` +
-            ` '${parsedRepresentative.receiveHeight}', and was '${receiverConfirmationHeight}'.`
+            `${blockType} receiver account info is required to have 'confirmation_height' be equal to receiveHeight` +
+            ` '${parsedRepresentative.receiveHeight}', and was '${receiverConfirmationHeight}'.`,
         );
       }
       break;

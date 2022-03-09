@@ -85,7 +85,7 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
 
   const fetchWithTimeout = async (resource, options) => {
     return new Promise(async (resolve, reject) => {
-      const { timeout = config.fetchTimeout } = options;
+      const {timeout = config.fetchTimeout} = options;
 
       const controller = new AbortController();
       /* istanbul ignore next */
@@ -99,30 +99,30 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
         ...options,
         signal: controller.signal,
       })
-        .catch((error) => {
-          loggingUtil.debug('getNftInfoForIpfsCid', 'error', error.message);
-          clearTimeout(id);
-          if (error.message == 'The user aborted a request.') {
-            error.message = `timeout waiting for response from IPFS CID lookup`;
-          }
-          resolve({
-            status: 408,
-            statusText: error.message,
-            headers: { get: () => {} },
+          .catch((error) => {
+            loggingUtil.debug('getNftInfoForIpfsCid', 'error', error.message);
+            clearTimeout(id);
+            if (error.message == 'The user aborted a request.') {
+              error.message = `timeout waiting for response from IPFS CID lookup`;
+            }
+            resolve({
+              status: 408,
+              statusText: error.message,
+              headers: {get: () => {}},
+            });
+          })
+          .then((response) => {
+            loggingUtil.debug('getNftInfoForIpfsCid', 'response', response);
+            clearTimeout(id);
+            resolve(response);
           });
-        })
-        .then((response) => {
-          loggingUtil.debug('getNftInfoForIpfsCid', 'response', response);
-          clearTimeout(id);
-          resolve(response);
-        });
     });
   };
 
   const url = `${config.ipfsApiUrl}/${ipfsCid}`;
 
   const headers = {
-    accept: '*/*',
+    'accept': '*/*',
     'accept-language': 'en-US,en',
     'content-type': 'application/json',
   };

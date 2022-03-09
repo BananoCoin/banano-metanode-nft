@@ -1,5 +1,5 @@
-import { addText, addChildElement } from '../lib/dom.js';
-import { getPreviousHash } from '../lib/previous-hash.js';
+import {addText, addChildElement} from '../lib/dom.js';
+import {getPreviousHash} from '../lib/previous-hash.js';
 
 const addTransferNft = () => {
   const wrapperElt = document.getElementById('transferNftWrapper');
@@ -9,11 +9,11 @@ const addTransferNft = () => {
     onsubmit: 'return false;',
   });
   addText(
-    addChildElement(formElt, 'button', {
-      type: 'button',
-      onclick: 'return hideTransferNftWrapper();',
-    }),
-    'Main Menu'
+      addChildElement(formElt, 'button', {
+        type: 'button',
+        onclick: 'return hideTransferNftWrapper();',
+      }),
+      'Main Menu',
   );
   addText(addChildElement(formElt, 'h2'), 'Transfer NFT');
 
@@ -32,22 +32,22 @@ const addTransferNft = () => {
   });
   addChildElement(formElt, 'br');
   addText(
-    addChildElement(formElt, 'button', {
-      id: 'mint-nft',
-      type: 'button',
-      class: '',
-      onclick: 'checkTransferNftCID();return false;',
-    }),
-    'Check CID'
+      addChildElement(formElt, 'button', {
+        id: 'mint-nft',
+        type: 'button',
+        class: '',
+        onclick: 'checkTransferNftCID();return false;',
+      }),
+      'Check CID',
   );
   addText(
-    addChildElement(formElt, 'button', {
-      id: 'refreshCidList',
-      type: 'button',
-      class: '',
-      onclick: 'clearTransferNftTemplateCid();getKnownTemplateList();return false;',
-    }),
-    'Refresh Template List'
+      addChildElement(formElt, 'button', {
+        id: 'refreshCidList',
+        type: 'button',
+        class: '',
+        onclick: 'clearTransferNftTemplateCid();getKnownTemplateList();return false;',
+      }),
+      'Refresh Template List',
   );
   addChildElement(formElt, 'div', {
     id: 'transferAssets',
@@ -156,4 +156,4 @@ window.transferNft = async () => {
   transferNftInfo.innerText = response;
 };
 
-export { addTransferNft };
+export {addTransferNft};

@@ -1,5 +1,5 @@
-import { addText, addChildElement } from '../lib/dom.js';
-import { postIpfsHtmlMessage, addJsonImageLink } from '../lib/ipfs-html.js';
+import {addText, addChildElement} from '../lib/dom.js';
+import {postIpfsHtmlMessage, addJsonImageLink} from '../lib/ipfs-html.js';
 
 const addGallery = () => {
   const wrapperElt = document.getElementById('galleryWrapper');
@@ -9,11 +9,11 @@ const addGallery = () => {
     onsubmit: 'return false;',
   });
   addText(
-    addChildElement(formElt, 'button', {
-      type: 'button',
-      onclick: 'return hideGalleryWrapper();',
-    }),
-    'Main Menu'
+      addChildElement(formElt, 'button', {
+        type: 'button',
+        onclick: 'return hideGalleryWrapper();',
+      }),
+      'Main Menu',
   );
   addText(addChildElement(formElt, 'h2'), 'Gallery');
   const shareHrefElt = addChildElement(formElt, 'a', {
@@ -35,13 +35,13 @@ const addGallery = () => {
     class: 'selectable container column',
   });
   addText(
-    addChildElement(formElt, 'button', {
-      id: 'refreshCidList',
-      type: 'button',
-      class: '',
-      onclick: 'getKnownTemplateList();return false;',
-    }),
-    'Refresh Template List'
+      addChildElement(formElt, 'button', {
+        id: 'refreshCidList',
+        type: 'button',
+        class: '',
+        onclick: 'getKnownTemplateList();return false;',
+      }),
+      'Refresh Template List',
   );
 };
 
@@ -86,4 +86,4 @@ window.loadGallery = async () => {
   setTimeout(callback, 0);
 };
 
-export { addGallery };
+export {addGallery};

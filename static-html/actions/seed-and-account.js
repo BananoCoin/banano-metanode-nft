@@ -1,5 +1,5 @@
-import { getRandomHex32 } from '../lib/randomHex32.js';
-import { addText, addChildElement, hide, show, clear } from '../lib/dom.js';
+import {getRandomHex32} from '../lib/randomHex32.js';
+import {addText, addChildElement, hide, show, clear} from '../lib/dom.js';
 
 const loadSeed = () => {
   if (window.localStorage.seed == undefined) {
@@ -20,33 +20,33 @@ const addSeedHideShow = () => {
     onsubmit: 'return false;',
   });
   addText(
-    addChildElement(formElt, 'button', {
-      type: 'button',
-      onclick: 'return hideSeedAndAccountWrapper();',
-    }),
-    'Main Menu'
+      addChildElement(formElt, 'button', {
+        type: 'button',
+        onclick: 'return hideSeedAndAccountWrapper();',
+      }),
+      'Main Menu',
   );
 
   addText(addChildElement(formElt, 'h2'), 'Seed');
   addChildElement(formElt, 'br');
   addText(
-    addChildElement(formElt, 'button', {
-      id: 'seed-show',
-      type: 'button',
-      class: '',
-      onclick: 'return showSeed();',
-    }),
-    'Show Seed'
+      addChildElement(formElt, 'button', {
+        id: 'seed-show',
+        type: 'button',
+        class: '',
+        onclick: 'return showSeed();',
+      }),
+      'Show Seed',
   );
   addText(
-    addChildElement(formElt, 'button', {
-      id: 'seed-hide',
-      type: 'button',
-      class: '',
-      style: 'display:none',
-      onclick: 'return hideSeed();',
-    }),
-    'Hide Seed'
+      addChildElement(formElt, 'button', {
+        id: 'seed-hide',
+        type: 'button',
+        class: '',
+        style: 'display:none',
+        onclick: 'return hideSeed();',
+      }),
+      'Hide Seed',
   );
   addChildElement(formElt, 'br');
   addChildElement(formElt, 'input', {
@@ -191,4 +191,4 @@ window.hideSeed = () => {
   return false;
 };
 
-export { loadSeed, addSeedHideShow, addAccountAndInfo };
+export {loadSeed, addSeedHideShow, addAccountAndInfo};
