@@ -13,7 +13,7 @@
   "assetTemplateCounterDataDir": "data/assetTemplateCounter",
   "templateMaxSupplyDataDir": "data/templateMaxSupply",
   "currentVersion": "0.0.1",
-  "supportedVersions": ["0.0.1"],
+  "supportedVersions": ["0.0.1", "ERC1155"],
   "fetchTimeout": 5000,
   "webPort": "",
   "whitelist": [],

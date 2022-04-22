@@ -90,7 +90,7 @@ window.checkCid = async () => {
     html += `<span><h2>json</h2></span>`;
     Object.keys(responseJson.json).forEach((key) => {
       const value = responseJson.json[key];
-      html += `<span>'${key}':'${value}'</span>`;
+      html += `<span>"${key}":${JSON.stringify(value)}</span>`;
     });
 
     html += `<span id="cidInfoAsset">loading image ....</span>`;

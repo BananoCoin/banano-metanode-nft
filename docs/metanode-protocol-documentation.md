@@ -24,6 +24,23 @@ these require understanding the multisig protocol, and adding it to bananojs, so
 
     1.  create a JSON with the below properties:
 
+        https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/metadata_json.md
+
+        ```
+        {
+          "name: "<name>",
+          "description": "<description>",
+          "image": "ipfs://QmbzTMo42KADUbLwc43KR9Se6aV3N6wfKqFbSr2qN1gJqR",
+          "properties": {
+            "issuer": "<banano address>",
+            "supply_block_hash": "<block hash>"
+            ]
+          }
+        }
+        ```
+
+        this gets converted into a command:
+        
         ```js
         {
           'command':'<template type> eg:mint_nft',

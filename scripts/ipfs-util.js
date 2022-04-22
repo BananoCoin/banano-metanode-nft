@@ -150,6 +150,30 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
       resp.success = true;
       resp.errors = [];
 
+      if (resp.json.properties !== undefined) {
+        // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/metadata_json.md
+        resp.json.command = 'nft_template';
+        resp.json.version = 'ERC1155';
+        resp.json.transferable = 'true';
+
+        resp.json.issuer = resp.json.properties.issuer;
+        resp.json.previous = resp.json.properties.supply_block_hash;
+
+        delete resp.json.properties;
+
+        resp.json.title = resp.json.name;
+        delete resp.json.name;
+        delete resp.json.description;
+        delete resp.json.animation_url;
+        resp.json.metadata_ipfs_cid = resp.json.image;
+        delete resp.json.image;
+
+        // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/supply_block.md
+        // TODO: get version and supply from supply block.
+      }
+
+      // https://github.com/Airtune/73-meta-tokens/blob/58e7dc446f260fc157e31733e995b539302bb4d1/mint_nft.md
+
       if (resp.json.command !== 'nft_template') {
         resp.success = false;
         resp.errors.push(`command:'${resp.json.command}' !== 'nft_template'`);

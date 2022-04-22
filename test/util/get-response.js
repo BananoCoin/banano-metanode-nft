@@ -28,7 +28,7 @@ const config = {
   assetTemplateCounterDataDir: 'assetTemplateCounterDataDir',
   templateMaxSupplyDataDir: 'templateMaxSupplyDataDir',
   templateDataDir: 'templateDataDir',
-  supportedVersions: ['0.0.1'],
+  supportedVersions: ['0.0.1', 'ERC1155'],
   currentVersion: '0.0.1',
   whitelist: ['a'],
   blacklist: ['b'],

@@ -788,7 +788,7 @@ describe(actionUtil.ACTION, () => {
     const expectedResponse = {
       content_type: 'application/json',
       errors: [
-        'unsupported version:\'\' supported versions:["0.0.1"]',
+        'unsupported version:\'\' supported versions:["0.0.1","ERC1155"]',
         'max_supply:\'\' not an integer',
         'transferable:\'\' not a boolean',
         'metadata_ipfs_cid:\'\' error \'ipfs_cid:\'\' not valid v0 CID (Qm+base58)\'',
