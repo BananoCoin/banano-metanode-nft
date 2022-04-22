@@ -1,31 +1,23 @@
 self.onmessage = (e) => {
   const ipfsApiUrl = e.data[0];
-  const jsonIpfsCid = e.data[1];
+  const templateJson = e.data[1];
   const assets = e.data[2];
   const blacklist = e.data[3];
   const whitelist = e.data[4];
   console.log('onmessage', e.data);
-  getIpfsHtml(ipfsApiUrl, jsonIpfsCid, assets, blacklist, whitelist);
+  getIpfsHtml(ipfsApiUrl, templateJson, assets, blacklist, whitelist);
 };
 
-const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets, blacklist, whitelist) => {
+const getIpfsHtml = async (ipfsApiUrl, templateJson, assets, blacklist, whitelist) => {
   let html = '';
   let imageIpfsCid = '';
   let allowReload = 'true';
   let title = '';
   try {
-    const templateUrl = ipfsApiUrl + '/' + jsonIpfsCid;
-    console.log('templateUrl', templateUrl);
-    const templateResponse = await fetch(templateUrl, {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-      },
-    });
-    const templateRsponseJson = await templateResponse.json();
-    const issuer = templateRsponseJson.issuer;
-    title = templateRsponseJson.title;
-    imageIpfsCid = templateRsponseJson.art_data_ipfs_cid;
+    console.log('templateJson', templateJson);
+    const issuer = templateJson.issuer;
+    title = templateJson.json.title;
+    imageIpfsCid = templateJson.json.metadata_ipfs_cid;
     if (blacklist !== undefined && blacklist.includes(issuer)) {
       html += `<h4>Blacklisted</h4>`;
     } else {
@@ -67,6 +59,6 @@ const getIpfsHtml = async (ipfsApiUrl, jsonIpfsCid, assets, blacklist, whitelist
     allowReload = 'true';
   }
 
-  const result = [html, assets, jsonIpfsCid, imageIpfsCid, allowReload, title];
+  const result = [html, assets, templateJson, imageIpfsCid, allowReload, title];
   postMessage(result);
 };

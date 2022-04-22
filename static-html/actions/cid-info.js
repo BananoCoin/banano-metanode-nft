@@ -73,8 +73,9 @@ window.checkCid = async () => {
     return;
   }
   const responseJson = await response.json();
+  console.log('responseJson', responseJson);
   const assets = [];
-  let jsonIpfsCid = '';
+  let artIpfsCid = '';
 
   let html = '';
   if (responseJson.success) {
@@ -97,7 +98,7 @@ window.checkCid = async () => {
 
     // TODO: use responseJson.json.art_data_ipfs_cid;
     // as the use of responseJson.ipfs_cid causes an extra step.
-    jsonIpfsCid = responseJson.ipfs_cid;
+    artIpfsCid = responseJson.json.metadata_ipfs_cid;
     assets.push('cidInfoAsset');
   }
   if (responseJson.errors !== undefined) {
@@ -111,9 +112,9 @@ window.checkCid = async () => {
 
   cidInfoElt.innerHTML = html;
 
-  addJsonImageLink(ipfsApiUrl, jsonIpfsCid, assets);
+  addJsonImageLink(ipfsApiUrl, artIpfsCid, assets);
   if (assets.length > 0) {
-    postIpfsHtmlMessage(ipfsApiUrl, jsonIpfsCid, assets);
+    postIpfsHtmlMessage(ipfsApiUrl, responseJson, assets);
   }
 };
 

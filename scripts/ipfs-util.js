@@ -165,11 +165,15 @@ const getNftInfoForIpfsCid = async (fetch, bananojs, ipfsCid) => {
         delete resp.json.name;
         delete resp.json.description;
         delete resp.json.animation_url;
-        resp.json.metadata_ipfs_cid = resp.json.image;
+        resp.json.art_data_ipfs_cid = resp.json.image;
         delete resp.json.image;
 
         // https://github.com/Airtune/73-meta-tokens/blob/main/meta_ledger_protocol/supply_block.md
         // TODO: get version and supply from supply block.
+      }
+      if (resp.json.art_data_ipfs_cid !== undefined) {
+        resp.json.metadata_ipfs_cid = resp.json.art_data_ipfs_cid;
+        delete resp.json.art_data_ipfs_cid;
       }
 
       // https://github.com/Airtune/73-meta-tokens/blob/58e7dc446f260fc157e31733e995b539302bb4d1/mint_nft.md
