@@ -53,7 +53,7 @@ window.loadGallery = async () => {
 
   const dataListElt = document.getElementById('knownTemplateList');
 
-  console.log(dataListElt);
+  console.log('loadGallery', {dataListElt: dataListElt});
 
   const callback = async () => {
     const templatesToLoad = [];

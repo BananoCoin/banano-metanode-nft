@@ -4,19 +4,20 @@ import {shorten} from '../lib/asset-name.js';
 
 const getIpfsHtmlWorkerInst = new Worker('./workers/get-ipfs-html.js', {type: 'module'});
 
-window.reloadTemplateAssets = (templateJson, assets) => {
+window.reloadTemplateAssets = (templateJsonCid, assets) => {
+  console.log('ipfs-html', 'reloadTemplateAssets', {templateJsonCid: templateJsonCid, assets: assets});
   // no blacklist or whitelist means load everything.
-  getIpfsHtmlWorkerInst.postMessage([ipfsApiUrl, JSON.parse(templateJson), JSON.parse(assets)]);
+  getIpfsHtmlWorkerInst.postMessage([ipfsApiUrl, templateJsonCid, JSON.parse(assets)]);
 };
 
 getIpfsHtmlWorkerInst.onmessage = function(e) {
   const html = e.data[0];
   const assets = e.data[1];
-  const templateJson = e.data[2];
+  const templateJsonCid = e.data[2];
   const imageIpfsCid = e.data[3];
   const allowReload = e.data[4];
   const title = e.data[5];
-  // console.log('e.data', e.data);
+  console.log('ipfs-html', 'getIpfsHtmlWorkerInst.onmessage', 'e.data', e.data);
   for (let assetIx = 0; assetIx < assets.length; assetIx++) {
     const asset = assets[assetIx];
     const span = document.getElementById(asset);
@@ -32,17 +33,17 @@ getIpfsHtmlWorkerInst.onmessage = function(e) {
         addChildElement(span, 'button', {
           type: 'button',
           class: '',
-          onclick: `reloadTemplateAssets('${JSON.stringify(templateJson)}', '${JSON.stringify(assets)}');return false;`,
+          onclick: `reloadTemplateAssets('${templateJsonCid}', '${JSON.stringify(assets)}');return false;`,
         }),
-        'Reload Template ' + shorten(templateJson.ipfs_cid),
+        'Reload Template ' + shorten(templateJsonCid),
     );
     addChildElement(span, 'br');
     addText(
         addChildElement(span, 'a', {
-          href: `${ipfsApiUrl}/${templateJson.ipfs_cid}`,
+          href: `${ipfsApiUrl}/${templateJsonCid}`,
           target: '_blank',
         }),
-        'JSON CID ' + templateJson.ipfs_cid,
+        'JSON CID ' + templateJsonCid,
     );
     addChildElement(span, 'br');
     addText(
@@ -55,8 +56,8 @@ getIpfsHtmlWorkerInst.onmessage = function(e) {
   }
 };
 
-const postIpfsHtmlMessage = (ipfsApiUrl, templateJson, assets) => {
-  getIpfsHtmlWorkerInst.postMessage([ipfsApiUrl, templateJson, assets, window.blacklist, window.whitelist]);
+const postIpfsHtmlMessage = (ipfsApiUrl, templateJsonCid, assets) => {
+  getIpfsHtmlWorkerInst.postMessage([ipfsApiUrl, templateJsonCid, assets, window.blacklist, window.whitelist]);
 };
 
 const addJsonImageLink = (ipfsApiUrl, artIpfsCid, assets) => {
