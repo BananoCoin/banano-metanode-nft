@@ -25,15 +25,21 @@ const getIpfsHtml = async (ipfsApiUrl, templateJsonCid, assets, blacklist, white
     const templateJsonResponseContentType = templateJsonResponse.headers.get('content-type');
     if ((templateJsonResponse.status === 200) &&
         templateJsonResponseContentType &&
-        (templateJsonResponseContentType.indexOf('application/json') !== -1)) {
+        ((templateJsonResponseContentType.indexOf('application/json') !== -1) ||
+          (templateJsonResponseContentType.indexOf('text/plain') !== -1))) {
       templateJson = await templateJsonResponse.json();
       console.log('get-ipfs-html', 'templateJson', templateJson);
       const issuer = templateJson.issuer;
-      title = templateJson.title;
-      if (templateJson.art_data_ipfs_cid) {
+      if (templateJson.title !== undefined) {
+        title = templateJson.title;
+      }
+      if (templateJson.name !== undefined) {
+        title = templateJson.name;
+      }
+      if (templateJson.art_data_ipfs_cid !== undefined) {
         imageIpfsCid = templateJson.art_data_ipfs_cid;
       }
-      if (templateJson.image) {
+      if (templateJson.image !== undefined) {
         imageIpfsCid = templateJson.image;
       }
       if (blacklist !== undefined && blacklist.includes(issuer)) {
