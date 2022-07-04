@@ -30,7 +30,12 @@ const getIpfsHtml = async (ipfsApiUrl, templateJsonCid, assets, blacklist, white
       console.log('get-ipfs-html', 'templateJson', templateJson);
       const issuer = templateJson.issuer;
       title = templateJson.title;
-      imageIpfsCid = templateJson.art_data_ipfs_cid;
+      if (templateJson.art_data_ipfs_cid) {
+        imageIpfsCid = templateJson.art_data_ipfs_cid;
+      }
+      if (templateJson.image) {
+        imageIpfsCid = templateJson.image;
+      }
       if (blacklist !== undefined && blacklist.includes(issuer)) {
         html += `<h4>Blacklisted</h4>`;
       } else {
