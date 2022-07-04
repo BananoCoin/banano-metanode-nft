@@ -1,5 +1,6 @@
 {
-  "ipfsApiUrl": "https://gateway.pinata.cloud/ipfs",
+  "!ipfsApiUrl": "https://gateway.pinata.cloud/ipfs",
+  "ipfsApiUrl": "https://ipfs.io/ipfs",
   "pinataApiUrl": "https://api.pinata.cloud",
   "bananodeApiUrl": "https://kaliumapi.appditto.com/api",
   "nftApiUrl": "/",

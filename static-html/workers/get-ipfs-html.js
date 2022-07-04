@@ -18,11 +18,14 @@ const getIpfsHtml = async (ipfsApiUrl, templateJsonCid, assets, blacklist, white
     const templateJsonUrl = ipfsApiUrl + '/' + templateJsonCid;
     const templateJsonResponse = await fetch(templateJsonUrl, {
       method: 'GET',
-      headers: {
-        'content-type': 'image',
-      },
+      // headers: {
+      //   'content-type': 'application/json',
+      // },
     });
-    if (templateJsonResponse.status === 200) {
+    const templateJsonResponseContentType = templateJsonResponse.headers.get('content-type');
+    if ((templateJsonResponse.status === 200) &&
+        templateJsonResponseContentType &&
+        (templateJsonResponseContentType.indexOf('application/json') !== -1)) {
       templateJson = await templateJsonResponse.json();
       console.log('get-ipfs-html', 'templateJson', templateJson);
       const issuer = templateJson.issuer;
@@ -36,12 +39,11 @@ const getIpfsHtml = async (ipfsApiUrl, templateJsonCid, assets, blacklist, white
           const imageUrl = ipfsApiUrl + '/' + imageIpfsCid;
           const imageResponse = await fetch(imageUrl, {
             method: 'GET',
-            headers: {
-              'content-type': 'image',
-            },
+            // headers: {
+            //   'content-type': 'image',
+            // },
           });
           const imageContentType = imageResponse.headers.get('content-type');
-
           if (imageResponse.status === 200) {
             const imageBlob = await imageResponse.blob();
             if (imageContentType == 'image/svg+xml') {
@@ -56,7 +58,7 @@ const getIpfsHtml = async (ipfsApiUrl, templateJsonCid, assets, blacklist, white
               html += `Unsupported Content Type: ${imageContentType}`;
             }
           } else {
-            html = 'error:' + imageResponse.status + ' ' + imageResponse.statusText;
+            html = 'error:' + imageResponse.status + ' ' + imageResponse.statusText + ` content type '${imageContentType}`;
             allowReload = 'true';
           }
         } else {
@@ -65,7 +67,7 @@ const getIpfsHtml = async (ipfsApiUrl, templateJsonCid, assets, blacklist, white
         }
       }
     } else {
-      html = 'error:' + templateJsonResponse.status + ' ' + templateJsonResponse.statusText;
+      html = 'error:' + templateJsonResponse.status + ' ' + templateJsonResponse.statusText + ` content type '${templateJsonResponseContentType}`;
       allowReload = 'true';
     }
   } catch (error) {
