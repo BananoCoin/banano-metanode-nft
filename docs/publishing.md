@@ -8,4 +8,11 @@
 
     npm run preflight;
 
-    npm --no-git-tag-version version patch;
+## commit here and publish
+
+    git commit -a -m 'updating dependencies';
+    npm version patch;
+    git pull;
+    git push;
+    git push --tags;
+    npm publish --access public;
