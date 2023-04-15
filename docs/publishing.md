@@ -13,4 +13,3 @@
     git pull;
     git push;
     git push --tags;
-    npm publish --access public;
